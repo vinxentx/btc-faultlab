@@ -1,7 +1,13 @@
 - name: Ensure config dir exists
   ansible.builtin.file:
-    path: "{{ workdir }}/conf"
+    path: "{{ workdir }}/config"
     state: directory
+
+- name: Ensure per-node config dirs exist
+  ansible.builtin.file:
+    path: "{{ workdir }}/config/node{{ '%02d'|format(item) }}"
+    state: directory
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
 - name: Template docker-compose.yml
   ansible.builtin.template:
@@ -11,7 +17,7 @@
 - name: Render per-node bitcoin.conf files
   ansible.builtin.template:
     src: "bitcoin.conf.j2"
-    dest: "{{ workdir }}/conf/node{{ '%02d'|format(item) }}.conf"
+    dest: "{{ workdir }}/config/node{{ '%02d'|format(item) }}/bitcoin.conf"
   loop: "{{ range(1, node_count + 1) | list }}"
 
 - name: Ensure data dirs exist
