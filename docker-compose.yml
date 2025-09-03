@@ -1,0 +1,121 @@
+version: "3.8"
+name: "btcnet"
+
+services:
+  node01:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node01"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node01/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node01:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node02:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node02"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node02/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node02:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node03:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node03"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node03/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node03:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node04:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node04"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node04/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node04:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node05:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node05"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node05/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node05:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node06:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node06"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node06/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node06:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node07:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node07"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node07/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node07:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+  node08:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "node08"
+
+    restart: unless-stopped
+    command: >
+      bitcoind -regtest=1 -printtoconsole=1
+      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    volumes:
+      - "/home/vincent/btc-faultlab/config/node08/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
+      - "/home/vincent/btc-faultlab/data/node08:/home/bitcoin/.bitcoin"
+    networks: [ "btcnet" ]
+
+  txgen:
+    image: "python:3.12-slim"
+    container_name: "txgen"
+
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - "/home/vincent/btc-faultlab/files:/app:ro"
+      - "/home/vincent/btc-faultlab/results:/results"
+    command: >
+      bash -lc "python -u /app/txgen.py --rate 10
+      --rpc http://user:pass@node01:18443
+      --log /results/txlog.csv"
+    depends_on:
+      - node01
+    networks: [ "btcnet" ]
+
+networks:
+  btcnet:
+    driver: bridge

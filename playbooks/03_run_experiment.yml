@@ -1,0 +1,65 @@
+- hosts: controller
+  gather_facts: false
+  vars:
+    run_id: "{{ lookup('pipe','date -u +%Y%m%dT%H%M%SZ') }}"
+    run_dir: "{{ workdir }}/results/{{ run_id }}"
+  tasks:
+    - name: Create run directory
+      ansible.builtin.file:
+        path: "{{ run_dir }}/plots"
+        state: directory
+        mode: "0755"
+        recurse: true
+
+    - name: Write metadata.yml (parameters snapshot)
+      ansible.builtin.copy:
+        dest: "{{ run_dir }}/metadata.yml"
+        content: |
+          run_id: {{ run_id }}
+          node_count: {{ node_count }}
+          tx_rate: {{ tx_rate }}
+          crash_fraction: {{ crash_fraction }}
+          crash_duration_s: {{ crash_duration_s }}
+          crash_mode: {{ crash_mode }}
+          recovery_mode: {{ recovery_mode }}
+          reindex_on_restart: {{ reindex_on_restart }}
+          loss_pct: {{ loss_pct }}
+          latency_ms: {{ latency_ms }}
+          bandwidth_mbit: {{ bandwidth_mbit }}
+          warmup_s: {{ warmup_s }}
+          observe_s: {{ observe_s }}
+          cooldown_s: {{ cooldown_s }}
+          seed: {{ seed }}
+
+    - name:  Log_event - start_warmup
+      ansible.builtin.shell: |
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_warmup" >> "{{ run_dir }}/events.log"
+
+    - name: Warm-up
+      ansible.builtin.pause: { seconds: "{{ warmup_s }}" }
+
+    - name: Apply net impairments (loss/latency/bandwidth)
+      include_role: { name: netem }
+      vars: { run_dir: "{{ run_dir }}" }
+
+    - name: Log_event - after_netem_before_crash
+      ansible.builtin.shell: |
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) after_netem" >> "{{ run_dir }}/events.log"
+
+    - name: Inject crashes
+      include_role: { name: experiment }
+      vars: { phase: "crash", run_dir: "{{ run_dir }}" }
+
+    - name: Observe recovery period
+      ansible.builtin.pause: { seconds: "{{ observe_s }}" }
+
+    - name: Remove net impairments
+      include_role: { name: netem }
+      vars: { clear: true, run_dir: "{{ run_dir }}" }
+
+    - name: Log_event - end_observation_start_cooldown
+      ansible.builtin.shell: |
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) end_observe" >> "{{ run_dir }}/events.log"
+
+    - name: Cool-down
+      ansible.builtin.pause: { seconds: "{{ cooldown_s }}" }

@@ -1,0 +1,41 @@
+# Finde jüngsten Run-Ordner OHNE run_dir zu evaluieren (vermeidet Rekursion).
+- name: Determine latest run directory under results/
+  ansible.builtin.set_fact:
+    rd: "{{ workdir }}/results/{{ lookup('pipe', 'ls -1t ' ~ workdir ~ '/results | head -n1') | trim }}"
+
+- name: Ensure results dir exists
+  ansible.builtin.file:
+    path: "{{ rd }}"
+    state: directory
+
+- name: Dump docker logs per node
+  loop: "{{ range(1, node_count + 1) | list }}"
+  loop_control: { loop_var: i }
+  ansible.builtin.shell: |
+    docker logs node{{ '%02d'|format(i) }} > "{{ rd }}/node{{ '%02d'|format(i) }}.log" 2>&1
+  changed_when: true
+
+- name: Snapshot chain tips
+  ansible.builtin.shell: |
+    docker exec node01 bitcoin-cli -regtest getchaintips > "{{ rd }}/chaintips.json"
+  changed_when: true
+
+- name: Snapshot mempool info
+  ansible.builtin.shell: |
+    docker exec node01 bitcoin-cli -regtest getmempoolinfo > "{{ rd }}/mempool.json"
+  changed_when: true
+
+# Falls txlog im allgemeinen results liegt, verlinke ihn in diesen Run
+- name: Link txlog into run dir (if present at workdir/results)
+  ansible.builtin.shell: |
+    if [ -f "{{ workdir }}/results/txlog.csv" ]; then ln -sf "{{ workdir }}/results/txlog.csv" "{{ rd }}/txlog.csv"; fi
+  changed_when: false
+
+- name: Run ZMQ confirmation collector (flush confirmations)
+  ansible.builtin.shell: |
+    python3 files/telemetry_zmq.py --rpc http://{{ rpc_user }}:{{ rpc_pass }}@127.0.0.1:18443 \
+      --zmq-block tcp://127.0.0.1:28332 --zmq-tx tcp://127.0.0.1:28333 \
+      --txlog "{{ rd }}/txlog.csv" --out "{{ rd }}/confirmations.csv" --timeout 10
+  args:
+    chdir: "{{ workdir }}"
+  changed_when: false

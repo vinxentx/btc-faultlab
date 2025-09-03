@@ -1,0 +1,55 @@
+- name: Compute crash set (deterministic)
+  ansible.builtin.set_fact:
+    all_nodes: "{{ query('sequence','start=1 end=' ~ node_count) | map('int') | list }}"
+    crash_count: "{{ (node_count * crash_fraction) | round(0,'floor') | int }}"
+
+- name: Pick nodes to crash (seeded shuffle, take first k)
+  ansible.builtin.set_fact:
+    crash_nodes_idx: "{{ all_nodes | shuffle(seed=seed) | list | slice(crash_count) | first | default([]) }}"
+  when: crash_count > 0
+
+- name: Expand to names
+  ansible.builtin.set_fact:
+    crash_nodes: "{{ crash_nodes_idx | map('regex_replace','^(.*)$','node%02d') | list | default([]) }}"
+  vars: { 'node%02d': '' }
+  when: crash_count > 0
+
+- name: Log crash plan (workdir-global)
+  when: crash_count > 0
+  ansible.builtin.shell: |
+    mkdir -p "{{ workdir }}/results"
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_plan nodes={{ crash_nodes | default([]) | join(',') }} mode={{ crash_mode }} duration={{ crash_duration_s }}s" >> "{{ workdir }}/results/events.log"
+  changed_when: true
+
+
+- name: Burst crash
+  when:
+    - crash_count > 0
+    - crash_mode == "burst"
+  loop: "{{ crash_nodes }}"
+  loop_control: { loop_var: c }
+  ansible.builtin.shell: "docker stop {{ c }}"
+
+- name: Staggered crash
+  when:
+    - crash_count > 0
+    - crash_mode == "staggered"
+  loop: "{{ crash_nodes }}"
+  loop_control: { loop_var: c }
+  ansible.builtin.shell: "docker stop {{ c }} && sleep {{ (crash_duration_s / (crash_nodes|length|default(1))) | int }}"
+
+- name: Pause while crashed
+  when: crash_count > 0
+  ansible.builtin.pause: { seconds: "{{ crash_duration_s }}" }
+
+# Recovery start
+- name: Recovery (cold vs fast)
+  when: crash_count > 0
+  loop: "{{ crash_nodes }}"
+  loop_control: { loop_var: c }
+  ansible.builtin.shell: |
+    {% if recovery_mode == 'cold' %}
+    docker start {{ c }} && docker exec {{ c }} bash -lc "echo reindex={{ 1 if reindex_on_restart else 0 }} >/dev/null"
+    {% else %}
+    docker start {{ c }}
+    {% endif %}

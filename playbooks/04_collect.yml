@@ -1,0 +1,13 @@
+- hosts: controller
+  gather_facts: false
+  vars:
+    run_id: "{{ lookup('pipe','ls -1t {{ workdir }}/results | head -n1') | trim }}"
+    run_dir: "{{ workdir }}/results/{{ run_id }}"
+  tasks:
+    - include_role: { name: telemetry }
+      vars: { run_dir: "{{ run_dir }}" }
+
+    - name: Compute metrics & plots
+      ansible.builtin.shell: |
+        python3 analysis/metrics.py --run-dir "{{ run_dir }}"
+      args: { chdir: "{{ playbook_dir }}/.." }

@@ -1,0 +1,23 @@
+# Achtung: kein Zugriff auf run_dir, damit keine Rekursion getriggert wird.
+
+- name: Apply netem
+  when: clear | default(false) | bool == false
+  loop: "{{ range(1, node_count + 1) | list }}"
+  loop_control:
+    loop_var: i
+  ansible.builtin.shell: |
+    docker exec node{{ '%02d'|format(i) }} bash -lc "
+      tc qdisc del dev eth0 root 2>/dev/null || true
+      tc qdisc add dev eth0 root handle 1: htb default 1
+      tc class add dev eth0 parent 1:1 htb rate {{ bandwidth_mbit }}mbit
+      tc qdisc add dev eth0 parent 1:1 handle 10: netem delay {{ latency_ms }}ms loss {{ loss_pct }}%"
+  changed_when: true
+
+- name: Clear netem
+  when: clear | default(false) | bool
+  loop: "{{ range(1, node_count + 1) | list }}"
+  loop_control:
+    loop_var: i
+  ansible.builtin.shell: |
+    docker exec node{{ '%02d'|format(i) }} bash -lc "tc qdisc del dev eth0 root 2>/dev/null || true"
+  changed_when: true

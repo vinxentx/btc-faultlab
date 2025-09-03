@@ -1,0 +1,41 @@
+- name: Ensure config dir exists
+  ansible.builtin.file:
+    path: "{{ workdir }}/conf"
+    state: directory
+
+- name: Template docker-compose.yml
+  ansible.builtin.template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ workdir }}/docker-compose.yml"
+
+- name: Render per-node bitcoin.conf files
+  ansible.builtin.template:
+    src: "bitcoin.conf.j2"
+    dest: "{{ workdir }}/conf/node{{ '%02d'|format(item) }}.conf"
+  loop: "{{ range(1, node_count + 1) | list }}"
+
+- name: Ensure data dirs exist
+  ansible.builtin.file:
+    path: "{{ workdir }}/data/node{{ '%02d'|format(item) }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
+
+- name: Ensure results dir exists
+  ansible.builtin.file:
+    path: "{{ workdir }}/results"
+    state: directory
+    mode: "0755"
+
+# Wichtig: UID/GID 101:101 – genau wie im Log des Images
+- name: Chown config, data, results to 101:101
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: 101
+    group: 101
+    recurse: true
+  loop:
+    - "{{ workdir }}/config"
+    - "{{ workdir }}/data"
+    - "{{ workdir }}/results"

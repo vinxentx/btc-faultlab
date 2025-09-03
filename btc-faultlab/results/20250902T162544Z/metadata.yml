@@ -1,0 +1,15 @@
+run_id: 20250902T162544Z
+node_count: 8
+tx_rate: 10
+crash_fraction: 0.30
+crash_duration_s: 60
+crash_mode: burst
+recovery_mode: cold
+reindex_on_restart: True
+loss_pct: 5
+latency_ms: 200
+bandwidth_mbit: 10
+warmup_s: 120
+observe_s: 600
+cooldown_s: 30
+seed: 42

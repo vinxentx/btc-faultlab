@@ -1,0 +1,2371 @@
+{
+ "files": [
+  {
+   "name": ".",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".ansible-lint",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f69569e947e2f399ad98aa4dafc1aa3a4af212b4977658c6be85f9c1253f93e6",
+   "format": 1
+  },
+  {
+   "name": ".github",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".github/ISSUE_TEMPLATE",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".github/ISSUE_TEMPLATE/bug_report.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4ebc5be8b7eac9e753be35c7d4114b4aed833dfb1bd1e0ed1d67d9c8f29ccfc7",
+   "format": 1
+  },
+  {
+   "name": ".github/ISSUE_TEMPLATE/documentation_report.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "017f8a4fe4f1b1c710d989b37c57fea1e855ce808b364284381dc64a1c104cbc",
+   "format": 1
+  },
+  {
+   "name": ".github/ISSUE_TEMPLATE/feature_request.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cf46c5da7496974844f40b56392f4a81531538ba1b6c96069429be7c4ded075c",
+   "format": 1
+  },
+  {
+   "name": ".github/ISSUE_TEMPLATE/config.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0ee8711dfa2a97718332908e31be32d231809711110c9929e75bf6d67a1656b5",
+   "format": 1
+  },
+  {
+   "name": ".github/patchback.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ed69f87ea46171cb574fb77dc74fdbd7a269d4cad8d5ba6494d64d99842ef8e4",
+   "format": 1
+  },
+  {
+   "name": ".github/settings.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "66f8ce87f6ff7963028d565988bb95c89c512916e49ba859bcace3a4d9f06ab7",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/ansible-bot.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b6698f8a99d8e1f6854e441eaad3e70a21610d4999fc90ba368388cc40a455e1",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/changelog.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b35ba641d37c59bbd70faac055d054204b83c4d61146ad00a504ae111fccc6",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/patchback.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ed69f87ea46171cb574fb77dc74fdbd7a269d4cad8d5ba6494d64d99842ef8e4",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/eco-vcenter-ci.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dc23708db2d3973469d16f42702fc08edaa2d6a43aa47792db151f78f36e072a",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/linters.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d29343cd8d94fed04b80fff9dbf4e473f6f4ed45ddc33ae116bc3ad1f3ad5ef8",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/docs-pr.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1fd3398988ba1781b495c419a66ef452341cd1b3ccbf9f372e55e4cab641ab1a",
+   "format": 1
+  },
+  {
+   "name": ".github/workflows/sanity-tests.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "29c7ebeae7c4225d1ffa8e1e911aaa13c848cf40e2120e0ec409a2eab80c22fb",
+   "format": 1
+  },
+  {
+   "name": ".github/SECURITY.MD",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cebef5e1f07c912f2002233f76c3c72dde94b4d7cd9a86e8e97f34789e6e1e0b",
+   "format": 1
+  },
+  {
+   "name": ".gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ec1365454805dee2090baf5e09ef8d5329c7aa8bb68b82eff1bd366c6731d669",
+   "format": 1
+  },
+  {
+   "name": ".yamllint",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2bd701284c6c12a52d10db0b1c6778d6ac52ab2554d1f12994a499c4e6abe077",
+   "format": 1
+  },
+  {
+   "name": "LICENSE",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+   "format": 1
+  },
+  {
+   "name": "bindep.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b93952fe1e00f2b29ba9a29a0fe06ce0422f9dce5c23349885bdbc23b8da3a48",
+   "format": 1
+  },
+  {
+   "name": "changelogs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "changelogs/config.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "398309b0db82a6f9cd8d512ee402e90c5a594b687de4d595af9c4efd9151930e",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/.keep",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "format": 1
+  },
+  {
+   "name": "changelogs/changelog.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "de20a03215c7f33c4090e4894adb88cdfc0f7e5ca76342cb24216591889aff86",
+   "format": 1
+  },
+  {
+   "name": "config",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs-requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7e097f42b671801826048bfb45ad4df35ed44e8eae2ce04010ca302abaf088fa",
+   "format": 1
+  },
+  {
+   "name": "docs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs/docsite",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs/docsite/extra-docs.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1e07a4f54473638944cb668af1946e6720c9fd68d0e42b50e810f80bb787f6e7",
+   "format": 1
+  },
+  {
+   "name": "docs/docsite/rst",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs/docsite/rst/dev_guide.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "51a03da813ea0b47735ff98034ef9f446b47b09ec572dfc8477e6dca4465ca0f",
+   "format": 1
+  },
+  {
+   "name": "docs/development.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a2786dac5a442f6306efa671c23a7a2d63bf3a1b0ff2f8a6b2cf9d5d0f09f6bf",
+   "format": 1
+  },
+  {
+   "name": "docs/maintainer.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bf5d6f27ee19f25b9ba144a8afb6a43b72b19b50b49c6cf656dbd7beca27e03f",
+   "format": 1
+  },
+  {
+   "name": "docs/lookup_plugin_migration.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7efa3b27131957f346625ffb253d90ecd7124b0a34becf8f406f45a5a1a7e365",
+   "format": 1
+  },
+  {
+   "name": "docs/turbo_mode.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d5a451e75ad169d69accf0c722777315313c3bc7d31041f0754fb4943b1c1e50",
+   "format": 1
+  },
+  {
+   "name": "manual",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "manual/source",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "manual/source/.rstcheck.cfg",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "13448d04d5186c1aac40cc5c2310b17ff91ad3e9488e280064c1c6b48cdbfef4",
+   "format": 1
+  },
+  {
+   "name": "manual/source/Makefile",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c9fee3709e7c96e6214e0641587747dde58d98ba05d8eb61950e4b59d7736d43",
+   "format": 1
+  },
+  {
+   "name": "manual/source/conf.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ade0a5e3d0cf3463a6cfb9e4c75dd264f843ed8487e6c3ef5cf9008b3c6565e4",
+   "format": 1
+  },
+  {
+   "name": "manual/source/export_to_ansible_ansible.sh",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "388deffabe0c7a25d7f6a34bf32642e4c7f4747efac7258ee5d3f2872ca36b50",
+   "format": 1
+  },
+  {
+   "name": "manual/source/guide_vmware_rest.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2c9cfd607b3e0645772086f2d67f7779b3acf5d520d72639721d0edb9ea4e0dd",
+   "format": 1
+  },
+  {
+   "name": "manual/source/index.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "43d0981561dddb9b0bdec0826e1722b2a6c03f5389ef4725a55f49e07312a0be",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/appliance",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/appliance/appliance_access.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "edf1be9f1ecadd6a89b88ba38200b47538ca133f25090dcc17d88efe05991f11",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/appliance/health.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a755a609cb89709edaa4a76e023afde6a897d288ad0a03252fd5149ef5e815ae",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/appliance/network.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7e323826f564bcaf62fba6727b900228d72bf801f60c2474d364b21efd23a337",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/appliance/services.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bb44565a38c8bba7dbd4594c0db60809fce7a2c159d0b696ec0a740bc702d0b8",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/appliance/system_managment.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "082a50a20fefef52a299c480094d608cfa5b83d73780c8dfca101cb527885e6c",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/1_authentication.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "519639fd99fca59f99e6fd329aaeceac25263c407604c42bb6fa87d009fd8203",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/1_installation.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "079698c908377695dd17d98d8017b5b9925d549edad203b9cfca12276a8d0915",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/2_collect_information.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2f24a77713d6be722db15b314c1daca8da34ccebd0f75ef120115b5c7b8bd3fc",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/3_create_vm.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3adc1cedbbb42ae0d7dd1adc0067eedf76ac14337c1496a6b883e654b51bbf77",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/4_vm_info.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "33aaead565a34e04116406a5a095296c641724a86eb9ae7779a8abdf41fc4193",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/5_vm_hardware_tuning.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8f208e30ea8624ae0084f47228190d8985ff690b9cd7799512ebc707336e2eb6",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/6_run_a_vm.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f365a455aaa6d3f6e42c38958044dff88fa2461fc923cf443406e9c21a474897",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/7_vm_tool_information.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f8951e66ad31202ebf9c4a672e126e0ae81d2a90fdf3afd3b0712343a4662bf2",
+   "format": 1
+  },
+  {
+   "name": "manual/source/vmware_rest_scenarios/vcenter/8_vm_tool_configuration.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "21a5f31b6309d0a6abd21cf0e6e30c7b9eb36cf8dd11a3b7751a48df9155fd0a",
+   "format": 1
+  },
+  {
+   "name": "meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta/runtime.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b9f8f8158a2900aff741cfe05aaa2b5fe9d3f351ed5a6b305c40da41116a26ac",
+   "format": 1
+  },
+  {
+   "name": "modules.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "76c3a0105e8ef02099f5aa40b6a7222058557fc4d9406e4d1caffd4386a01074",
+   "format": 1
+  },
+  {
+   "name": "plugins",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/doc_fragments",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/doc_fragments/__init__.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "format": 1
+  },
+  {
+   "name": "plugins/doc_fragments/moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "994fc1576ba2ad89a9e4e53ea3c69f8cf2c145a04e5cca03921bbe89f49894a8",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/cluster_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0d9b3526fd330c16caa3671f62ba44f0f6c28ae1879b63582352d17e2c2d4eab",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/datacenter_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1e5af6aa72d05fe1dfa33afee39c1b7070ad9bb755374a4f25a1339f7d435393",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/datastore_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0a7e1dbda9cc426cc43af906405be5dd871ce3d61149cdd43b276635ae826744",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/folder_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bc8245ccbc7cb79700fa80d860771d646ee322f6782a32672723c9168a095bce",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/host_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9d7d667a536822414884476b5c2a070769bc405089ce1f7ef00f1498405cb242",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/network_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5c9c85412e8306ddc7f915eb1ac7a75751919e16cc796e841590d4af36880eb6",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/resource_pool_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e37c708d6a20a59571f3e93b09aa150b14e8416a78f6792c532771f3f1b8f5cc",
+   "format": 1
+  },
+  {
+   "name": "plugins/lookup/vm_moid.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ed2bda981b7924091ae4b9d0a5d422ddbb1e588741ab7d6915d93480d2b1b566",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/vmware_rest.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "591d8700de98fb84e3450ccad3e494c0f0d9c95a9a25f79a087555446f2b1241",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_consolecli.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8fadb74ca670605ad426cafae43f9cff5fd2c6135a141d7da66644b95ca403d5",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_consolecli_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8866f5d3b550b576e4a2a3496654440c269e4c7b3fc393a2b25b4216c82b0eb0",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_dcui.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d38c16292cac98ce0bc5b9bd388648c1c5ccbd963ffba9a8dea9a42d38fa744f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_dcui_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9911782705e4f951a452f9684870205e6a5d1b1379066afe55d26311b88e01f0",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_shell.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6d89a1fea585f4572f450fad115adbdd750e7073fa7765c8cf41df08fdd48623",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_shell_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8dc4b5128c11e227dac06e1ce32b0f9238305dcf5dc8adc049c62024d2f05a0a",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_ssh.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1f9996ba1f8574a5aa222561dafe02cd2225fdb48196460c16992e48656528e1",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_access_ssh_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d59088e068d499e07b6512fcc7f2423aeeeb11bc3f46e0b4762bf6459b301060",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_applmgmt_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7109a79889131221c4ed2fd5a35285ff9f3f38b52a5f0260493ef69a0a9defca",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_database_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "61e9f32db51d538ab20e6e463d9f54652861ef6691f9d60754335947e1833d2f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_databasestorage_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7b4b251a9f272ccef6b35964f606f09585cb839bee8db6467c9f828caf50eae2",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_load_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ff7e614f91b2b0fab1a8cfa59ca6ff0aa4854224c7d830c78fa2e42210b738ad",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_mem_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "443fe95cd2e22b9df733b47fa6820d597e9969848601091b9db259c77c005245",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_softwarepackages_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8f7001adc260bc866b740024feaf3c27f7edbce7a52bd750fb7a55656742b461",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_storage_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1881ea06f0f36e015d717df8a1c7ec072c7e9dd68621315d5f6eb80cb22af7a5",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_swap_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "79fc1392a12be58563cc927ad174534e278aeafb7bc5136d74d17ea84251a5ce",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_health_system_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2d10841a1103d03b0158b36f47f0c8780386101c1ce7352492a5e5a80681a11f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_infraprofile_configs.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "33952566d55349f287e76388cb18e8b52486f098e9d376aac1524361076d7965",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_infraprofile_configs_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "105d3cd2902b9f3fad87fcfa57f6928f8cfd8d6dfdeaaea3b01b1b202bac4931",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_localaccounts_globalpolicy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "624d20556f99353b9f6269c838e3004fa12e881f5557300f3634e373ae8b83c0",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_localaccounts_globalpolicy_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "73cabbab4d69b936f0a88755a6416d64a8b9b872076cc98df119fa8d00b3cbe8",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_localaccounts_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "791be71d3abbba565f997d202ec33f3b9dc87069479345cebd404445ea8aebc8",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_monitoring_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fed0db11a182564bbce446e74415bbf65c20dc1d553c5a057a4a8b062f274245",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_monitoring_query.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d5e753cb13e7c845e13e9cb99ab5db33c7aed7234333502196fcae62570f7677",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9014b96a4448aab9d776878c32a1e944e54558b73a2cf624f296eaa090c0c1c9",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_dns_domains.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "abc54aec35523301ae28270488d128ca3019e0d8b4290e5e31bc0ad87ad28111",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_dns_domains_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "acf683f4d33f8958c71b40cd0591d4159795b3708dc64faf354b97b440444f79",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_dns_hostname.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5937f1bc11370c2dc935eba688651eabcc0ba4d486ddc388add0742cd4ac2087",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_dns_hostname_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "97a4bc6e95910b0b9ea825353ce87dba14a305c8b37567f791be37b73d84f0f4",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_dns_servers.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ddd891c4a72544c5212f8365458e07e60c11d423f6bd3113b1e769cb7e0d7a68",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_dns_servers_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d3a2fed6cdbc8159953f07f36c17b948ece8e4cbb94cac2b579036640a3aa7ba",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_firewall_inbound.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1c00e71bde060862b3e2815b782f34f57cd98ce7c404c7b594d6cc5e303a5756",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_firewall_inbound_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "86377013d249c88aa13d30b0c95e914f68b2a14885e2477e04f1669feb78e3c4",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3528d996c69d241ceba58cb5cb9ffae187c0d9b33c4e72361d711a5b33f6ed41",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_interfaces_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1e4e618a0eb1223d10c30b8b27c8d73da39988990376d2a7d963bae2cd7e13aa",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_interfaces_ipv4.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "eecfbe437250b7589f936fc252170d7f2a46efc31222e1bfaf16c75e655e6612",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_interfaces_ipv4_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b450f90ea04eb0e0c189cab8194d33635b9a7842b8c7e6f17c99d99c02fa53ee",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_interfaces_ipv6.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "10b5867198c92d1d982f0e4b5a33ac2e3f89e2dac5f15504b99ff99af0d95a32",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_interfaces_ipv6_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "87c257a928eee60cdb39dc1350b74e2242f3254be5450c9aa0b148fc911e2df3",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_noproxy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "78b3ee3031a96d6b1fc7ebda0737a51323aef4e3876aedf47b9df01bdbcfad4d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_noproxy_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6da940a428ad0abc308443278a603e091ee21afa5c5119e5899768503213de33",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_proxy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7836ad1d61af58735b947701a286dcef51ded75d16e013a69af33723a870cece",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_networking_proxy_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9257e0f7d4d721ced2840f74a99047f5f00ce45bf1df6e0d08525c3f2e02b942",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_ntp.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6c87a3e4b29ba7d0b7399b55ee5d90b35b01fcd47d0c451fbecb29b90522a0d9",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_ntp_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d79cb759184627bd0201d757ed9bd33c70b59e37e4a029ea31b3d7912274dcb4",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_services.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "81d8e75b835d30dcd2714a37b9159120c86b584cc817a3ee3999c6c42737e82d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_services_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "74933aa4d647706b8615448df7d72e3f484785a9aac32c0701a718e04a4cb251",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_shutdown.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ef041a66866c46154c78c298d0c58e1c563709c4256f841cf1ab27cd7a2bf1e9",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_shutdown_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ec998bcfb99f4887f21653483dfa1c736ad59755cfaa3391d5b1d0451266651e",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_globalfips.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "721e1db881310691022c0da9a7c8f4ef982aca337713c7ccc999abcc43f2aff7",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_globalfips_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3e8e258ef7e9e2d38c805ff0e6628a60664bb5c954d6fbd76aa9f416331a5e8d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_storage.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bc6dd0971f0cd7045ce6c0924603244544eb588a9f9ca2be4998799adb7f3a90",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_storage_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a2284d894a3621d9a87037c567c71c9b6ae0a8a05c20656e0ed9887d28011a4c",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_time_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fcc65b5fb28cddf0d20fc43dfe5519f5b115c07f2844fa406471a579674ce8c5",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_time_timezone.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1c62803cd659373104d9752059c20dafc250b8efb09c9af068bf77924b13f837",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_time_timezone_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6e595335ca4c91a28cf9fd4377cebd313c349222a6ddf309ecf46aa7c7492cdb",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_system_version_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "010582e8e131db7d187dcb3cafbe82fcbaf871440607ac43fabea1fbaabcdb9d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_timesync.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ba823f8077ace5f1b4b0bc1834720f7677b0b4b48c2d4ae4bc6046a93056b309",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_timesync_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "30e8b03bcac37d321648fcc549e29ef4f101f8dda259f9e026649cf8aa0f36e7",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_update_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6d70cf39524e9bbbe277bebb18c714f314cd1159d05da5c05a60bc38f7fd4826",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_vmon_service.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0b33c44e2fe05b7f80758d6b6091ea4f002fee4582019e7243e2d5d5f11834d4",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/appliance_vmon_service_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bc0c7ec74ba92a834677e97c58ba8c6c3f43633e1603dc075a2408959e9544c2",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_configuration.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9b4ce68f30bd63c379222cac78d86dd336d3f17db9c7478ccc7e34209d2a9e89",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_configuration_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e706687e5cc52fd6c8365194df8684d173ed18fded0867155b985f3faac23794",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_library_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d6bc654b45636e186f6cfd610f4d37ab84e878740a8d3efcff0c9390a220b385",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_library_item_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "83f4463d98f923086246ea51a8aa313ab3f6dc1fa27f86ee2197b44ec9b5dc56",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_library_subscriptions_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bd5f48a39cfa6d918035328020db09a0e58892deca46a2816ee63e5a8e618fac",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_locallibrary.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9a5bd02fc0a9138eb24b8e2a673fc56396500bdc0e39e63c806b6a04a365e9e3",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_locallibrary_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "248e5aaccf99984c4de22c028694edf0a42d8046fe3b6607ac0506651a1a5dc0",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_subscribedlibrary.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "be7f776fe7a191b0ea3ef4f5286c80997f449788a5f38b4b70c2cdc25257851c",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/content_subscribedlibrary_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0b855b2374db756ec2673f9b3a9633a34ae5e70ad3f2496c4e30fde28f19cbb6",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_cluster_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "129786cb0ad32f981683754d85da845630804ce5dac3902b839e5f75de4a24e6",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_datacenter.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "409ac38a329e2b05676845acf5f4cadbf957d327c6854398170b26e9a0c432cf",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_datacenter_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1817dae1e95ec2cd81e507814ed79d4dddc88178bc66ad8bc7d1b36ad218bc44",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_datastore_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "492c28383a3e09a8f4534816748c7969235b2fcc1feb6dd02c254576a3061382",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_folder_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f58293122c26f199b1ae0e50f28c18d35e5bf7e8fe1002fce7ce18c0fa019e28",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_host.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "41a85a5051a96fd649c068a0d4e5d5baf5586878ff288a84bdfddaea7a954aa0",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_host_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "69448efff9454cff4e7af9839390153adc71936070c381eaf07954be3b137bde",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_network_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fcc65a156ae0548dbce2e6bd829888c132d2dd4b2603a800e588e0d8576e9213",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_ovf_libraryitem.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c6bead29947a7ecde44e18a79ddf911900c77705210b1751e095373bd2087681",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_resourcepool.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "aaa173ba6fa24ea6752b6e6bd39c6e091d7e12b7cd7c29f1e8f4f888ea080449",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_resourcepool_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e10f6d637d24a07e4d3d95b7ddab4f17a6561d371df23fe42394ccbd01b04f90",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_storage_policies_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "24908f94117478d0de152c17f767d7c607d993a5f279403b8b140fc181d69d2d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8217075c68c880c0d5a6b5f326e733b27ad7ef0b7bdbebf9ad3e6bea7d7d0ca8",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_customization.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "11208184c34d1e5aab35913080cb58758d80b4c1b6a3b0b95a7a97b8245fec45",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_filesystem_directories.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "eb22bc2031295aa084a58942a3588d1687278b38db33227965be7c20b42acc81",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_identity_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b2f21ceb8a98c8cc2963daf46870f89790d4d39e3840306419ca5a6bca256698",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_localfilesystem_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5844efb9e3ae8c1ec2494c9fd3decd8ede7de7aa68c69de6d2d67aaf9d659793",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_networking_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3f4f3b567b216e8d2e1ac31f2482494e30606c2d16355ba4afc887dc8b73b7d5",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_networking_interfaces_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c544f04346342cd1ffe1f5621e8ff1469db46f03e518378644a7c98096553f4f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_networking_routes_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8972bf371bdffc6816794c94203409fda77988d446e6d7632fae54a6f48082ea",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_operations_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c0d6802bb5148f3a4bca6a8cb3963dfd4cc1172590df0591b34543ef942dd5db",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_power.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c599f04c37a49930d6ec1b8ce8d7af2a56c6e4326f06f9648f0f16792230397f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_guest_power_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "54ade72a740dad0e320978b297d30899337d971ed931560d456bb6b188faa36e",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b09bf3b529d5f5a138df2e42337b7f8c06e7962dabfd6312bdaea32abaece41c",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_adapter_sata.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dd6b52f65b37e40c70c0c06dffd149b49a069d2d852321d88b003631c785bc58",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_adapter_sata_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a87624ba02a46d41b7b0d9731edaf1d0b72ffc5141b8d72685ba6f5fa2c4cdbf",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_adapter_scsi.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6940e703b5ffa45773990f60bf30f93939ef1d688cb1e8ddbba81b59470a746c",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_adapter_scsi_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f5794978573fd80aaecaf5222d415ff32d13e0e97254a1cf338a511711facab9",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_boot.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a24f2646a3b19688efc2d374393792d2526363039d1c95f16215c2494aa62251",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_boot_device.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "795ceee00f972aee48acf3c6a402797abdcc552b8635dfe6e5a7cf798fa2cd2c",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_boot_device_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f24375bd4d8569a2d4c443ee70223f69b2b619f42313706d8a210ed52f39e5a8",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_boot_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fbcbd5aa42ce9a88e5203a7fb6a1217e8a84ca3ff4ed4209c626c7bee272d32d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_cdrom.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c82ac11f5c662adf70381f2ace7e1b792b7460afb68a00cbd51b9081b5c404f2",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_cdrom_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f8785e3f666eae97612930a44cd5141e003d67d7d79362ba02e985d77f722346",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_cpu.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "18f082db1be550c976de52f8844c86f6aec620faa61f07ab687f43d140fb02aa",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_cpu_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0c8e236da6cc73203e689358f93f9e8771872e6e8fe30d25756277c55c8a58d8",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_disk.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ade03549b854d8b7800efbf9acfbf26bd205586199ea39c1c4e4fb6620e37d26",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_disk_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6cc7eb0d9b38143798268d1de3229a414baf5ad5af4d2b30debd718ba6b9ae4e",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_ethernet.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "92261977ce07da0d6acc94cf14e814de1ffebf374605156022a63fc0d6dbdfa6",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_ethernet_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "785e4d94eff547270f3318e4251f83bd8de267d4ac2d8d0f85b31a75a1070c84",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_floppy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "05623a85e2f9434d4da7c8af39bab6880707861193b126e784e1db20f83bb15d",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_floppy_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "318016184fcbd94086593b4147c1cbb66638ed68954782817ad9992e6e3804e5",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a99878db1fa56132f3d87fb26f6841ef3b22b351c88faa17477814a39c5a812e",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_memory.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1d1a4011bffe610a456e5a42522e021f56b144e871cb2cdc4ee87085006e7861",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_memory_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f719428c4af537264cd0ae3ce83cb902f1c19431d5a6613d22e4cbc9e5ba6978",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_parallel.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "72fa922e5cd64f12329d35ebc4d1d88c441c3afc6d13766d5cfaf53de45cd6eb",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_parallel_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cd70dd7d46d2e77507f7f385cbdb63987c123758c0c8ac5b934590482697dc68",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_serial.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2a08946b3983770fac111b8aa1e8be196f43d3307b1f679ed98aefe15cd4176b",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_hardware_serial_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b43d4bbd34e3a1364a72ceb335f803932612badf6b02be65666f0cbd37a1794f",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2a8699f4bc9a4c0189a5f8b926089c0f6e739d804d47b36e83e1799ae5ba8b58",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_libraryitem_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "792e1b7d4828a5df1d110dd083d3dd0227d47e0b42792dc0bd4dcb86a723adf5",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_power.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "721ccad67e2cb3ab16dc55b71df5514b1a3b2578c51d474feb3d5eb1c8d6ba86",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_power_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3f00c95cd8815dc3e629ab59a4debfdffa1e4a03219b1646c662289985176aff",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_storage_policy.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e948aeeaf131efbeccfd04776fe1424e7a5b69c2cf870c9af0d5ab6259ee2efc",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_storage_policy_compliance.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d555ef43f1d0cf30922931580463d98fcdc5086095f3dd8c3165b3d0bda30a5e",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_storage_policy_compliance_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "60f4bc4be4ffbbeef1347579ef9bdcf3ec3e0c9933cddca121b5a56c0d947e84",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_storage_policy_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7c0c836d84c4f12045a41e656cfb4e92dea0dc1589c8aa95f18790933c442f15",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_tools.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d4ab76b69e57c9933805424d173de9e23c74460483265739759eb28a92f75a72",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_tools_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d4fad28dcf4532c7765163b92a02b3e33316cc302d4e9718b80f71335c958ad3",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_tools_installer.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9deabcea052edee0f7e57c944fd1b722123baf78d6b578d3da428ea98e315e74",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vm_tools_installer_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "360ea34cd40fa0f0fd0b92fcd69aa343edce2daccf612e528e290ec41901c753",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vmtemplate_libraryitems.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2f68318a2a355231a856836e35f9423a64cdef3631aa652eef32ee6a44a2a9c1",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/vcenter_vmtemplate_libraryitems_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7f58d209bffd288133213f7240ce70b88262b994b7a92aa33f47507c6ce94082",
+   "format": 1
+  },
+  {
+   "name": "plugins/plugin_utils",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/plugin_utils/lookup.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4501d75ef07d293f6ddb78dce71d0e25481e348be423e8801712b0f7cee7fe11",
+   "format": 1
+  },
+  {
+   "name": "requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8aff8921a69c99397e852868dd09a985c2a76d1458c75b2de3bca3cffd7bf11a",
+   "format": 1
+  },
+  {
+   "name": "test-requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "975f73f090f527ebb5035af0f1702bfeff210448c17e6e36e946921ad61039e9",
+   "format": 1
+  },
+  {
+   "name": "tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/.gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b5726d3ec9335a09c124469eca039523847a6b0f08a083efaefd002b83326600",
+   "format": 1
+  },
+  {
+   "name": "tests/config.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "673096e872f1747b59841ac7bc000c35bc81af7581de76f7e8137a4608c9b909",
+   "format": 1
+  },
+  {
+   "name": "tests/integration",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_health.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ed82f20c3ada3eec6c3bed3656adabddfb927fb722ed448384c33175a724e6",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_infraprofile_configs.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "40419b99050a9a1b7d9d3dabd7c214fe8570f037016f177ea3f27b1e7347b857",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_monitoring.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5e8362aff2ff467510449e4132070b86fb7730f89b94cebed7284de2c19c5278",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_networking.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "42825327e79eeda4cd6f500318d681e94902eeb35d5d2ebf9b9d4a2865f1c764",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_system.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "be0dd25047c6ed9c2979e5f4b84ccc1e69e86fe4524464e26346f098c141d7aa",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_time.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "675be002cbb5b03831bf0933399f06123da3270adf6c3652f98000594bb2d7f7",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_services.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "477f68b49452320b28ff333cb5c68c6f145ca89c9d56b0653a5df2efb0defefb",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_networking_dns_hostname.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "79ff7431b0047063cda56df5959eb46a7fea39b2629f0099554a63c8d6120e5a",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_networking_proxy.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a5ef7c5e1fff6a11e125bd215a3e1227513a15576c18320f9d43058b97bf5d53",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "78cdb09140c4b943c12298eac68c2852b7964e1da4115850215d2dfaa6bd005f",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/tasks/appliance_localaccounts.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bde365d16b7d41362a4a2f1bdb28327436affd6dc487a78e7dba57fcc2190d53",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cc707881d7b524702d6550971c941428f05c51bd6486d9fbd7e67d5e3bac716d",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "283938ec97c73f5b3f97716348a87002a407eae3fdeb1aae7b8bddc31a635ee1",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5c8ee544e13c5ffe946a0f5aca9061876f671da50465036a78aab1059ed50278",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_clone_on_library/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cc707881d7b524702d6550971c941428f05c51bd6486d9fbd7e67d5e3bac716d",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ee7cf1685647d806956bab4ce282537d4a5bf7d0ef85133607e446d037a53b09",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/tasks/delete_vm.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b5413fbf8125367b6dcb8194239d7446b9e9474a5e0edffd77a90bed186afa67",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "91a4a11700fc6f5166cafa360d76a23512a586ef764f48bac6b1c2cbac34f56b",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_cloning/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cc707881d7b524702d6550971c941428f05c51bd6486d9fbd7e67d5e3bac716d",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance-multi-hosts",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance-multi-hosts/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance-multi-hosts/tasks/appliance_ntp.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "799fa3a2402ab6fe9ecae4dfa03cc28e37744f570dc40fec9ab090df037177ab",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance-multi-hosts/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f3d1a2427e9316c7ca5a64413783ca1e040e175a32d493d2fa97849b2b01b991",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance-multi-hosts/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_appliance-multi-hosts/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cc707881d7b524702d6550971c941428f05c51bd6486d9fbd7e67d5e3bac716d",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "034dee20efd5fd8815722a75c92a2dc8dc518f7620fe0925e1a96f54db37edc6",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e92cd3e95d4b8059a99a91760345fbd6dc46a7ac7b738d74075c90dc236cfa42",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_library_and_ovf_clone/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cc707881d7b524702d6550971c941428f05c51bd6486d9fbd7e67d5e3bac716d",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3c1ea871e66308e3bb01eb117ca55e009b736ed2f3cfc4f23e9a344ede104bf6",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7d47dd50d103b8996499202074a276c7af949c9f505704f84ba523ea646be880",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_customize/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a6b1e14b5606f58b6cdd1ee174e0a04b296e59748bc2e0a8dce512fb80ab3ce5",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ef98b01b4f966aa4f163374898584b1f956a7fecbac454ef48d2de782fc4f3f0",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b984e87f7934298a9879310c2fc53e580ab47d3fd3fafe6157cc40a54b8678ac",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_guest_filesystem_directories/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a6b1e14b5606f58b6cdd1ee174e0a04b296e59748bc2e0a8dce512fb80ab3ce5",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d8223f352e71d82785dacaf1dec29e32c920bc0c98ad2d97e64d8ffc2b8caf98",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/verify_env_information.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b11fbffe8682b3b0ad70cb5c3420670ddf4568c5e9301388c1aef0625551c791",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_adapter_info.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7a739d2ef49b72c3dc6d202288a551954e2e30cd1e559f2e9a4a29975cac3665",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_boot_device.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4a3c5dafe0b7235baf147c0dba7d1086b75698539a08b262f72c51150f896601",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_cdrom_info.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b35d12512d9734de0e71bd63bb87b1ccf2ba104624c84880e3a7cd6a59b98538",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_ethernet_info.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ce24a0de588043ff4faa8f79551610cb860b00edf486886572d60998e2d530fc",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_memory_info.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6f27f284778e3cd35925e7dfda0543640dbe8f4a441c556d415a3199fb01477b",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_info.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "00ccb6d4270948bac92164b964f379c29106fbf509482add274e1d5a7b23599a",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_libraryitem.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "63bd5cd283c345fc8bd5c24f30b75ec539f5403d68ffc274cb905bf1763b6d9e",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_power.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0c4ba27b13376b5318eb40dd082c80d95212d509d15bf6f661cfe3fdef7a0b07",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "40f454acd5bf172e23b83c930332cf3e6408becc4f3b3c92070fed064a7f446f",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/create_vm.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1bb852eeadec3fcade3ecf10fb5a20e03a402bc346d6f4776c394132a40e4fc5",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9c0e87301088a393a656ab0823f6f066a43df4b79a89841b0facf340859535a5",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_adapter.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d02c49905cb16b123a19536219bcd2408585bcd82066e885ca1cc1c0e5b2785a",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_boot.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "201f754e6275a372df70b9cb71e55b369a0e6a3f548e3d2837c4dc8453bafeb2",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_cdrom.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4d7f0049574a985d8903e62a459659454cc6036d8abfec0bf0b0277645160b03",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_cpu.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b4de186effb2e83dff01852750b832e5718e744e6898280f8a16d5502c28c55a",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_disk.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c9bc26c292645ca8adcde807c007397bf7b7d83013c507e023cac797c0688187",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_ethernet.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d38216315e4ea4d7118335970c61a2c44e3eef0dab49e1ddd20826914ff3e330",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_flo.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "25fb54e9869478effc746fce9d1b877b2a9b80702a9e8ab69aff563b85be75e2",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_memory.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f74508e86124b5bad29a7eddf8794b8de4c9a22be01da491ae9f26efe393a0e3",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_parallel.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ecff9cae4c4bdf803b1b8e6fbe86c8e377c006fafa1667e878e6243497802b1",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/tasks/vm_hardware_serial.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8f03c7908be5f32318822c6b82fd03d0bb8691904902935abbd88ad87985d722",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/vmware_rest_vcenter_vm_scenario/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a6b1e14b5606f58b6cdd1ee174e0a04b296e59748bc2e0a8dce512fb80ab3ce5",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_test_vars",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_test_vars/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_test_vars/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3ac8ae26a24134b8fd812a73b20aff6c57934d1c510ec57d8d62cdc3522da681",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_test_vars/vars",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_test_vars/vars/vcenter_vars.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5363e5af1162903292f6477afd8141e519f042668eca2c452d85143d65f046f2",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_vm",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_vm/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_vm/defaults/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "80ace76f52926e6b3f634cfef566d7e0d8f897f71adea7645327bc2cbf0937db",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_vm/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/integration/targets/prepare_vm/tasks/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "753e4e7582199e7d14cce211ef0ded14017689fc2f30a0ac241d4ee7209211ba",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/generate_integration_config.sh",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "149d2997b5d426c699bbfa7c3151bac70cb238cf0fff0c32ea73c21443531539",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/integration_config.yml.tpl",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "df0bbcad347f0fc77f7a8cd9c95c4d630f9f5352765079c970c79fb63216240c",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "69d97ef58ec44c0500b30a327f6bf5c0ed56e86ea3bb7bb03e7e428aa34f8468",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/requirements.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b0bd07baca9f2fadd93ca228578cb895906ee23c40f592c830da424ddf86928a",
+   "format": 1
+  },
+  {
+   "name": "tests/integration/run_eco_vcenter_ci.sh",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4f8ec59cbba6f8de7e193107c2220fe34a9c0f8a83ce01f01e24e97f6874bcce",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.15.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ca8f55e3ca625eba50d11fad3b865cd0c9f57a127381716c2ed88323eb0125",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.16.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ca8f55e3ca625eba50d11fad3b865cd0c9f57a127381716c2ed88323eb0125",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.17.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ca8f55e3ca625eba50d11fad3b865cd0c9f57a127381716c2ed88323eb0125",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.18.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ca8f55e3ca625eba50d11fad3b865cd0c9f57a127381716c2ed88323eb0125",
+   "format": 1
+  },
+  {
+   "name": "tests/sanity/ignore-2.19.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ca8f55e3ca625eba50d11fad3b865cd0c9f57a127381716c2ed88323eb0125",
+   "format": 1
+  },
+  {
+   "name": "tests/utils",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "tests/utils/constraints.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8aff8921a69c99397e852868dd09a985c2a76d1458c75b2de3bca3cffd7bf11a",
+   "format": 1
+  },
+  {
+   "name": "Makefile",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "23ea5d30cb9796aae7a725ebdfe2cf6c57cc04d12deb11c07a410c34d32ddd07",
+   "format": 1
+  },
+  {
+   "name": "linters.requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b86283a95889732dd4432dc449a55e42566324c72937839d853e7216f8e4588b",
+   "format": 1
+  },
+  {
+   "name": "README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "47782d61ff2c46420942733e933393dfd545027c80acf4d8d543c5769074db3a",
+   "format": 1
+  },
+  {
+   "name": "CHANGELOG.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1fbbbe29a16a3324a6b05c426361d35bb9d519f07b9c7a34108faf5de3c36304",
+   "format": 1
+  }
+ ],
+ "format": 1
+}

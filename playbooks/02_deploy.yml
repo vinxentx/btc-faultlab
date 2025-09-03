@@ -1,0 +1,19 @@
+- hosts: controller
+  gather_facts: false
+  vars:
+    output_compose: "{{ workdir }}/docker-compose.yml"
+  tasks:
+    - name: Create workdir
+      ansible.builtin.file:
+        path: "{{ workdir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Render bitcoin assets
+      include_role: { name: bitcoin }
+
+    - name: Bring up stack via docker compose
+      ansible.builtin.shell: |
+        docker compose -f "{{ output_compose }}" up -d
+      args:
+        chdir: "{{ workdir }}"

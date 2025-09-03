@@ -1,0 +1,38 @@
+# --- Topologie & Last ---
+node_count: 8
+tx_rate: 10
+regions: ["eu","us"]
+
+# --- Fault Injection ---
+crash_fraction: 0.30
+crash_duration_s: 300
+crash_mode: "burst"          # "burst" | "staggered"
+
+# --- Recovery ---
+recovery_mode: "cold"        # "cold" | "fast"
+reindex_on_restart: "{{ recovery_mode == 'cold' }}"
+
+# --- Omission / Netzqualität ---
+loss_pct: 5
+latency_ms: 200
+bandwidth_mbit: 10
+
+# --- Bitcoin ---
+image: "bitcoin/bitcoin:27.0"
+
+network_name: "btcnet"
+# Projektwurzel = Ordner über playbooks/
+workdir: "{{ playbook_dir | realpath | dirname }}"
+
+rpc_user: "user"
+rpc_pass: "pass"
+zmq_block: "tcp://0.0.0.0:28332"
+zmq_tx: "tcp://0.0.0.0:28333"
+
+# --- Phasen (Sekunden) ---
+warmup_s: 120
+observe_s: 600
+cooldown_s: 30
+
+# --- Reproduzierbarkeit ---
+seed: 42

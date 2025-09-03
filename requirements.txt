@@ -1,0 +1,7 @@
+ansible>=9.0.0
+pyyaml
+pandas
+numpy
+matplotlib
+pyzmq
+tabulate

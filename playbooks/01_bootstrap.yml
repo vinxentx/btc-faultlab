@@ -1,0 +1,29 @@
+- hosts: controller
+  gather_facts: true        # <— HIER auf true
+  become: true
+  tasks:
+    - name: Ensure Docker engine present (Ubuntu)
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: true
+
+    - name: Check if 'docker compose' is available
+      ansible.builtin.shell: docker compose version
+      register: compose_check
+      changed_when: false
+      failed_when: false
+
+    - name: Try to install docker-compose v2 package if missing (Ubuntu 24.04+)
+      ansible.builtin.apt:
+        name: docker-compose-v2
+        state: present
+        update_cache: true
+      when: compose_check.rc != 0
+      failed_when: false
+
+    - name: Add invoking user to docker group (idempotent)
+      ansible.builtin.user:
+        name: "{{ (ansible_env.SUDO_USER | default(ansible_user_id, true)) | default(ansible_env.USER) }}"
+        groups: docker
+        append: true
