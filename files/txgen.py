@@ -29,6 +29,13 @@ if __name__ == "__main__":
     cred, host = rest.split("@")
     auth = cred
 
+    try:
+        rpc_call(proto + "://" + host, "createwallet", ["faultlab"], auth=auth)
+    except RuntimeError as e:
+        # Ignore wallet already exists errors so the script can be rerun
+        if "already exists" not in str(e):
+            raise
+
     addr = rpc_call(proto + "://" + host, "getnewaddress", auth=auth)
     rpc_call(proto + "://" + host, "generatetoaddress", [101, addr], auth=auth)
 
