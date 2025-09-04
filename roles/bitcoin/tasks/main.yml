@@ -27,6 +27,14 @@
     mode: "0755"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
+- name: Copy bitcoin.conf into data dirs
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workdir }}/config/node{{ '%02d'|format(item) }}/bitcoin.conf"
+    dest: "{{ workdir }}/data/node{{ '%02d'|format(item) }}/bitcoin.conf"
+    mode: "0644"
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
+
 - name: Ensure results dir exists
   ansible.builtin.file:
     path: "{{ workdir }}/results"
