@@ -15,7 +15,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node01:/bitcoin/.bitcoin
-      - ./conf/node01.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         ports:
       - "28332:28332"   # ZMQ block
@@ -36,7 +35,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node02:/bitcoin/.bitcoin
-      - ./conf/node02.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         node03:
     image: ruimarinho/bitcoin-core:27.0
@@ -53,7 +51,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node03:/bitcoin/.bitcoin
-      - ./conf/node03.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         node04:
     image: ruimarinho/bitcoin-core:27.0
@@ -70,7 +67,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node04:/bitcoin/.bitcoin
-      - ./conf/node04.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         node05:
     image: ruimarinho/bitcoin-core:27.0
@@ -87,7 +83,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node05:/bitcoin/.bitcoin
-      - ./conf/node05.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         node06:
     image: ruimarinho/bitcoin-core:27.0
@@ -104,7 +99,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node06:/bitcoin/.bitcoin
-      - ./conf/node06.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         node07:
     image: ruimarinho/bitcoin-core:27.0
@@ -121,7 +115,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node07:/bitcoin/.bitcoin
-      - ./conf/node07.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
         node08:
     image: ruimarinho/bitcoin-core:27.0
@@ -138,7 +131,6 @@ services:
       - "-conf=/bitcoin/.bitcoin/bitcoin.conf"
     volumes:
       - ./data/node08:/bitcoin/.bitcoin
-      - ./conf/node08.conf:/bitcoin/.bitcoin/bitcoin.conf:ro
     networks: [ btcnet ]
       
   txgen:

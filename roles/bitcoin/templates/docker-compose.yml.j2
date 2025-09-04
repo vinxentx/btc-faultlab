@@ -13,7 +13,6 @@ services:
       bitcoind -regtest=1 -printtoconsole=1
       -conf=/home/bitcoin/.bitcoin/bitcoin.conf
     volumes:
-      - "{{ workdir }}/config/node{{ '%02d'|format(i) }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
       - "{{ workdir }}/data/node{{ '%02d'|format(i) }}:/home/bitcoin/.bitcoin"
     networks: [ "{{ network_name }}" ]
 {% endfor %}
