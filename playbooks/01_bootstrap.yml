@@ -7,6 +7,7 @@
         name: docker.io
         state: present
         update_cache: true
+      when: ansible_os_family == 'Debian'
 
     - name: Check if 'docker compose' is available
       ansible.builtin.shell: docker compose version
@@ -19,11 +20,26 @@
         name: docker-compose-v2
         state: present
         update_cache: true
-      when: compose_check.rc != 0
+      when:
+        - ansible_os_family == 'Debian'
+        - compose_check.rc != 0
       failed_when: false
+
+    - name: Ensure Docker is installed (macOS)
+      community.general.homebrew:
+        name: docker
+        state: present
+      when: ansible_os_family == 'Darwin'
+
+    - name: Ensure Docker Desktop is installed (macOS)
+      community.general.homebrew_cask:
+        name: docker
+        state: present
+      when: ansible_os_family == 'Darwin'
 
     - name: Add invoking user to docker group (idempotent)
       ansible.builtin.user:
         name: "{{ (ansible_env.SUDO_USER | default(ansible_user_id, true)) | default(ansible_env.USER) }}"
         groups: docker
         append: true
+      when: ansible_os_family == 'Debian'
