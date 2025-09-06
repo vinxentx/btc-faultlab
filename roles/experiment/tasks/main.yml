@@ -5,17 +5,23 @@
 
 - name: Pick nodes to crash (seeded shuffle, take first k)
   ansible.builtin.set_fact:
-    crash_nodes_idx: "{{ all_nodes | shuffle(seed=seed) | list | slice(crash_count) | first | default([]) }}"
-  when: crash_count > 0
+    crash_nodes_idx: "{{ (all_nodes | shuffle(seed=seed) | list)[: (crash_count | int)] | default([]) }}"
+  when: (crash_count | int) > 0
 
 - name: Expand to names
   ansible.builtin.set_fact:
-    crash_nodes: "{{ crash_nodes_idx | map('regex_replace','^(.*)$','node%02d') | list | default([]) }}"
-  vars: { 'node%02d': '' }
-  when: crash_count > 0
+    crash_nodes: []
+  when: (crash_count | int) > 0
+
+- name: Build crash_nodes list (format node names)
+  when: (crash_count | int) > 0
+  loop: "{{ crash_nodes_idx | default([]) }}"
+  loop_control: { loop_var: idx }
+  ansible.builtin.set_fact:
+    crash_nodes: "{{ (crash_nodes | default([])) + ['node' ~ ('%02d'|format(idx))] }}"
 
 - name: Log crash plan (workdir-global)
-  when: crash_count > 0
+  when: (crash_count | int) > 0
   ansible.builtin.shell: |
     mkdir -p "{{ workdir }}/results"
     echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_plan nodes={{ crash_nodes | default([]) | join(',') }} mode={{ crash_mode }} duration={{ crash_duration_s }}s" >> "{{ workdir }}/results/events.log"
@@ -24,7 +30,7 @@
 
 - name: Burst crash
   when:
-    - crash_count > 0
+    - (crash_count | int) > 0
     - crash_mode == "burst"
   loop: "{{ crash_nodes }}"
   loop_control: { loop_var: c }
@@ -32,19 +38,19 @@
 
 - name: Staggered crash
   when:
-    - crash_count > 0
+    - (crash_count | int) > 0
     - crash_mode == "staggered"
   loop: "{{ crash_nodes }}"
   loop_control: { loop_var: c }
   ansible.builtin.shell: "docker stop {{ c }} && sleep {{ (crash_duration_s / (crash_nodes|length|default(1))) | int }}"
 
 - name: Pause while crashed
-  when: crash_count > 0
+  when: (crash_count | int) > 0
   ansible.builtin.pause: { seconds: "{{ crash_duration_s }}" }
 
 # Recovery start
 - name: Recovery (cold vs fast)
-  when: crash_count > 0
+  when: (crash_count | int) > 0
   loop: "{{ crash_nodes }}"
   loop_control: { loop_var: c }
   ansible.builtin.shell: |

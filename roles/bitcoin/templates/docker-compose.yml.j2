@@ -1,4 +1,3 @@
-version: "3.8"
 name: "{{ network_name }}"
 
 {% set n = (node_count | int) %}
@@ -7,34 +6,75 @@ services:
   node{{ "%02d"|format(i) }}:
     image: "{{ image }}"
     container_name: "node{{ "%02d"|format(i) }}"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser={{ rpc_user }}"
+      - "-rpcpassword={{ rpc_pass }}"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "{{ workdir }}/config/node{{ '%02d'|format(i) }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "{{ workdir }}/data/node{{ '%02d'|format(i) }}:/home/bitcoin/.bitcoin"
+      - "node{{ '%02d'|format(i) }}_data:/home/bitcoin/.bitcoin"
+      - "{{ workdir }}/config/node{{ '%02d'|format(i) }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "{{ network_name }}" ]
+    ports:
+      - "{{ 20443 + (i - 1) * 4 }}:18443"
+      - "{{ 20444 + (i - 1) * 4 }}:18444"
+      - "{{ 30332 + (i - 1) * 4 }}:28332"
+      - "{{ 30333 + (i - 1) * 4 }}:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 {% endfor %}
 
   txgen:
     image: "python:3.12-slim"
     container_name: "txgen"
-
     restart: unless-stopped
+    user: "0:0"
     working_dir: /app
     volumes:
       - "{{ workdir }}/files:/app:ro"
-      - "{{ workdir }}/results:/results"
+      - "txlogs:/results"
     command: >
-      bash -lc "python -u /app/txgen.py --rate {{ tx_rate }}
+      bash -lc "pip install requests && python -u /app/txgen.py --rate {{ tx_rate }}
       --rpc http://{{ rpc_user }}:{{ rpc_pass }}@node01:18443
       --log /results/txlog.csv"
     depends_on:
-      - node01
+      node01:
+        condition: service_healthy
     networks: [ "{{ network_name }}" ]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://{{ rpc_user }}:{{ rpc_pass }}@node01:18443', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 networks:
   {{ network_name }}:
     driver: bridge
+volumes:
+{% for i in range(1, n + 1) %}
+  node{{ '%02d'|format(i) }}_data: {}
+{% endfor %}
+  txlogs: {}

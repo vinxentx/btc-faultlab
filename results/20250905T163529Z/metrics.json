@@ -1,0 +1,8 @@
+{
+  "run_dir": "/Users/vincenttietze/btc-faultlab/results/20250905T163529Z",
+  "tx_submitted": 1137,
+  "tx_confirmed": 1133,
+  "availability": 0.9964819700967458,
+  "cl50_s": 4.514,
+  "cl95_s": 9.3444
+}

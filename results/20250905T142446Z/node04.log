@@ -1,0 +1,140 @@
+2025-09-05T15:56:43Z Bitcoin Core version v27.0.0 (release build)
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -connect or -maxconnections=0 set -> setting -dnsseed=0
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -connect or -maxconnections=0 set -> setting -listen=0
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -upnp=0
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -natpmp=0
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -discover=0
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -listenonion=0
+2025-09-05T15:56:43Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -i2pacceptincoming=0
+2025-09-05T15:56:43Z Script verification uses 7 additional threads
+2025-09-05T15:56:43Z Using the 'arm_shani(1way,2way)' SHA256 implementation
+2025-09-05T15:56:43Z Default data directory /home/bitcoin/.bitcoin
+2025-09-05T15:56:43Z Using data directory /home/bitcoin/.bitcoin/regtest
+2025-09-05T15:56:43Z Config file: /home/bitcoin/.bitcoin/bitcoin.conf
+2025-09-05T15:56:43Z Config file arg: [regtest] fallbackfee="0.0002"
+2025-09-05T15:56:43Z Config file arg: [regtest] maxmempool="500"
+2025-09-05T15:56:43Z Config file arg: [regtest] rpcallowip="0.0.0.0/0"
+2025-09-05T15:56:43Z Config file arg: [regtest] rpcbind="0.0.0.0"
+2025-09-05T15:56:43Z Config file arg: [regtest] rpcpassword=****
+2025-09-05T15:56:43Z Config file arg: [regtest] rpcuser=****
+2025-09-05T15:56:43Z Config file arg: [regtest] server="1"
+2025-09-05T15:56:43Z Command-line arg: connect="node01:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node02:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node03:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node04:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node05:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node06:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node07:18444"
+2025-09-05T15:56:43Z Command-line arg: connect="node08:18444"
+2025-09-05T15:56:43Z Command-line arg: datadir="/home/bitcoin/.bitcoin"
+2025-09-05T15:56:43Z Command-line arg: printtoconsole="1"
+2025-09-05T15:56:43Z Command-line arg: regtest="1"
+2025-09-05T15:56:43Z Command-line arg: rpcallowip="0.0.0.0/0"
+2025-09-05T15:56:43Z Command-line arg: rpcbind="0.0.0.0"
+2025-09-05T15:56:43Z Command-line arg: rpcpassword=****
+2025-09-05T15:56:43Z Command-line arg: rpcuser=****
+2025-09-05T15:56:43Z Command-line arg: server="1"
+2025-09-05T15:56:43Z Command-line arg: txindex="1"
+2025-09-05T15:56:43Z Command-line arg: zmqpubhashblock="tcp://0.0.0.0:28332"
+2025-09-05T15:56:43Z Command-line arg: zmqpubhashtx="tcp://0.0.0.0:28333"
+2025-09-05T15:56:43Z Using at most 125 automatic connections (1048576 file descriptors available)
+2025-09-05T15:56:43Z Using 16 MiB out of 16 MiB requested for signature cache, able to store 524288 elements
+2025-09-05T15:56:43Z Using 16 MiB out of 16 MiB requested for script execution cache, able to store 524288 elements
+2025-09-05T15:56:43Z scheduler thread start
+2025-09-05T15:56:43Z Binding RPC on address 0.0.0.0 port 18443
+2025-09-05T15:56:43Z WARNING: the RPC server is not safe to expose to untrusted networks such as the public internet
+2025-09-05T15:56:43Z Binding RPC on address 0.0.0.0 port 18443
+2025-09-05T15:56:43Z Binding RPC on address 0.0.0.0 port 18443 failed.
+2025-09-05T15:56:43Z Config options rpcuser and rpcpassword will soon be deprecated. Locally-run instances may remove rpcuser to use cookie-based auth, or may be replaced with rpcauth. Please see share/rpcauth for rpcauth auth generation.
+2025-09-05T15:56:43Z Starting HTTP server with 4 worker threads
+2025-09-05T15:56:43Z Using wallet directory /home/bitcoin/.bitcoin/regtest/wallets
+2025-09-05T15:56:43Z init message: Verifying wallet(s)…
+2025-09-05T15:56:43Z Using /16 prefix for IP bucketing
+2025-09-05T15:56:43Z init message: Loading P2P addresses…
+2025-09-05T15:56:43Z Loaded 0 addresses from peers.dat  0ms
+2025-09-05T15:56:43Z init message: Loading banlist…
+2025-09-05T15:56:43Z SetNetworkActive: true
+2025-09-05T15:56:43Z Script verification uses 7 additional threads
+2025-09-05T15:56:43Z Cache configuration:
+2025-09-05T15:56:43Z * Using 2.0 MiB for block index database
+2025-09-05T15:56:43Z * Using 56.0 MiB for transaction index database
+2025-09-05T15:56:43Z * Using 8.0 MiB for chain state database
+2025-09-05T15:56:43Z * Using 384.0 MiB for in-memory UTXO set (plus up to 476.8 MiB of unused mempool space)
+2025-09-05T15:56:43Z init message: Loading block index…
+2025-09-05T15:56:43Z Validating signatures for all blocks.
+2025-09-05T15:56:43Z Setting nMinimumChainWork=0000000000000000000000000000000000000000000000000000000000000000
+2025-09-05T15:56:43Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/blocks/index
+2025-09-05T15:56:43Z Opened LevelDB successfully
+2025-09-05T15:56:43Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/blocks/index: 0000000000000000
+2025-09-05T15:56:43Z LoadBlockIndexDB: last block file = 0
+2025-09-05T15:56:43Z LoadBlockIndexDB: last block file info: CBlockFileInfo(blocks=1389, size=12945338, heights=0...1388, time=2011-02-02...2025-09-05)
+2025-09-05T15:56:43Z Checking all blk files are present...
+2025-09-05T15:56:43Z Initializing chainstate Chainstate [ibd] @ height -1 (null)
+2025-09-05T15:56:43Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-09-05T15:56:43Z Opened LevelDB successfully
+2025-09-05T15:56:43Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: eb52348367d727ce
+2025-09-05T15:56:43Z Loaded best chain: hashBestChain=636a7bd4be135d620b3fd14686956b91d5a7d558a718a1054caf4ca3af2e3ce9 height=1388 date=2025-09-05T15:53:17Z progress=1.000000
+2025-09-05T15:56:43Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-09-05T15:56:43Z Opened LevelDB successfully
+2025-09-05T15:56:43Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: eb52348367d727ce
+2025-09-05T15:56:43Z [Chainstate [ibd] @ height 1388 (636a7bd4be135d620b3fd14686956b91d5a7d558a718a1054caf4ca3af2e3ce9)] resized coinsdb cache to 8.0 MiB
+2025-09-05T15:56:43Z [Chainstate [ibd] @ height 1388 (636a7bd4be135d620b3fd14686956b91d5a7d558a718a1054caf4ca3af2e3ce9)] resized coinstip cache to 384.0 MiB
+2025-09-05T15:56:43Z init message: Verifying blocks…
+2025-09-05T15:56:43Z Verifying last 6 blocks at level 3
+2025-09-05T15:56:43Z Verification progress: 0%
+2025-09-05T15:56:43Z Verification progress: 16%
+2025-09-05T15:56:43Z Verification progress: 33%
+2025-09-05T15:56:43Z Verification progress: 50%
+2025-09-05T15:56:43Z Verification progress: 66%
+2025-09-05T15:56:43Z Verification progress: 83%
+2025-09-05T15:56:43Z Verification progress: 99%
+2025-09-05T15:56:43Z Verification: No coin database inconsistencies in last 6 blocks (151 transactions)
+2025-09-05T15:56:43Z  block index             108ms
+2025-09-05T15:56:43Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/indexes/txindex
+2025-09-05T15:56:43Z Opened LevelDB successfully
+2025-09-05T15:56:43Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/indexes/txindex: 0000000000000000
+2025-09-05T15:56:43Z Setting NODE_NETWORK on non-prune mode
+2025-09-05T15:56:43Z block tree size = 1389
+2025-09-05T15:56:43Z nBestHeight = 1388
+2025-09-05T15:56:43Z initload thread start
+2025-09-05T15:56:43Z Loading 0 mempool transactions from disk...
+2025-09-05T15:56:43Z Imported mempool transactions from disk: 0 succeeded, 0 failed, 0 expired, 0 already there, 0 waiting for initial broadcast
+2025-09-05T15:56:43Z initload thread exit
+2025-09-05T15:56:43Z init message: Starting network threads…
+2025-09-05T15:56:43Z DNS seeding disabled
+2025-09-05T15:56:43Z txindex thread start
+2025-09-05T15:56:43Z txindex is enabled at height 1388
+2025-09-05T15:56:43Z txindex thread exit
+2025-09-05T15:56:43Z init message: Done loading
+2025-09-05T15:56:43Z msghand thread start
+2025-09-05T15:56:43Z opencon thread start
+2025-09-05T15:56:43Z addcon thread start
+2025-09-05T15:56:43Z net thread start
+2025-09-05T15:56:43Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:43Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:44Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:44Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:45Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:45Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:46Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:46Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:47Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:47Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:48Z Leaving InitialBlockDownload (latching to false)
+2025-09-05T15:56:48Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:49Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:50Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:51Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:52Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:53Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:54Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:55Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:57Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T15:56:58Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T15:57:00Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)

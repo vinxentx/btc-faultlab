@@ -1,121 +1,369 @@
-version: "3.8"
 name: "btcnet"
 
 services:
   node01:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node01"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node01/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node01:/home/bitcoin/.bitcoin"
+      - "node01_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node01/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20443:18443"
+      - "20444:18444"
+      - "30332:28332"
+      - "30333:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node02:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node02"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node02/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node02:/home/bitcoin/.bitcoin"
+      - "node02_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node02/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20447:18443"
+      - "20448:18444"
+      - "30336:28332"
+      - "30337:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node03:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node03"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node03/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node03:/home/bitcoin/.bitcoin"
+      - "node03_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node03/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20451:18443"
+      - "20452:18444"
+      - "30340:28332"
+      - "30341:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node04:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node04"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node04/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node04:/home/bitcoin/.bitcoin"
+      - "node04_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node04/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20455:18443"
+      - "20456:18444"
+      - "30344:28332"
+      - "30345:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node05:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node05"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node05/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node05:/home/bitcoin/.bitcoin"
+      - "node05_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node05/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20459:18443"
+      - "20460:18444"
+      - "30348:28332"
+      - "30349:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node06:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node06"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node06/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node06:/home/bitcoin/.bitcoin"
+      - "node06_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node06/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20463:18443"
+      - "20464:18444"
+      - "30352:28332"
+      - "30353:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node07:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node07"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node07/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node07:/home/bitcoin/.bitcoin"
+      - "node07_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node07/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20467:18443"
+      - "20468:18444"
+      - "30356:28332"
+      - "30357:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   node08:
     image: "bitcoin/bitcoin:27.0"
     container_name: "node08"
-
     restart: unless-stopped
-    command: >
-      bitcoind -regtest=1 -printtoconsole=1
-      -conf=/home/bitcoin/.bitcoin/bitcoin.conf
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/home/vincent/btc-faultlab/config/node08/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf"
-      - "/home/vincent/btc-faultlab/data/node08:/home/bitcoin/.bitcoin"
+      - "node08_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/node08/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
+    ports:
+      - "20471:18443"
+      - "20472:18444"
+      - "30360:28332"
+      - "30361:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   txgen:
     image: "python:3.12-slim"
     container_name: "txgen"
-
     restart: unless-stopped
+    user: "0:0"
     working_dir: /app
     volumes:
-      - "/home/vincent/btc-faultlab/files:/app:ro"
-      - "/home/vincent/btc-faultlab/results:/results"
+      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
+      - "txlogs:/results"
     command: >
-      bash -lc "python -u /app/txgen.py --rate 10
+      bash -lc "pip install requests && python -u /app/txgen.py --rate 10
       --rpc http://user:pass@node01:18443
       --log /results/txlog.csv"
     depends_on:
-      - node01
+      node01:
+        condition: service_healthy
     networks: [ "btcnet" ]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://user:pass@node01:18443', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 networks:
   btcnet:
     driver: bridge
+volumes:
+  node01_data: {}
+  node02_data: {}
+  node03_data: {}
+  node04_data: {}
+  node05_data: {}
+  node06_data: {}
+  node07_data: {}
+  node08_data: {}
+  txlogs: {}

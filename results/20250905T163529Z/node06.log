@@ -1,0 +1,359 @@
+2025-09-05T16:35:04Z Bitcoin Core version v27.0.0 (release build)
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -connect or -maxconnections=0 set -> setting -dnsseed=0
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -connect or -maxconnections=0 set -> setting -listen=0
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -upnp=0
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -natpmp=0
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -discover=0
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -listenonion=0
+2025-09-05T16:35:04Z InitParameterInteraction: parameter interaction: -listen=0 -> setting -i2pacceptincoming=0
+2025-09-05T16:35:04Z Script verification uses 7 additional threads
+2025-09-05T16:35:04Z Using the 'arm_shani(1way,2way)' SHA256 implementation
+2025-09-05T16:35:04Z Default data directory /home/bitcoin/.bitcoin
+2025-09-05T16:35:04Z Using data directory /home/bitcoin/.bitcoin/regtest
+2025-09-05T16:35:04Z Config file: /home/bitcoin/.bitcoin/bitcoin.conf
+2025-09-05T16:35:04Z Config file arg: [regtest] fallbackfee="0.0002"
+2025-09-05T16:35:04Z Config file arg: [regtest] maxmempool="500"
+2025-09-05T16:35:04Z Config file arg: [regtest] rpcallowip="0.0.0.0/0"
+2025-09-05T16:35:04Z Config file arg: [regtest] rpcbind="0.0.0.0"
+2025-09-05T16:35:04Z Config file arg: [regtest] rpcpassword=****
+2025-09-05T16:35:04Z Config file arg: [regtest] rpcuser=****
+2025-09-05T16:35:04Z Config file arg: [regtest] server="1"
+2025-09-05T16:35:04Z Command-line arg: connect="node01:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node02:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node03:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node04:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node05:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node06:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node07:18444"
+2025-09-05T16:35:04Z Command-line arg: connect="node08:18444"
+2025-09-05T16:35:04Z Command-line arg: datadir="/home/bitcoin/.bitcoin"
+2025-09-05T16:35:04Z Command-line arg: printtoconsole="1"
+2025-09-05T16:35:04Z Command-line arg: regtest="1"
+2025-09-05T16:35:04Z Command-line arg: rpcallowip="0.0.0.0/0"
+2025-09-05T16:35:04Z Command-line arg: rpcbind="0.0.0.0"
+2025-09-05T16:35:04Z Command-line arg: rpcpassword=****
+2025-09-05T16:35:04Z Command-line arg: rpcuser=****
+2025-09-05T16:35:04Z Command-line arg: server="1"
+2025-09-05T16:35:04Z Command-line arg: txindex="1"
+2025-09-05T16:35:04Z Command-line arg: zmqpubhashblock="tcp://0.0.0.0:28332"
+2025-09-05T16:35:04Z Command-line arg: zmqpubhashtx="tcp://0.0.0.0:28333"
+2025-09-05T16:35:04Z Using at most 125 automatic connections (1048576 file descriptors available)
+2025-09-05T16:35:04Z Using 16 MiB out of 16 MiB requested for signature cache, able to store 524288 elements
+2025-09-05T16:35:04Z Using 16 MiB out of 16 MiB requested for script execution cache, able to store 524288 elements
+2025-09-05T16:35:04Z scheduler thread start
+2025-09-05T16:35:04Z Binding RPC on address 0.0.0.0 port 18443
+2025-09-05T16:35:04Z WARNING: the RPC server is not safe to expose to untrusted networks such as the public internet
+2025-09-05T16:35:04Z Binding RPC on address 0.0.0.0 port 18443
+2025-09-05T16:35:04Z Binding RPC on address 0.0.0.0 port 18443 failed.
+2025-09-05T16:35:04Z Config options rpcuser and rpcpassword will soon be deprecated. Locally-run instances may remove rpcuser to use cookie-based auth, or may be replaced with rpcauth. Please see share/rpcauth for rpcauth auth generation.
+2025-09-05T16:35:04Z Starting HTTP server with 4 worker threads
+2025-09-05T16:35:04Z Using wallet directory /home/bitcoin/.bitcoin/regtest/wallets
+2025-09-05T16:35:04Z init message: Verifying wallet(s)…
+2025-09-05T16:35:04Z Using /16 prefix for IP bucketing
+2025-09-05T16:35:04Z init message: Loading P2P addresses…
+2025-09-05T16:35:04Z Loaded 0 addresses from peers.dat  0ms
+2025-09-05T16:35:04Z init message: Loading banlist…
+2025-09-05T16:35:04Z SetNetworkActive: true
+2025-09-05T16:35:04Z Script verification uses 7 additional threads
+2025-09-05T16:35:04Z Cache configuration:
+2025-09-05T16:35:04Z * Using 2.0 MiB for block index database
+2025-09-05T16:35:04Z * Using 56.0 MiB for transaction index database
+2025-09-05T16:35:04Z * Using 8.0 MiB for chain state database
+2025-09-05T16:35:04Z * Using 384.0 MiB for in-memory UTXO set (plus up to 476.8 MiB of unused mempool space)
+2025-09-05T16:35:04Z init message: Loading block index…
+2025-09-05T16:35:04Z Validating signatures for all blocks.
+2025-09-05T16:35:04Z Setting nMinimumChainWork=0000000000000000000000000000000000000000000000000000000000000000
+2025-09-05T16:35:04Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/blocks/index
+2025-09-05T16:35:04Z Opened LevelDB successfully
+2025-09-05T16:35:04Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/blocks/index: 0000000000000000
+2025-09-05T16:35:04Z LoadBlockIndexDB: last block file = 0
+2025-09-05T16:35:04Z LoadBlockIndexDB: last block file info: CBlockFileInfo(blocks=1389, size=12945338, heights=0...1388, time=2011-02-02...2025-09-05)
+2025-09-05T16:35:04Z Checking all blk files are present...
+2025-09-05T16:35:04Z Initializing chainstate Chainstate [ibd] @ height -1 (null)
+2025-09-05T16:35:04Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-09-05T16:35:04Z Opened LevelDB successfully
+2025-09-05T16:35:04Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: 9f16dd8a71e53db5
+2025-09-05T16:35:04Z Loaded best chain: hashBestChain=636a7bd4be135d620b3fd14686956b91d5a7d558a718a1054caf4ca3af2e3ce9 height=1388 date=2025-09-05T15:53:17Z progress=1.000000
+2025-09-05T16:35:04Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-09-05T16:35:04Z Opened LevelDB successfully
+2025-09-05T16:35:04Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: 9f16dd8a71e53db5
+2025-09-05T16:35:04Z [Chainstate [ibd] @ height 1388 (636a7bd4be135d620b3fd14686956b91d5a7d558a718a1054caf4ca3af2e3ce9)] resized coinsdb cache to 8.0 MiB
+2025-09-05T16:35:04Z [Chainstate [ibd] @ height 1388 (636a7bd4be135d620b3fd14686956b91d5a7d558a718a1054caf4ca3af2e3ce9)] resized coinstip cache to 384.0 MiB
+2025-09-05T16:35:04Z init message: Verifying blocks…
+2025-09-05T16:35:04Z Verifying last 6 blocks at level 3
+2025-09-05T16:35:04Z Verification progress: 0%
+2025-09-05T16:35:04Z Verification progress: 16%
+2025-09-05T16:35:04Z Verification progress: 33%
+2025-09-05T16:35:04Z Verification progress: 50%
+2025-09-05T16:35:04Z Verification progress: 66%
+2025-09-05T16:35:04Z Verification progress: 83%
+2025-09-05T16:35:04Z Verification progress: 99%
+2025-09-05T16:35:04Z Verification: No coin database inconsistencies in last 6 blocks (151 transactions)
+2025-09-05T16:35:04Z  block index              75ms
+2025-09-05T16:35:04Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/indexes/txindex
+2025-09-05T16:35:04Z Opened LevelDB successfully
+2025-09-05T16:35:04Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/indexes/txindex: 0000000000000000
+2025-09-05T16:35:04Z Setting NODE_NETWORK on non-prune mode
+2025-09-05T16:35:04Z block tree size = 1389
+2025-09-05T16:35:04Z nBestHeight = 1388
+2025-09-05T16:35:04Z init message: Starting network threads…
+2025-09-05T16:35:04Z initload thread start
+2025-09-05T16:35:04Z DNS seeding disabled
+2025-09-05T16:35:04Z Loading 0 mempool transactions from disk...
+2025-09-05T16:35:04Z init message: Done loading
+2025-09-05T16:35:04Z Imported mempool transactions from disk: 0 succeeded, 0 failed, 0 expired, 0 already there, 0 waiting for initial broadcast
+2025-09-05T16:35:04Z initload thread exit
+2025-09-05T16:35:04Z opencon thread start
+2025-09-05T16:35:04Z addcon thread start
+2025-09-05T16:35:04Z net thread start
+2025-09-05T16:35:04Z msghand thread start
+2025-09-05T16:35:04Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z txindex thread start
+2025-09-05T16:35:04Z txindex is enabled at height 1388
+2025-09-05T16:35:04Z txindex thread exit
+2025-09-05T16:35:04Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:04Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:05Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:05Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:06Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:06Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:07Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:07Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:08Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:08Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:09Z Leaving InitialBlockDownload (latching to false)
+2025-09-05T16:35:09Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:10Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:11Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:12Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:13Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:14Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:15Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:16Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:18Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:19Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:21Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:22Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:24Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:25Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:27Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:28Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:30Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:32Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:34Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:36Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:38Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:40Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:42Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:44Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:47Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:49Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:52Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:54Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:57Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:35:59Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:02Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:04Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:07Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:10Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:13Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:17Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:20Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:23Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:26Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:29Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:32Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:36Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:39Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:43Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:46Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:50Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:53Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:36:57Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:01Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:05Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:09Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:13Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:17Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:21Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:25Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:29Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:33Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:38Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:43Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:37:57Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:02Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:08Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:13Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:19Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:24Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:39Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:45Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:50Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:38:56Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:01Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:08Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:23Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:28Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:34Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:41Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:47Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:39:53Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:08Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:13Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:19Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:25Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:30Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:35Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:51Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:40:56Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:01Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:07Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:13Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:18Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:33Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:39Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:44Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:50Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:41:56Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:01Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:16Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:22Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:27Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:33Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:38Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:44Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:49Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:42:55Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:00Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:06Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:11Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:17Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:23Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:28Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:33Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:39Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:44Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:49Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:43:54Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:00Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:06Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:11Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:16Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:22Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:27Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:33Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:39Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:45Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:50Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:44:55Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:01Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:06Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:11Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:16Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:22Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:28Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:33Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:39Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:44Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:49Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:45:54Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:00Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:05Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:11Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:16Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:22Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:27Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:33Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:38Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:44Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:50Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:46:56Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:02Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:07Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:12Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:18Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:23Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:28Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:33Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:40Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:46Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:51Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:47:56Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:02Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:07Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:12Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:19Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:25Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:31Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:38Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:43Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:48Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:53Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:48:59Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:05Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:11Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:17Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:22Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:27Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:33Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:38Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:43Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:50Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:49:55Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:01Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:06Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:12Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:17Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:22Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:27Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:33Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:39Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:44Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:52Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:50:57Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:02Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:07Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:13Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:18Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:24Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:29Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:35Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:40Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:45Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:50Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:51:56Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:01Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:08Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:15Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:20Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:25Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:31Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:36Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:41Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:46Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:52Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:52:57Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:02Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:07Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:12Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:17Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:22Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:27Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:32Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:37Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:42Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:48Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:53Z connect() to 172.18.0.9:18444 failed after wait: Connection refused (111)
+2025-09-05T16:53:58Z connect() to 172.18.0.5:18444 failed after wait: Connection refused (111)
+2025-09-05T16:54:03Z connect() to 172.18.0.7:18444 failed after wait: Connection refused (111)
+2025-09-05T16:54:08Z connect() to 172.18.0.6:18444 failed after wait: Connection refused (111)
+2025-09-05T16:54:13Z connect() to 172.18.0.3:18444 failed after wait: Connection refused (111)
+2025-09-05T16:54:18Z connect() to 172.18.0.4:18444 failed after wait: Connection refused (111)
+2025-09-05T16:54:23Z connect() to 172.18.0.2:18444 failed after wait: Connection refused (111)
+2025-09-05T16:54:28Z connect() to 172.18.0.8:18444 failed after wait: Connection refused (111)

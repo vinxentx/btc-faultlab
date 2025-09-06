@@ -4,12 +4,36 @@
     run_id: "{{ lookup('pipe','date -u +%Y%m%dT%H%M%SZ') }}"
     run_dir: "{{ workdir }}/results/{{ run_id }}"
   tasks:
+    - name: Freeze run_id (compute once)
+      ansible.builtin.set_fact:
+        run_id: "{{ run_id if run_id is defined and run_id | length > 0 else lookup('pipe','date -u +%Y%m%dT%H%M%SZ') }}"
+
+    - name: Freeze run_dir based on frozen run_id
+      ansible.builtin.set_fact:
+        run_dir: "{{ workdir }}/results/{{ run_id }}"
+
+    - name: Ensure base results directory exists and is writable by user
+      ansible.builtin.file:
+        path: "{{ workdir }}/results"
+        state: directory
+        mode: "0755"
+        owner: "{{ lookup('env','USER') }}"
+        group: "staff"
+
     - name: Create run directory
       ansible.builtin.file:
         path: "{{ run_dir }}/plots"
         state: directory
         mode: "0755"
         recurse: true
+        owner: "{{ lookup('env','USER') }}"
+        group: "staff"
+
+    - name: Touch events.log
+      ansible.builtin.file:
+        path: "{{ run_dir }}/events.log"
+        state: touch
+        mode: "0644"
 
     - name: Write metadata.yml (parameters snapshot)
       ansible.builtin.copy:
@@ -37,6 +61,37 @@
 
     - name: Warm-up
       ansible.builtin.pause: { seconds: "{{ warmup_s }}" }
+
+    - name: Wait for all node containers to be running and healthy
+      loop: "{{ range(1, node_count + 1) | list }}"
+      loop_control: { loop_var: i }
+      ansible.builtin.shell: |
+        # Check container status
+        status=$(docker inspect -f '{{"{{"}} .State.Status {{"}}"}}' node{{ '%02d'|format(i) }})
+        if [ "$status" != "running" ]; then
+          echo "Container not running: $status"
+          exit 1
+        fi
+        
+        # Check health status
+        health=$(docker inspect -f '{{"{{"}} .State.Health.Status {{"}}"}}' node{{ '%02d'|format(i) }} 2>/dev/null || echo "no-healthcheck")
+        if [ "$health" = "unhealthy" ]; then
+          echo "Container unhealthy: $health"
+          exit 1
+        fi
+        
+        # Check RPC connectivity
+        if ! docker exec node{{ '%02d'|format(i) }} bitcoin-cli -regtest getblockchaininfo >/dev/null 2>&1; then
+          echo "RPC not ready"
+          exit 1
+        fi
+        
+        echo "Container healthy and RPC ready"
+      register: container_health
+      retries: 60
+      delay: 2
+      until: container_health.rc == 0
+      changed_when: false
 
     - name: Apply net impairments (loss/latency/bandwidth)
       include_role: { name: netem }

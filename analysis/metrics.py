@@ -48,13 +48,13 @@ def main():
     events=parse_events(os.path.join(run_dir,"events.log"))
 
     df_sub=pd.read_csv(txlog,parse_dates=["submit_ts_utc"])
-    df_conf=pd.read_csv(conf,parse_dates=["submit_ts_utc","block_ts_utc"]) if os.path.exists(conf) else pd.DataFrame()
+    df_conf=pd.read_csv(conf,parse_dates=["submit_ts_utc","confirm_ts_utc"]) if os.path.exists(conf) else pd.DataFrame()
 
-    conf_times=sorted(df_conf["block_ts_utc"].tolist()) if not df_conf.empty else []
+    conf_times=sorted(df_conf["confirm_ts_utc"].tolist()) if not df_conf.empty else []
     tps_series=rolling_rate(conf_times, 60) if conf_times else []
 
     if not df_conf.empty:
-        cl=df_conf["conf_latency_s"].astype(float)
+        cl=df_conf["latency_seconds"].astype(float)
         cl50=float(np.percentile(cl,50)); cl95=float(np.percentile(cl,95))
     else:
         cl50=cl95=float("nan")
@@ -74,7 +74,7 @@ def main():
         plt.tight_layout(); plt.savefig(os.path.join(plots_dir,"tps.png")); plt.close()
 
     if not df_conf.empty:
-        plt.figure(); plt.hist(df_conf["conf_latency_s"].astype(float), bins=30)
+        plt.figure(); plt.hist(df_conf["latency_seconds"].astype(float), bins=30)
         plt.title("Confirmation latency distribution"); plt.xlabel("seconds"); plt.ylabel("count")
         plt.tight_layout(); plt.savefig(os.path.join(plots_dir,"cl_hist.png")); plt.close()
 

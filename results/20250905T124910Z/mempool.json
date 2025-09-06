@@ -1,0 +1,13 @@
+{
+  "loaded": true,
+  "size": 65,
+  "bytes": 12870,
+  "usage": 97200,
+  "total_fee": 0.00257605,
+  "maxmempool": 500000000,
+  "mempoolminfee": 0.00001000,
+  "minrelaytxfee": 0.00001000,
+  "incrementalrelayfee": 0.00001000,
+  "unbroadcastcount": 65,
+  "fullrbf": false
+}

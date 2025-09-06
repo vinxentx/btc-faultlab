@@ -2,11 +2,17 @@
   ansible.builtin.file:
     path: "{{ workdir }}/config"
     state: directory
+    mode: "0755"
+    owner: "{{ lookup('env','USER') }}"
+    group: "staff"
 
 - name: Ensure per-node config dirs exist
   ansible.builtin.file:
     path: "{{ workdir }}/config/node{{ '%02d'|format(item) }}"
     state: directory
+    mode: "0755"
+    owner: "{{ lookup('env','USER') }}"
+    group: "staff"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
 - name: Template docker-compose.yml
@@ -18,38 +24,50 @@
   ansible.builtin.template:
     src: "bitcoin.conf.j2"
     dest: "{{ workdir }}/config/node{{ '%02d'|format(item) }}/bitcoin.conf"
+    mode: "0644"
+    owner: "{{ lookup('env','USER') }}"
+    group: "staff"
   loop: "{{ range(1, node_count + 1) | list }}"
 
-- name: Ensure data dirs exist
-  ansible.builtin.file:
-    path: "{{ workdir }}/data/node{{ '%02d'|format(item) }}"
-    state: directory
-    mode: "0755"
+- name: Precreate named volumes for node data
+  ansible.builtin.shell: |
+    docker volume create {{ network_name }}_node{{ '%02d'|format(item) }}_data
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
+  changed_when: true
 
-- name: Copy bitcoin.conf into data dirs
-  become: true
-  ansible.builtin.copy:
-    src: "{{ workdir }}/config/node{{ '%02d'|format(item) }}/bitcoin.conf"
-    dest: "{{ workdir }}/data/node{{ '%02d'|format(item) }}/bitcoin.conf"
-    mode: "0644"
+- name: Chown named volumes to 101:101 (bitcoin user inside container)
+  ansible.builtin.shell: |
+    docker run --rm -u 0:0 -v {{ network_name }}_node{{ '%02d'|format(item) }}_data:/data alpine:3.19 sh -lc "mkdir -p /data && chown -R 101:101 /data"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
+  changed_when: true
+
+## Host data dirs no longer required (using named volumes)
 
 - name: Ensure results dir exists
   ansible.builtin.file:
     path: "{{ workdir }}/results"
     state: directory
     mode: "0755"
+    owner: "{{ lookup('env','USER') }}"
+    group: "staff"
 
-# Wichtig: UID/GID 101:101 – genau wie im Log des Images
-- name: Chown config, data, results to 101:101
-  become: true
-  ansible.builtin.file:
-    path: "{{ item }}"
-    owner: 101
-    group: 101
-    recurse: true
-  loop:
-    - "{{ workdir }}/config"
-    - "{{ workdir }}/data"
-    - "{{ workdir }}/results"
+- name: Validate all required files exist
+  ansible.builtin.stat:
+    path: "{{ workdir }}/config/node{{ '%02d'|format(item) }}/bitcoin.conf"
+  register: config_files
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
+
+- name: Check if all config files exist
+  ansible.builtin.set_fact:
+    all_configs_exist: "{{ config_files.results | selectattr('stat.exists') | list | length == (node_count | int) }}"
+
+- name: Fail if not all config files exist
+  ansible.builtin.fail:
+    msg: "Not all config files exist. Expected {{ node_count | int }}, found {{ config_files.results | selectattr('stat.exists') | list | length }}"
+  when: not all_configs_exist
+
+- name: Validate docker-compose.yml exists
+  ansible.builtin.stat:
+    path: "{{ workdir }}/docker-compose.yml"
+  register: compose_file
+  failed_when: not compose_file.stat.exists
