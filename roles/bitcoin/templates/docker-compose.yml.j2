@@ -1,6 +1,11 @@
 name: "{{ network_name }}"
 
 {% set n = (node_count | int) %}
+{% set core_size = 8 if n >= 8 else n %}
+{% set secondary_size = ([n - core_size, 8] | min) if n > core_size else 0 %}
+{% set outer_size = n - core_size - secondary_size %}
+{% set core_nodes = range(1, core_size + 1) %}
+{% set secondary_nodes = range(core_size + 1, core_size + secondary_size + 1) %}
 services:
 {% for i in range(1, n + 1) %}
   node{{ "%02d"|format(i) }}:
@@ -21,14 +26,68 @@ services:
       - "-rpcallowip=0.0.0.0/0"
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+{% set targets = [] %}
+{% if i <= core_size %}
+      # Core tier - dense mesh with spillover
+{% for j in core_nodes %}
+{% if j != i %}
+{% set targets = targets + [j] %}
+{% endif %}
+{% endfor %}
+{% if secondary_size > 0 %}
+{% set secondary_peer = core_size + ((i - 1) % secondary_size) + 1 %}
+{% set targets = targets + [secondary_peer] %}
+{% endif %}
+{% elif i <= core_size + secondary_size %}
+      # Secondary tier - connect to rotating core subset and neighbors
+{% set base = i - core_size - 1 %}
+{% for offset in range(0, [4, core_size] | min) %}
+{% set core_idx = ((base + offset) % core_size) + 1 %}
+{% set targets = targets + [core_idx] %}
+{% endfor %}
+{% if i - 1 >= core_size + 1 %}
+{% set targets = targets + [i - 1] %}
+{% endif %}
+{% if i + 1 <= core_size + secondary_size %}
+{% set targets = targets + [i + 1] %}
+{% endif %}
+{% if outer_size > 0 %}
+{% set outer_peer = core_size + secondary_size + ((base) % outer_size) + 1 %}
+{% set targets = targets + [outer_peer] %}
+{% endif %}
+{% else %}
+      # Outer tier - mix of core, secondary, and lateral links
+{% set base = i - core_size - secondary_size - 1 %}
+{% if core_size > 0 %}
+{% for offset in [0, 2, 4] %}
+{% if offset < core_size %}
+{% set core_idx = ((base + offset) % core_size) + 1 %}
+{% set targets = targets + [core_idx] %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if secondary_size > 0 %}
+{% for offset in range(0, [2, secondary_size] | min) %}
+{% set secondary_idx = core_size + ((base + offset) % secondary_size) + 1 %}
+{% set targets = targets + [secondary_idx] %}
+{% endfor %}
+{% endif %}
+{% if i - 1 >= core_size + secondary_size + 1 %}
+{% set targets = targets + [i - 1] %}
+{% endif %}
+{% if i + 1 <= n %}
+{% set targets = targets + [i + 1] %}
+{% endif %}
+{% endif %}
+{% for target in targets | unique | list | sort %}
+{% if target != i %}
+      - "-connect=node{{ '%02d'|format(target) }}:18444"
+{% endif %}
+{% endfor %}
     volumes:
       - "node{{ '%02d'|format(i) }}_data:/home/bitcoin/.bitcoin"
       - "{{ workdir }}/config/node{{ '%02d'|format(i) }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"

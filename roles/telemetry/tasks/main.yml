@@ -34,10 +34,14 @@
     fi
   changed_when: false
 
-- name: Run RPC-based confirmation collector
+- name: Extract transaction confirmations (if txlog exists)
   ansible.builtin.shell: |
-    python3 files/confirmation_collector.py --rpc http://{{ rpc_user }}:{{ rpc_pass }}@127.0.0.1:20443 \
-      --txlog "{{ rd }}/txlog.csv" --out "{{ rd }}/confirmations.csv" --start-height 0
+    if [ -f "{{ rd }}/txlog.csv" ]; then
+      python3 analysis/extract_confirmations.py --run-dir "{{ rd }}" --node node01
+    else
+      echo "No txlog.csv found, skipping confirmation extraction"
+      echo "txid,submit_time,confirm_time,confirmations,block_height" > "{{ rd }}/confirmations.csv"
+    fi
   args:
     chdir: "{{ workdir }}"
-  changed_when: false
+  changed_when: true

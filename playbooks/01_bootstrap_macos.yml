@@ -1,0 +1,52 @@
+- hosts: controller
+  gather_facts: true
+  tasks:
+    - name: Check if Docker is running
+      ansible.builtin.shell: docker info
+      register: docker_check
+      changed_when: false
+      failed_when: false
+
+    - name: Fail if Docker is not running
+      ansible.builtin.fail:
+        msg: "Docker is not running. Please start Docker Desktop."
+      when: docker_check.rc != 0
+
+    - name: Check if docker compose is available
+      ansible.builtin.shell: docker compose version
+      register: compose_check
+      changed_when: false
+      failed_when: false
+
+    - name: Fail if docker compose is not available
+      ansible.builtin.fail:
+        msg: "Docker Compose is not available. Please install Docker Desktop."
+      when: compose_check.rc != 0
+
+    - name: Clean up any existing containers and volumes
+      ansible.builtin.shell: |
+        # Stop and remove any existing containers
+        docker compose -f docker-compose.yml down -v 2>/dev/null || true
+        # Remove any remaining node containers
+        docker ps -a --filter name=node --format "{{ '{{.Names}}' }}" | xargs -r docker rm -f 2>/dev/null || true
+        # Remove ALL btcnet volumes to ensure clean state
+        docker volume ls --filter name=btcnet -q | xargs -r docker volume rm -f 2>/dev/null || true
+        # Also remove any txlogs volume
+        docker volume rm btcnet_txlogs 2>/dev/null || true
+        echo "Cleaned up all containers and volumes for fresh start"
+      args:
+        chdir: "{{ playbook_dir }}/.."
+      changed_when: false
+
+    - name: Docker and Docker Compose are ready
+      ansible.builtin.debug:
+        msg: "Docker and Docker Compose are ready for experiments"
+
+
+
+
+
+
+
+
+

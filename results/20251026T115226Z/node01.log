@@ -1,0 +1,909 @@
+2025-10-26T11:52:19Z Bitcoin Core version v27.0.0 (release build)
+2025-10-26T11:52:19Z Script verification uses 7 additional threads
+2025-10-26T11:52:19Z Using the 'arm_shani(1way,2way)' SHA256 implementation
+2025-10-26T11:52:19Z Default data directory /home/bitcoin/.bitcoin
+2025-10-26T11:52:19Z Using data directory /home/bitcoin/.bitcoin/regtest
+2025-10-26T11:52:19Z Config file: /home/bitcoin/.bitcoin/bitcoin.conf
+2025-10-26T11:52:19Z Config file arg: [regtest] fallbackfee="0.0002"
+2025-10-26T11:52:19Z Config file arg: [regtest] maxmempool="500"
+2025-10-26T11:52:19Z Config file arg: [regtest] rpcallowip="0.0.0.0/0"
+2025-10-26T11:52:19Z Config file arg: [regtest] rpcbind="0.0.0.0"
+2025-10-26T11:52:19Z Config file arg: [regtest] rpcpassword=****
+2025-10-26T11:52:19Z Config file arg: [regtest] rpcuser=****
+2025-10-26T11:52:19Z Config file arg: [regtest] server="1"
+2025-10-26T11:52:19Z Command-line arg: datadir="/home/bitcoin/.bitcoin"
+2025-10-26T11:52:19Z Command-line arg: discover="1"
+2025-10-26T11:52:19Z Command-line arg: dnsseed="0"
+2025-10-26T11:52:19Z Command-line arg: listen="1"
+2025-10-26T11:52:19Z Command-line arg: maxconnections="64"
+2025-10-26T11:52:19Z Command-line arg: printtoconsole="1"
+2025-10-26T11:52:19Z Command-line arg: regtest="1"
+2025-10-26T11:52:19Z Command-line arg: rpcallowip="0.0.0.0/0"
+2025-10-26T11:52:19Z Command-line arg: rpcbind="0.0.0.0"
+2025-10-26T11:52:19Z Command-line arg: rpcpassword=****
+2025-10-26T11:52:19Z Command-line arg: rpcuser=****
+2025-10-26T11:52:19Z Command-line arg: server="1"
+2025-10-26T11:52:19Z Command-line arg: txindex="1"
+2025-10-26T11:52:19Z Command-line arg: zmqpubhashblock="tcp://0.0.0.0:28332"
+2025-10-26T11:52:19Z Command-line arg: zmqpubhashtx="tcp://0.0.0.0:28333"
+2025-10-26T11:52:19Z Using at most 64 automatic connections (1048576 file descriptors available)
+2025-10-26T11:52:19Z Using 16 MiB out of 16 MiB requested for signature cache, able to store 524288 elements
+2025-10-26T11:52:19Z Using 16 MiB out of 16 MiB requested for script execution cache, able to store 524288 elements
+2025-10-26T11:52:19Z scheduler thread start
+2025-10-26T11:52:19Z Binding RPC on address 0.0.0.0 port 18443
+2025-10-26T11:52:19Z WARNING: the RPC server is not safe to expose to untrusted networks such as the public internet
+2025-10-26T11:52:19Z Binding RPC on address 0.0.0.0 port 18443
+2025-10-26T11:52:19Z Binding RPC on address 0.0.0.0 port 18443 failed.
+2025-10-26T11:52:19Z Config options rpcuser and rpcpassword will soon be deprecated. Locally-run instances may remove rpcuser to use cookie-based auth, or may be replaced with rpcauth. Please see share/rpcauth for rpcauth auth generation.
+2025-10-26T11:52:19Z Starting HTTP server with 4 worker threads
+2025-10-26T11:52:19Z Using wallet directory /home/bitcoin/.bitcoin/regtest/wallets
+2025-10-26T11:52:19Z init message: Verifying wallet(s)…
+2025-10-26T11:52:19Z Using /16 prefix for IP bucketing
+2025-10-26T11:52:19Z init message: Loading P2P addresses…
+2025-10-26T11:52:19Z Creating peers.dat because the file was not found ("/home/bitcoin/.bitcoin/regtest/peers.dat")
+2025-10-26T11:52:19Z init message: Loading banlist…
+2025-10-26T11:52:19Z Recreating the banlist database
+2025-10-26T11:52:19Z SetNetworkActive: true
+2025-10-26T11:52:19Z /home/bitcoin/.bitcoin/regtest/fee_estimates.dat is not found. Continue anyway.
+2025-10-26T11:52:19Z Script verification uses 7 additional threads
+2025-10-26T11:52:19Z Cache configuration:
+2025-10-26T11:52:19Z * Using 2.0 MiB for block index database
+2025-10-26T11:52:19Z * Using 56.0 MiB for transaction index database
+2025-10-26T11:52:19Z * Using 8.0 MiB for chain state database
+2025-10-26T11:52:19Z * Using 384.0 MiB for in-memory UTXO set (plus up to 476.8 MiB of unused mempool space)
+2025-10-26T11:52:19Z init message: Loading block index…
+2025-10-26T11:52:19Z Validating signatures for all blocks.
+2025-10-26T11:52:19Z Setting nMinimumChainWork=0000000000000000000000000000000000000000000000000000000000000000
+2025-10-26T11:52:19Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/blocks/index
+2025-10-26T11:52:19Z Opened LevelDB successfully
+2025-10-26T11:52:19Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/blocks/index: 0000000000000000
+2025-10-26T11:52:19Z LoadBlockIndexDB: last block file = 0
+2025-10-26T11:52:19Z LoadBlockIndexDB: last block file info: CBlockFileInfo(blocks=0, size=0, heights=0...0, time=1970-01-01...1970-01-01)
+2025-10-26T11:52:19Z Checking all blk files are present...
+2025-10-26T11:52:19Z Initializing databases...
+2025-10-26T11:52:19Z Initializing chainstate Chainstate [ibd] @ height -1 (null)
+2025-10-26T11:52:19Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-10-26T11:52:19Z Opened LevelDB successfully
+2025-10-26T11:52:19Z Wrote new obfuscate key for /home/bitcoin/.bitcoin/regtest/chainstate: 5d9893139bad230e
+2025-10-26T11:52:19Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: 5d9893139bad230e
+2025-10-26T11:52:19Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-10-26T11:52:19Z Opened LevelDB successfully
+2025-10-26T11:52:19Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: 5d9893139bad230e
+2025-10-26T11:52:19Z [Chainstate [ibd] @ height -1 (null)] resized coinsdb cache to 8.0 MiB
+2025-10-26T11:52:19Z [Chainstate [ibd] @ height -1 (null)] resized coinstip cache to 384.0 MiB
+2025-10-26T11:52:19Z init message: Verifying blocks…
+2025-10-26T11:52:19Z  block index              15ms
+2025-10-26T11:52:19Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/indexes/txindex
+2025-10-26T11:52:19Z Opened LevelDB successfully
+2025-10-26T11:52:19Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/indexes/txindex: 0000000000000000
+2025-10-26T11:52:19Z Setting NODE_NETWORK on non-prune mode
+2025-10-26T11:52:19Z initload thread start
+2025-10-26T11:52:19Z UpdateTip: new best=0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206 height=0 version=0x00000001 log2_work=1.000000 tx=1 date='2011-02-02T23:16:42Z' progress=1.000000 cache=0.3MiB(0txo)
+2025-10-26T11:52:19Z Failed to open mempool file from disk. Continuing anyway.
+2025-10-26T11:52:19Z initload thread exit
+2025-10-26T11:52:19Z block tree size = 1
+2025-10-26T11:52:19Z nBestHeight = 0
+2025-10-26T11:52:19Z txindex thread start
+2025-10-26T11:52:19Z txindex is enabled
+2025-10-26T11:52:19Z txindex thread exit
+2025-10-26T11:52:19Z Bound to 127.0.0.1:18445
+2025-10-26T11:52:19Z Bound to [::]:18444
+2025-10-26T11:52:19Z Bound to 0.0.0.0:18444
+2025-10-26T11:52:19Z 0 block-relay-only anchors will be tried for connections.
+2025-10-26T11:52:19Z init message: Starting network threads…
+2025-10-26T11:52:19Z DNS seeding disabled
+2025-10-26T11:52:19Z init message: Done loading
+2025-10-26T11:52:19Z addcon thread start
+2025-10-26T11:52:19Z torcontrol thread start
+2025-10-26T11:52:19Z net thread start
+2025-10-26T11:52:19Z msghand thread start
+2025-10-26T11:52:19Z opencon thread start
+2025-10-26T11:52:20Z Adding fixed seeds as -dnsseed=0 (or IPv4/IPv6 connections are disabled via -onlynet) and neither -addnode nor -seednode are provided
+2025-10-26T11:52:20Z Added 0 fixed seeds from reachable networks.
+2025-10-26T11:52:28Z Using SQLite Version 3.38.5
+2025-10-26T11:52:28Z Using wallet /home/bitcoin/.bitcoin/regtest/wallets/faultlab
+2025-10-26T11:52:28Z init message: Loading wallet…
+2025-10-26T11:52:28Z [faultlab] Wallet file version = 10500, last client version = 270000
+2025-10-26T11:52:28Z [faultlab] Legacy Wallet Keys: 0 plaintext, 0 encrypted, 0 w/ metadata, 0 total.
+2025-10-26T11:52:28Z [faultlab] Descriptors: 0, Descriptor Keys: 0 plaintext, 0 encrypted, 0 total.
+2025-10-26T11:52:28Z [faultlab] Setting minversion to 169900
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = c950f7306788102f99a966300d7a94c3696795f9da532813be1e816b8aba9bcf, type = legacy, internal = false
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 76648214d452ab3f6094c628b696e0e708cf9d88928989704ba4eef8034f42f0, type = p2sh-segwit, internal = false
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 1ac46cf912e13b4b8945a3a1a13116ee3747ecdaa362d4fbc5f76972c8076348, type = bech32, internal = false
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 12bad37d8a1f6603c40194c42a6d47dc7a11cd876cc1ba12d35d1caa9e7cfac3, type = bech32m, internal = false
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 7757944d85b7ca031a5fc5cacee84e6d9c34ee1dfc9a18d680fa4a1292194236, type = legacy, internal = true
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 3a8d06feb3fb7e77e621868d57a26c57e9caebb8351e9b08362f01279dfb4494, type = p2sh-segwit, internal = true
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 8bda5e471595de2595c28c119369df4b7ddb64dae67a9fcd737c7f69223ec06a, type = bech32, internal = true
+2025-10-26T11:52:28Z [faultlab] Setting spkMan to active: id = 176c5d241ded94e186062718fa9ba25147645ca3a2b13f85aa47906f3a3de37b, type = bech32m, internal = true
+2025-10-26T11:52:28Z [faultlab] Wallet completed loading in             304ms
+2025-10-26T11:52:28Z [faultlab] setKeyPool.size() = 8000
+2025-10-26T11:52:28Z [faultlab] mapWallet.size() = 0
+2025-10-26T11:52:28Z [faultlab] m_address_book.size() = 0
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Leaving InitialBlockDownload (latching to false)
+2025-10-26T11:52:28Z UpdateTip: new best=580ac48b269f0ba8317aff734dc3f7774618fa07074ba3b903dd37a3a0cfe9a3 height=1 version=0x20000000 log2_work=2.000000 tx=2 date='2025-10-26T11:52:28Z' progress=1.000000 cache=0.3MiB(1txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6c9f28a2b980f712cbb0c541fa2811a781d9e5afb50ab2447fbee45fba9901b0 height=2
+2025-10-26T11:52:28Z UpdateTip: new best=6c9f28a2b980f712cbb0c541fa2811a781d9e5afb50ab2447fbee45fba9901b0 height=2 version=0x20000000 log2_work=2.584963 tx=3 date='2025-10-26T11:52:29Z' progress=1.000000 cache=0.3MiB(2txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=44315ed809749852e00b351a7e7fa8b77a47890655e1be039c4fe8453579e40f height=3
+2025-10-26T11:52:28Z UpdateTip: new best=44315ed809749852e00b351a7e7fa8b77a47890655e1be039c4fe8453579e40f height=3 version=0x20000000 log2_work=3.000000 tx=4 date='2025-10-26T11:52:29Z' progress=1.000000 cache=0.3MiB(3txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=075b3a3c5eb520e2826250d28a73b211cdcae6c1e84344c113ea68730c583678 height=4
+2025-10-26T11:52:28Z UpdateTip: new best=075b3a3c5eb520e2826250d28a73b211cdcae6c1e84344c113ea68730c583678 height=4 version=0x20000000 log2_work=3.321928 tx=5 date='2025-10-26T11:52:30Z' progress=1.000000 cache=0.3MiB(4txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=16e37c640a96ecb8645de49ff9d04a9ed2c57539183a48ce99834801e23681ac height=5
+2025-10-26T11:52:28Z UpdateTip: new best=16e37c640a96ecb8645de49ff9d04a9ed2c57539183a48ce99834801e23681ac height=5 version=0x20000000 log2_work=3.584963 tx=6 date='2025-10-26T11:52:30Z' progress=1.000000 cache=0.3MiB(5txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=424a1ff2dafca6e4c5dfa632a916fc471085e4e8b3c172c7b733b03fac259ae9 height=6
+2025-10-26T11:52:28Z [faultlab] AddToWallet 2480ce7bae23ddf2e8782afc777ebd86134148ae83cd2a0afded60e1d922ba00  new Confirmed (block=580ac48b269f0ba8317aff734dc3f7774618fa07074ba3b903dd37a3a0cfe9a3, height=1, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 339c3f642dd022fb42cf5b5f01f11e5b5daaf11bbe5cc9748a1eeae6b4f8a3af  new Confirmed (block=6c9f28a2b980f712cbb0c541fa2811a781d9e5afb50ab2447fbee45fba9901b0, height=2, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet acef733bd6f04fd20cf0793d6f04df71c42e74539177af2871411eb04d0f59e9  new Confirmed (block=44315ed809749852e00b351a7e7fa8b77a47890655e1be039c4fe8453579e40f, height=3, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet bdf241b804c6b5ef72515a2c2ca23a97e37d7b1a79dcf26d1a46c15e96487f5b  new Confirmed (block=075b3a3c5eb520e2826250d28a73b211cdcae6c1e84344c113ea68730c583678, height=4, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 13dbb8e1d8e6ceca8009c9dfdafd159caa85fe5ccf503f0473a82c88e4788121  new Confirmed (block=16e37c640a96ecb8645de49ff9d04a9ed2c57539183a48ce99834801e23681ac, height=5, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=424a1ff2dafca6e4c5dfa632a916fc471085e4e8b3c172c7b733b03fac259ae9 height=6 version=0x20000000 log2_work=3.807355 tx=7 date='2025-10-26T11:52:30Z' progress=1.000000 cache=0.3MiB(6txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=2b3d7c950e605dceb3b3063bd195687d59c135cbdb63f36165c45cef5bad3831 height=7
+2025-10-26T11:52:28Z UpdateTip: new best=2b3d7c950e605dceb3b3063bd195687d59c135cbdb63f36165c45cef5bad3831 height=7 version=0x20000000 log2_work=4.000000 tx=8 date='2025-10-26T11:52:30Z' progress=1.000000 cache=0.3MiB(7txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7bb8a95d0d5e5d9799a5c97109e586dfaa50ed783abe3f350069f52c6c945d4c height=8
+2025-10-26T11:52:28Z UpdateTip: new best=7bb8a95d0d5e5d9799a5c97109e586dfaa50ed783abe3f350069f52c6c945d4c height=8 version=0x20000000 log2_work=4.169925 tx=9 date='2025-10-26T11:52:31Z' progress=1.000000 cache=0.3MiB(8txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3ca8d47f38d5b07d69c7708c78e24d343e2a6eb7658a93d912eaceb28d80ff71 height=9
+2025-10-26T11:52:28Z UpdateTip: new best=3ca8d47f38d5b07d69c7708c78e24d343e2a6eb7658a93d912eaceb28d80ff71 height=9 version=0x20000000 log2_work=4.321928 tx=10 date='2025-10-26T11:52:31Z' progress=1.000000 cache=0.3MiB(9txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7503695f382da1b38ecb3d604b3abc2c2595ceb8fdc8fc946811e78e6180266a height=10
+2025-10-26T11:52:28Z UpdateTip: new best=7503695f382da1b38ecb3d604b3abc2c2595ceb8fdc8fc946811e78e6180266a height=10 version=0x20000000 log2_work=4.459432 tx=11 date='2025-10-26T11:52:31Z' progress=1.000000 cache=0.3MiB(10txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3963b3f13075913d51f89cc3755e520e683d3e4d509e5a6428498b95825347f0 height=11
+2025-10-26T11:52:28Z [faultlab] AddToWallet b6756c5daa9c17c9f6edfc02ff5781dc651d0d9c8f66d1d5a54d65079508fd29  new Confirmed (block=424a1ff2dafca6e4c5dfa632a916fc471085e4e8b3c172c7b733b03fac259ae9, height=6, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 6a2df24025c4cd421a018ebf834204e08e6285a0e660e068e550b16e8a5b8d91  new Confirmed (block=2b3d7c950e605dceb3b3063bd195687d59c135cbdb63f36165c45cef5bad3831, height=7, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet a03e6d395da7c86152c4d511fc78afdbf9a279074ea23c8e302310b6a20f5c6d  new Confirmed (block=7bb8a95d0d5e5d9799a5c97109e586dfaa50ed783abe3f350069f52c6c945d4c, height=8, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 1d0f8f904e75ea6e11820cf21fd7d8fd58ba71cd9299580a994a5e3099cb6520  new Confirmed (block=3ca8d47f38d5b07d69c7708c78e24d343e2a6eb7658a93d912eaceb28d80ff71, height=9, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet a627e56ad3ef8fd933bedfa39276472d9f1f7115e55cab3329269053148a8cf5  new Confirmed (block=7503695f382da1b38ecb3d604b3abc2c2595ceb8fdc8fc946811e78e6180266a, height=10, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=3963b3f13075913d51f89cc3755e520e683d3e4d509e5a6428498b95825347f0 height=11 version=0x20000000 log2_work=4.584963 tx=12 date='2025-10-26T11:52:31Z' progress=1.000000 cache=0.3MiB(11txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=74c3b3251598e3e0a19010079e8bdc2b0cca2d869377fd0b42b97884645db5f2 height=12
+2025-10-26T11:52:28Z UpdateTip: new best=74c3b3251598e3e0a19010079e8bdc2b0cca2d869377fd0b42b97884645db5f2 height=12 version=0x20000000 log2_work=4.700440 tx=13 date='2025-10-26T11:52:31Z' progress=1.000000 cache=0.3MiB(12txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0d65441fbb3d9390e8193d04a11decffb678236e72df09e84bb9bb4131ce3f9e height=13
+2025-10-26T11:52:28Z UpdateTip: new best=0d65441fbb3d9390e8193d04a11decffb678236e72df09e84bb9bb4131ce3f9e height=13 version=0x20000000 log2_work=4.807355 tx=14 date='2025-10-26T11:52:31Z' progress=1.000000 cache=0.3MiB(13txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=11b92b42e5f99e67404c2322d52117cb954ef2ae6269752df82ce090f6b6a226 height=14
+2025-10-26T11:52:28Z UpdateTip: new best=11b92b42e5f99e67404c2322d52117cb954ef2ae6269752df82ce090f6b6a226 height=14 version=0x20000000 log2_work=4.906891 tx=15 date='2025-10-26T11:52:32Z' progress=1.000000 cache=0.3MiB(14txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7c549a130ab991498e8c078c6b1263e8fbb23b7300ae13fdfd5be2b96dab33de height=15
+2025-10-26T11:52:28Z UpdateTip: new best=7c549a130ab991498e8c078c6b1263e8fbb23b7300ae13fdfd5be2b96dab33de height=15 version=0x20000000 log2_work=5.000000 tx=16 date='2025-10-26T11:52:32Z' progress=1.000000 cache=0.3MiB(15txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 884 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4dc9d2d896e67792fb59f6e9ec201a946ca0a2adbe9a5ce23bab85d1a16c2914 height=16
+2025-10-26T11:52:28Z [faultlab] AddToWallet e970efa4e39913ecd36ec6d8841b21cc764cb7c74289125547256bc56e451735  new Confirmed (block=3963b3f13075913d51f89cc3755e520e683d3e4d509e5a6428498b95825347f0, height=11, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 57aab2198c0f4f6dcfcb90e02463da49d95f68ea7ebcbf03b5c90a1e9590dd90  new Confirmed (block=74c3b3251598e3e0a19010079e8bdc2b0cca2d869377fd0b42b97884645db5f2, height=12, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 586e37ab8791970d84c969200a0abdebfe8ea7381adf458f7c459e2fcfbaa51a  new Confirmed (block=0d65441fbb3d9390e8193d04a11decffb678236e72df09e84bb9bb4131ce3f9e, height=13, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 84e800ca6c44a80206ad4b8e920068d4050404ba93dcd0d0b8758f64a72fe187  new Confirmed (block=11b92b42e5f99e67404c2322d52117cb954ef2ae6269752df82ce090f6b6a226, height=14, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 7092c9fb5ad2b18245a2f30af7807d23a28fe233d99eb1cff7f49552153cad54  new Confirmed (block=7c549a130ab991498e8c078c6b1263e8fbb23b7300ae13fdfd5be2b96dab33de, height=15, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=4dc9d2d896e67792fb59f6e9ec201a946ca0a2adbe9a5ce23bab85d1a16c2914 height=16 version=0x20000000 log2_work=5.087463 tx=17 date='2025-10-26T11:52:32Z' progress=1.000000 cache=0.3MiB(16txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=2fa416b4df0955399e8f71d15098c86612885208246a6c9610cbff628a465591 height=17
+2025-10-26T11:52:28Z UpdateTip: new best=2fa416b4df0955399e8f71d15098c86612885208246a6c9610cbff628a465591 height=17 version=0x20000000 log2_work=5.169925 tx=18 date='2025-10-26T11:52:32Z' progress=1.000000 cache=0.3MiB(17txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=2a51b0603bd2dab4fd6a66de5a1ce4a2e480a68ff823e97855b16b7c5c9e3470 height=18
+2025-10-26T11:52:28Z UpdateTip: new best=2a51b0603bd2dab4fd6a66de5a1ce4a2e480a68ff823e97855b16b7c5c9e3470 height=18 version=0x20000000 log2_work=5.247928 tx=19 date='2025-10-26T11:52:32Z' progress=1.000000 cache=0.3MiB(18txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3f2656f3bcaeebb9c81207124712015fa293bf74f5d23af2d5e58f74116be458 height=19
+2025-10-26T11:52:28Z UpdateTip: new best=3f2656f3bcaeebb9c81207124712015fa293bf74f5d23af2d5e58f74116be458 height=19 version=0x20000000 log2_work=5.321928 tx=20 date='2025-10-26T11:52:32Z' progress=1.000000 cache=0.3MiB(19txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7f2dd68111f151fa46614179f50384ef01e8c1d59af842142eefe7e4a143bc3b height=20
+2025-10-26T11:52:28Z UpdateTip: new best=7f2dd68111f151fa46614179f50384ef01e8c1d59af842142eefe7e4a143bc3b height=20 version=0x20000000 log2_work=5.392317 tx=21 date='2025-10-26T11:52:33Z' progress=1.000000 cache=0.3MiB(20txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7d8f18c6bb78b283b5c5b54ddcaeb9b860cc7170ac6af2314d4a44055463ca23 height=21
+2025-10-26T11:52:28Z [faultlab] AddToWallet 246a25f95ab0a7d7e6590ee5aa8d0d7cc0faab55683a09379f07686860ded4c9  new Confirmed (block=4dc9d2d896e67792fb59f6e9ec201a946ca0a2adbe9a5ce23bab85d1a16c2914, height=16, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 054d46b4cf9d5145bee64081c510824650a363606932be8829c8c44e17fcd3c9  new Confirmed (block=2fa416b4df0955399e8f71d15098c86612885208246a6c9610cbff628a465591, height=17, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet e6dc707f72c280021e8ca134459aef0382f0566f78d310bd9ff6fc643d1fcc97  new Confirmed (block=2a51b0603bd2dab4fd6a66de5a1ce4a2e480a68ff823e97855b16b7c5c9e3470, height=18, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 518a47e2c2c53fbede622556833d724afcf7cf0814fc7c016a49b3596971fe94  new Confirmed (block=3f2656f3bcaeebb9c81207124712015fa293bf74f5d23af2d5e58f74116be458, height=19, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet ebf967c61a467e3eecc2958b908c8f98fe4a7a16146c8acae93a6366e06e59ad  new Confirmed (block=7f2dd68111f151fa46614179f50384ef01e8c1d59af842142eefe7e4a143bc3b, height=20, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=7d8f18c6bb78b283b5c5b54ddcaeb9b860cc7170ac6af2314d4a44055463ca23 height=21 version=0x20000000 log2_work=5.459432 tx=22 date='2025-10-26T11:52:33Z' progress=1.000000 cache=0.3MiB(21txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0aa17e23565ab415a9023c668a6595fb819cec12887040f6602354c7a3e8360e height=22
+2025-10-26T11:52:28Z UpdateTip: new best=0aa17e23565ab415a9023c668a6595fb819cec12887040f6602354c7a3e8360e height=22 version=0x20000000 log2_work=5.523562 tx=23 date='2025-10-26T11:52:33Z' progress=1.000000 cache=0.3MiB(22txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=257fade12aba9599fa4c48410fc375c2ae7b9859e5bf134f653a97e48da0210e height=23
+2025-10-26T11:52:28Z UpdateTip: new best=257fade12aba9599fa4c48410fc375c2ae7b9859e5bf134f653a97e48da0210e height=23 version=0x20000000 log2_work=5.584963 tx=24 date='2025-10-26T11:52:33Z' progress=1.000000 cache=0.3MiB(23txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7fb0a8a3bdd42f6751c291e53a2ae8f8d5416afc43a01f8b3b4dbd7edc4faf81 height=24
+2025-10-26T11:52:28Z UpdateTip: new best=7fb0a8a3bdd42f6751c291e53a2ae8f8d5416afc43a01f8b3b4dbd7edc4faf81 height=24 version=0x20000000 log2_work=5.643856 tx=25 date='2025-10-26T11:52:33Z' progress=1.000000 cache=0.3MiB(24txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=69f7743b3811b803b467cda382213a48ddc59b0bf029086c10aa4f7698fc5df8 height=25
+2025-10-26T11:52:28Z UpdateTip: new best=69f7743b3811b803b467cda382213a48ddc59b0bf029086c10aa4f7698fc5df8 height=25 version=0x20000000 log2_work=5.700440 tx=26 date='2025-10-26T11:52:33Z' progress=1.000000 cache=0.3MiB(25txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=1ccc1f85524d7d538e0dfca57abbdfc5c0518788a08a9e006fbd7bfdf853dcbd height=26
+2025-10-26T11:52:28Z [faultlab] AddToWallet de8b27987627fbfedc31b03040851359d5b3e363ee71be3cd5c706197c0f3212  new Confirmed (block=7d8f18c6bb78b283b5c5b54ddcaeb9b860cc7170ac6af2314d4a44055463ca23, height=21, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet e7205116046b22c62f4621b98e0afec308fabc9c2eae5306864dc858ba1f8d74  new Confirmed (block=0aa17e23565ab415a9023c668a6595fb819cec12887040f6602354c7a3e8360e, height=22, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet b5e4594b17be26a8a15cb1388ad7217b30da7f79fba4c0a31912f1258425b393  new Confirmed (block=257fade12aba9599fa4c48410fc375c2ae7b9859e5bf134f653a97e48da0210e, height=23, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d0ec0de679451ae23f6f855dd42fd1b115d5831380ee062dd70873f56a31f31d  new Confirmed (block=7fb0a8a3bdd42f6751c291e53a2ae8f8d5416afc43a01f8b3b4dbd7edc4faf81, height=24, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 406ebe18549ec37ee854827c3eea846b16ce410629ba672bb59179fe28035593  new Confirmed (block=69f7743b3811b803b467cda382213a48ddc59b0bf029086c10aa4f7698fc5df8, height=25, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=1ccc1f85524d7d538e0dfca57abbdfc5c0518788a08a9e006fbd7bfdf853dcbd height=26 version=0x20000000 log2_work=5.754888 tx=27 date='2025-10-26T11:52:34Z' progress=1.000000 cache=0.3MiB(26txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=07fb23316940385a65cec9c73faf643b94a31f0584fcedf55d9007fdf0f725e6 height=27
+2025-10-26T11:52:28Z UpdateTip: new best=07fb23316940385a65cec9c73faf643b94a31f0584fcedf55d9007fdf0f725e6 height=27 version=0x20000000 log2_work=5.807355 tx=28 date='2025-10-26T11:52:34Z' progress=1.000000 cache=0.3MiB(27txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=56b540729fdaf416cbd37f6f46bf98086eb2394b8b9b87ac9a43950a5461f17d height=28
+2025-10-26T11:52:28Z UpdateTip: new best=56b540729fdaf416cbd37f6f46bf98086eb2394b8b9b87ac9a43950a5461f17d height=28 version=0x20000000 log2_work=5.857981 tx=29 date='2025-10-26T11:52:34Z' progress=1.000000 cache=0.3MiB(28txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=1790718f27921598228e649fe92aecd243d2ed03744850bc58a0638ef3b668d8 height=29
+2025-10-26T11:52:28Z UpdateTip: new best=1790718f27921598228e649fe92aecd243d2ed03744850bc58a0638ef3b668d8 height=29 version=0x20000000 log2_work=5.906891 tx=30 date='2025-10-26T11:52:34Z' progress=1.000000 cache=0.3MiB(29txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4d257aab323c7f12e386d19a9fe7a6813e1c932cc774278e90e6cbf1805e2000 height=30
+2025-10-26T11:52:28Z UpdateTip: new best=4d257aab323c7f12e386d19a9fe7a6813e1c932cc774278e90e6cbf1805e2000 height=30 version=0x20000000 log2_work=5.954196 tx=31 date='2025-10-26T11:52:34Z' progress=1.000000 cache=0.3MiB(30txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=30cfaf644f3a493262a19d988540ab15b1a778ed45f7802a3de9f466a9372996 height=31
+2025-10-26T11:52:28Z [faultlab] AddToWallet 01bbf4963854441ee9c2378cbf6f9dae4d376d86cce635c135ba96c98d7285be  new Confirmed (block=1ccc1f85524d7d538e0dfca57abbdfc5c0518788a08a9e006fbd7bfdf853dcbd, height=26, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 92103a961cd6ec566619846a42fb272700910d7729b88782baa7710460eac3a1  new Confirmed (block=07fb23316940385a65cec9c73faf643b94a31f0584fcedf55d9007fdf0f725e6, height=27, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d4336149db91f417b1a3a90f10199b9c88bbd0f186f5b808872dbea80cf594f4  new Confirmed (block=56b540729fdaf416cbd37f6f46bf98086eb2394b8b9b87ac9a43950a5461f17d, height=28, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d1fcb3c60f11efc39ef1ef4ff0bc1143a33b4c01f848743192a904226009ddf0  new Confirmed (block=1790718f27921598228e649fe92aecd243d2ed03744850bc58a0638ef3b668d8, height=29, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d4c9922f5786fc32845f5ff1b5c2426eb93dfe11e216533e3de80253e5f4735e  new Confirmed (block=4d257aab323c7f12e386d19a9fe7a6813e1c932cc774278e90e6cbf1805e2000, height=30, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=30cfaf644f3a493262a19d988540ab15b1a778ed45f7802a3de9f466a9372996 height=31 version=0x20000000 log2_work=6.000000 tx=32 date='2025-10-26T11:52:34Z' progress=1.000000 cache=0.3MiB(31txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=47cdd886eabe41086d129c4f0cd205c863798bd7188288bf43f2873b16869251 height=32
+2025-10-26T11:52:28Z UpdateTip: new best=47cdd886eabe41086d129c4f0cd205c863798bd7188288bf43f2873b16869251 height=32 version=0x20000000 log2_work=6.044394 tx=33 date='2025-10-26T11:52:35Z' progress=1.000000 cache=0.3MiB(32txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=304546bf216e694787984738146abdd4315473ab4440650c4b0a7526903dd84a height=33
+2025-10-26T11:52:28Z UpdateTip: new best=304546bf216e694787984738146abdd4315473ab4440650c4b0a7526903dd84a height=33 version=0x20000000 log2_work=6.087463 tx=34 date='2025-10-26T11:52:35Z' progress=1.000000 cache=0.3MiB(33txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=453e87d4294d2830539e0db94c27fcc48b45b0c0ed5505208906c368c54b06a6 height=34
+2025-10-26T11:52:28Z UpdateTip: new best=453e87d4294d2830539e0db94c27fcc48b45b0c0ed5505208906c368c54b06a6 height=34 version=0x20000000 log2_work=6.129283 tx=35 date='2025-10-26T11:52:35Z' progress=1.000000 cache=0.3MiB(34txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0454848775d26b79b585bdcf895166a2f87ab2d991794fa5b4ec9b5aa80915d2 height=35
+2025-10-26T11:52:28Z UpdateTip: new best=0454848775d26b79b585bdcf895166a2f87ab2d991794fa5b4ec9b5aa80915d2 height=35 version=0x20000000 log2_work=6.169925 tx=36 date='2025-10-26T11:52:35Z' progress=1.000000 cache=0.3MiB(35txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7bbeab30bbb8172aab5611f7704b71347707ed0fbec692c93123c83c2c485962 height=36
+2025-10-26T11:52:28Z [faultlab] AddToWallet eb2575db752ea548f476f6b57138fed3003c7d4f1bc7a4c36f5484b6bd22c43b  new Confirmed (block=30cfaf644f3a493262a19d988540ab15b1a778ed45f7802a3de9f466a9372996, height=31, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d8e6b1d873212c2fdeb5409cd98433326b89f6b8272f087fdb82f3363b8b836e  new Confirmed (block=47cdd886eabe41086d129c4f0cd205c863798bd7188288bf43f2873b16869251, height=32, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 304aa5d8e44f500635d2c165a61bfbfc19eb15797d7251f57d3d3a41739df44a  new Confirmed (block=304546bf216e694787984738146abdd4315473ab4440650c4b0a7526903dd84a, height=33, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 6dfd6684ad5d718ca2fe3758c1ecd4c70be88c6952086c832393e6094daa981d  new Confirmed (block=453e87d4294d2830539e0db94c27fcc48b45b0c0ed5505208906c368c54b06a6, height=34, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 73f36fd5bbca2b04db0f907f9708de1c66ac7df70316a6ce82f4e23f2d09035a  new Confirmed (block=0454848775d26b79b585bdcf895166a2f87ab2d991794fa5b4ec9b5aa80915d2, height=35, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=7bbeab30bbb8172aab5611f7704b71347707ed0fbec692c93123c83c2c485962 height=36 version=0x20000000 log2_work=6.209453 tx=37 date='2025-10-26T11:52:35Z' progress=1.000000 cache=0.3MiB(36txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=2b6665e9664e763d82cf31076dbc75d8d60385212a35286824399edc23648dcb height=37
+2025-10-26T11:52:28Z UpdateTip: new best=2b6665e9664e763d82cf31076dbc75d8d60385212a35286824399edc23648dcb height=37 version=0x20000000 log2_work=6.247928 tx=38 date='2025-10-26T11:52:35Z' progress=1.000000 cache=0.3MiB(37txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=42e50fcd608ec0976de0b2ec6ec0c7721286aedd62b5699e692107d9509e8bd0 height=38
+2025-10-26T11:52:28Z UpdateTip: new best=42e50fcd608ec0976de0b2ec6ec0c7721286aedd62b5699e692107d9509e8bd0 height=38 version=0x20000000 log2_work=6.285402 tx=39 date='2025-10-26T11:52:36Z' progress=1.000000 cache=0.3MiB(38txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4ce4bffdae08cb2ffa0195e72594a5416fa7ba044594bfcca12c169b7be8e9bb height=39
+2025-10-26T11:52:28Z UpdateTip: new best=4ce4bffdae08cb2ffa0195e72594a5416fa7ba044594bfcca12c169b7be8e9bb height=39 version=0x20000000 log2_work=6.321928 tx=40 date='2025-10-26T11:52:36Z' progress=1.000000 cache=0.3MiB(39txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=236a1a0927ebfd976811523a0a039a73b331433984dca5254a154e27c52e4a80 height=40
+2025-10-26T11:52:28Z UpdateTip: new best=236a1a0927ebfd976811523a0a039a73b331433984dca5254a154e27c52e4a80 height=40 version=0x20000000 log2_work=6.357552 tx=41 date='2025-10-26T11:52:36Z' progress=1.000000 cache=0.3MiB(40txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=348c55b6a91fa12192bf017cbab4a7176cb37ff7a5b4bdfd9f0bfff574860cd2 height=41
+2025-10-26T11:52:28Z [faultlab] AddToWallet 8bb0c6a0731d4fe7561a1d05db3febb81d20ac61619005e57343ac357c4ce94f  new Confirmed (block=7bbeab30bbb8172aab5611f7704b71347707ed0fbec692c93123c83c2c485962, height=36, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 1cd8065201406b076c08706509da7196280d9591d8c6274f88cc785d2facc7f7  new Confirmed (block=2b6665e9664e763d82cf31076dbc75d8d60385212a35286824399edc23648dcb, height=37, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet b61456c89c1209748788b4b1e015a91f4c294d68835ca6d7cb5d9813594c7e78  new Confirmed (block=42e50fcd608ec0976de0b2ec6ec0c7721286aedd62b5699e692107d9509e8bd0, height=38, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 36fdf9717f0b23fda08f153fec54650d68692cdb6a7894bf9d8143162e6e261f  new Confirmed (block=4ce4bffdae08cb2ffa0195e72594a5416fa7ba044594bfcca12c169b7be8e9bb, height=39, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 2f0b27c514c24ddb82db4a5b3e9856000044ffb372f0945b96b2daaa37896870  new Confirmed (block=236a1a0927ebfd976811523a0a039a73b331433984dca5254a154e27c52e4a80, height=40, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=348c55b6a91fa12192bf017cbab4a7176cb37ff7a5b4bdfd9f0bfff574860cd2 height=41 version=0x20000000 log2_work=6.392317 tx=42 date='2025-10-26T11:52:36Z' progress=1.000000 cache=0.3MiB(41txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6a4035bc920052979c9991cc9114ac86864420d4fea3791b857f7c3b2cfbc986 height=42
+2025-10-26T11:52:28Z UpdateTip: new best=6a4035bc920052979c9991cc9114ac86864420d4fea3791b857f7c3b2cfbc986 height=42 version=0x20000000 log2_work=6.426265 tx=43 date='2025-10-26T11:52:36Z' progress=1.000000 cache=0.3MiB(42txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3c2ddddf4f7ff6a1ead99537904216a6f3ad361dc27f0797ed254d3d2139935f height=43
+2025-10-26T11:52:28Z UpdateTip: new best=3c2ddddf4f7ff6a1ead99537904216a6f3ad361dc27f0797ed254d3d2139935f height=43 version=0x20000000 log2_work=6.459432 tx=44 date='2025-10-26T11:52:36Z' progress=1.000000 cache=0.3MiB(43txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7f244fc0fabe0046993ff52176d9b62fe5a34bf48bedd0b45c9ac50f143b98fe height=44
+2025-10-26T11:52:28Z UpdateTip: new best=7f244fc0fabe0046993ff52176d9b62fe5a34bf48bedd0b45c9ac50f143b98fe height=44 version=0x20000000 log2_work=6.491853 tx=45 date='2025-10-26T11:52:37Z' progress=1.000000 cache=0.3MiB(44txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=629cb4add3944569d0c65dc29264445d2ff833eeb5eeb24d180d9198276bdbb0 height=45
+2025-10-26T11:52:28Z UpdateTip: new best=629cb4add3944569d0c65dc29264445d2ff833eeb5eeb24d180d9198276bdbb0 height=45 version=0x20000000 log2_work=6.523562 tx=46 date='2025-10-26T11:52:37Z' progress=1.000000 cache=0.3MiB(45txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=622c4bd6031243be4d9258a19fcaa587235277824ef6539351f2bf01f501e5d3 height=46
+2025-10-26T11:52:28Z [faultlab] AddToWallet 7cd9783f367d4396330e0c463c2c2cdb7a9476f712ccc4d0e8bc9967108aa1be  new Confirmed (block=348c55b6a91fa12192bf017cbab4a7176cb37ff7a5b4bdfd9f0bfff574860cd2, height=41, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet bcbbc889b346f00e3c47faf5a2f308ffe82ee92b7a1f99b10210d42ede2b03f8  new Confirmed (block=6a4035bc920052979c9991cc9114ac86864420d4fea3791b857f7c3b2cfbc986, height=42, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet fa903b2750688f76bf0139600c9d823e471acd03d403b6b20a2856a72a7c6737  new Confirmed (block=3c2ddddf4f7ff6a1ead99537904216a6f3ad361dc27f0797ed254d3d2139935f, height=43, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 296f6862340e5f49ffb277631d612793f086e2ba12b02e4111c045542b3a75dd  new Confirmed (block=7f244fc0fabe0046993ff52176d9b62fe5a34bf48bedd0b45c9ac50f143b98fe, height=44, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 6edaf9f7d6db159de47ee7f4784eeadc265de6f8f67d80f62431bba0c7e17bda  new Confirmed (block=629cb4add3944569d0c65dc29264445d2ff833eeb5eeb24d180d9198276bdbb0, height=45, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=622c4bd6031243be4d9258a19fcaa587235277824ef6539351f2bf01f501e5d3 height=46 version=0x20000000 log2_work=6.554589 tx=47 date='2025-10-26T11:52:37Z' progress=1.000000 cache=0.3MiB(46txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3bb0aca5ed2c667d7daf5b608ccea46fe4a48e614f621f43a702930f1164b7f9 height=47
+2025-10-26T11:52:28Z UpdateTip: new best=3bb0aca5ed2c667d7daf5b608ccea46fe4a48e614f621f43a702930f1164b7f9 height=47 version=0x20000000 log2_work=6.584963 tx=48 date='2025-10-26T11:52:37Z' progress=1.000000 cache=0.3MiB(47txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=45d34107fe70bb15f48e860a4977850d71d83f5c16043b3c41283df99c987730 height=48
+2025-10-26T11:52:28Z UpdateTip: new best=45d34107fe70bb15f48e860a4977850d71d83f5c16043b3c41283df99c987730 height=48 version=0x20000000 log2_work=6.614710 tx=49 date='2025-10-26T11:52:37Z' progress=1.000000 cache=0.3MiB(48txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=158a50937f62e1fb460e7ff9bf575d2c147ddd8926503d79722635327ca7a8d8 height=49
+2025-10-26T11:52:28Z UpdateTip: new best=158a50937f62e1fb460e7ff9bf575d2c147ddd8926503d79722635327ca7a8d8 height=49 version=0x20000000 log2_work=6.643856 tx=50 date='2025-10-26T11:52:37Z' progress=1.000000 cache=0.3MiB(49txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0e7219efe841a8a70a02fdf0f3f6cdd837db2befd461af9722d47dcd31b6c03e height=50
+2025-10-26T11:52:28Z UpdateTip: new best=0e7219efe841a8a70a02fdf0f3f6cdd837db2befd461af9722d47dcd31b6c03e height=50 version=0x20000000 log2_work=6.672425 tx=51 date='2025-10-26T11:52:38Z' progress=1.000000 cache=0.3MiB(50txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3e9b3d458de2effd2ba4b1b470a0ac495b904d5c73b94e5aae3929d082b4be11 height=51
+2025-10-26T11:52:28Z [faultlab] AddToWallet 3eaef40c00389f80f9f90f16e50bac742eeb80c855e697fdcb802f084a1c6225  new Confirmed (block=622c4bd6031243be4d9258a19fcaa587235277824ef6539351f2bf01f501e5d3, height=46, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 2d1abe25ed4c85b80afcc846b813220902b5a0e12e43d579095acd1c2208a2c4  new Confirmed (block=3bb0aca5ed2c667d7daf5b608ccea46fe4a48e614f621f43a702930f1164b7f9, height=47, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet ae31e6cfaf88e1129d3527dc4fe2c1a6a7053aa4d1457b6f1bf2e6af7f379840  new Confirmed (block=45d34107fe70bb15f48e860a4977850d71d83f5c16043b3c41283df99c987730, height=48, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet a8f7530ae2256f053a33c854004858e98afd57d89f815fffc7b2215b51d1f3c5  new Confirmed (block=158a50937f62e1fb460e7ff9bf575d2c147ddd8926503d79722635327ca7a8d8, height=49, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet a91d8ad08e04b5cc105a89b8719de4d273c1c0477c6077be592b1e0ca31ad66c  new Confirmed (block=0e7219efe841a8a70a02fdf0f3f6cdd837db2befd461af9722d47dcd31b6c03e, height=50, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=3e9b3d458de2effd2ba4b1b470a0ac495b904d5c73b94e5aae3929d082b4be11 height=51 version=0x20000000 log2_work=6.700440 tx=52 date='2025-10-26T11:52:38Z' progress=1.000000 cache=0.3MiB(51txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=17d49ac449bc7dbc1125105b7ab914243229dbd5d5f6b305b28f0bef6f75b39f height=52
+2025-10-26T11:52:28Z UpdateTip: new best=17d49ac449bc7dbc1125105b7ab914243229dbd5d5f6b305b28f0bef6f75b39f height=52 version=0x20000000 log2_work=6.727920 tx=53 date='2025-10-26T11:52:38Z' progress=1.000000 cache=0.3MiB(52txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6ac397f4e4bb38e9d324e17308d3d3f9f03ce8d63b607b38c2b1740003adaf9d height=53
+2025-10-26T11:52:28Z UpdateTip: new best=6ac397f4e4bb38e9d324e17308d3d3f9f03ce8d63b607b38c2b1740003adaf9d height=53 version=0x20000000 log2_work=6.754888 tx=54 date='2025-10-26T11:52:38Z' progress=1.000000 cache=0.3MiB(53txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=170bda0131af7659292a6196c240a2a18a780a22cb662e60c26bd0e646e84378 height=54
+2025-10-26T11:52:28Z UpdateTip: new best=170bda0131af7659292a6196c240a2a18a780a22cb662e60c26bd0e646e84378 height=54 version=0x20000000 log2_work=6.781360 tx=55 date='2025-10-26T11:52:38Z' progress=1.000000 cache=0.3MiB(54txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=677b97252c0cadc4ea1e19d1d7b4cd3f03f178ed8d2fb97de2ed8ef33495c15e height=55
+2025-10-26T11:52:28Z UpdateTip: new best=677b97252c0cadc4ea1e19d1d7b4cd3f03f178ed8d2fb97de2ed8ef33495c15e height=55 version=0x20000000 log2_work=6.807355 tx=56 date='2025-10-26T11:52:38Z' progress=1.000000 cache=0.3MiB(55txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=63a05eda0e0517a53875042315156a673420d24dd05bd710bb5bb336a1411d5e height=56
+2025-10-26T11:52:28Z [faultlab] AddToWallet 105c535ab682da649d4e7d2a92817e01da756aae641a4267fdd9d5a7b483a631  new Confirmed (block=3e9b3d458de2effd2ba4b1b470a0ac495b904d5c73b94e5aae3929d082b4be11, height=51, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet c5ca2235b708de9f0a4fba6fdcb449d3a25be34e53430a10e622c1188fb34c8f  new Confirmed (block=17d49ac449bc7dbc1125105b7ab914243229dbd5d5f6b305b28f0bef6f75b39f, height=52, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 6494c0e8a40d77fe897eb0f35a748db743d2fae2fd26cea3d07bbc8ec15a2dd3  new Confirmed (block=6ac397f4e4bb38e9d324e17308d3d3f9f03ce8d63b607b38c2b1740003adaf9d, height=53, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet bbcb08c73dfb5793791281f2f88fea1843fb101e6e3294eeed322f536295692f  new Confirmed (block=170bda0131af7659292a6196c240a2a18a780a22cb662e60c26bd0e646e84378, height=54, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet f46b698c39439891048c7c8d1ab00d482dac8ce350e41e280e04ebd42f7be136  new Confirmed (block=677b97252c0cadc4ea1e19d1d7b4cd3f03f178ed8d2fb97de2ed8ef33495c15e, height=55, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=63a05eda0e0517a53875042315156a673420d24dd05bd710bb5bb336a1411d5e height=56 version=0x20000000 log2_work=6.832890 tx=57 date='2025-10-26T11:52:39Z' progress=1.000000 cache=0.3MiB(56txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=5bb0ed4eb5c33f9e9fec195b9103e2a04036ecba37bf0bc285f69338487440f0 height=57
+2025-10-26T11:52:28Z UpdateTip: new best=5bb0ed4eb5c33f9e9fec195b9103e2a04036ecba37bf0bc285f69338487440f0 height=57 version=0x20000000 log2_work=6.857981 tx=58 date='2025-10-26T11:52:39Z' progress=1.000000 cache=0.3MiB(57txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=27668632aa6e80869e4584d732dd7679b1b58730473b0b7723ad3e7b5aa3f1c1 height=58
+2025-10-26T11:52:28Z UpdateTip: new best=27668632aa6e80869e4584d732dd7679b1b58730473b0b7723ad3e7b5aa3f1c1 height=58 version=0x20000000 log2_work=6.882643 tx=59 date='2025-10-26T11:52:39Z' progress=1.000000 cache=0.3MiB(58txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=17f10d352fe71090161838ac1258f0f6c846cdfc5e814592daf3a9f8a198487b height=59
+2025-10-26T11:52:28Z UpdateTip: new best=17f10d352fe71090161838ac1258f0f6c846cdfc5e814592daf3a9f8a198487b height=59 version=0x20000000 log2_work=6.906891 tx=60 date='2025-10-26T11:52:39Z' progress=1.000000 cache=0.3MiB(59txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4da4612ad719fcf89dd4db4ca60c160799e81ba4abe6d280c74f9c27da2388b8 height=60
+2025-10-26T11:52:28Z UpdateTip: new best=4da4612ad719fcf89dd4db4ca60c160799e81ba4abe6d280c74f9c27da2388b8 height=60 version=0x20000000 log2_work=6.930737 tx=61 date='2025-10-26T11:52:39Z' progress=1.000000 cache=0.3MiB(60txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0b3e0cbd819879a35a499d62d486676ff6338238d4d269d2a4d9af4ea510bfc3 height=61
+2025-10-26T11:52:28Z [faultlab] AddToWallet a0df1f412c90b3719f6be67a63e6a712b9711357cdac59be01c0012efcbe8ccd  new Confirmed (block=63a05eda0e0517a53875042315156a673420d24dd05bd710bb5bb336a1411d5e, height=56, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 09e07e27d7dc3c4d7582078f134ffefdd001df72cba3d06872b16151dd2114c0  new Confirmed (block=5bb0ed4eb5c33f9e9fec195b9103e2a04036ecba37bf0bc285f69338487440f0, height=57, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet b3bb30898f9769612b4ea31c1b0c7d3cfcbfdbfe43bb98e2dcd7a1b1cc784ba4  new Confirmed (block=27668632aa6e80869e4584d732dd7679b1b58730473b0b7723ad3e7b5aa3f1c1, height=58, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet e411dcc89b2912a1ddf72cce4594e7c371e1d71099a0c36f08a707af1c156004  new Confirmed (block=17f10d352fe71090161838ac1258f0f6c846cdfc5e814592daf3a9f8a198487b, height=59, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d4977a643721112bd5b3c864e3e3e62e3d3031a522cbcb0aee2afdabfd15f5f6  new Confirmed (block=4da4612ad719fcf89dd4db4ca60c160799e81ba4abe6d280c74f9c27da2388b8, height=60, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=0b3e0cbd819879a35a499d62d486676ff6338238d4d269d2a4d9af4ea510bfc3 height=61 version=0x20000000 log2_work=6.954196 tx=62 date='2025-10-26T11:52:39Z' progress=1.000000 cache=0.3MiB(61txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=698a9bdef3362d178b05a70d361ce07f4ee4b7e5ffc26a5c547b9ec4aa1a8752 height=62
+2025-10-26T11:52:28Z UpdateTip: new best=698a9bdef3362d178b05a70d361ce07f4ee4b7e5ffc26a5c547b9ec4aa1a8752 height=62 version=0x20000000 log2_work=6.977280 tx=63 date='2025-10-26T11:52:40Z' progress=1.000000 cache=0.3MiB(62txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=01bc8341e580cc3eccdfb34995efdfc459f95ca5cfc5922165c1e0a4708021b4 height=63
+2025-10-26T11:52:28Z UpdateTip: new best=01bc8341e580cc3eccdfb34995efdfc459f95ca5cfc5922165c1e0a4708021b4 height=63 version=0x20000000 log2_work=7.000000 tx=64 date='2025-10-26T11:52:40Z' progress=1.000000 cache=0.3MiB(63txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0a64308cf3cab2e33a7295cad0ba2f58cce8460466d6317fc3e8cada08ff6607 height=64
+2025-10-26T11:52:28Z UpdateTip: new best=0a64308cf3cab2e33a7295cad0ba2f58cce8460466d6317fc3e8cada08ff6607 height=64 version=0x20000000 log2_work=7.022368 tx=65 date='2025-10-26T11:52:40Z' progress=1.000000 cache=0.3MiB(64txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=1d07c16b46dd5584fa93b01a6648735675b2a57f2072499b44ea60826283299b height=65
+2025-10-26T11:52:28Z UpdateTip: new best=1d07c16b46dd5584fa93b01a6648735675b2a57f2072499b44ea60826283299b height=65 version=0x20000000 log2_work=7.044394 tx=66 date='2025-10-26T11:52:40Z' progress=1.000000 cache=0.3MiB(65txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=03288f83f5d2ca28f068bc278198bb8d477e53c6cc3ba3494859589f5497f3af height=66
+2025-10-26T11:52:28Z [faultlab] AddToWallet 18d742a883b847be0e6ddbe824813372951caaf3717074e23162b121b2ea14f6  new Confirmed (block=0b3e0cbd819879a35a499d62d486676ff6338238d4d269d2a4d9af4ea510bfc3, height=61, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 3e818ea9aaecaf71c90f56e5bb5608b9e20a32ada5cb6dd172f97882d99d6697  new Confirmed (block=698a9bdef3362d178b05a70d361ce07f4ee4b7e5ffc26a5c547b9ec4aa1a8752, height=62, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet b7148eb7ec04d1c50fbcabe1f3e8ff188678212be919d3eb3fb2bfcdd770e4fa  new Confirmed (block=01bc8341e580cc3eccdfb34995efdfc459f95ca5cfc5922165c1e0a4708021b4, height=63, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 49fc81c33d63f65da176c016d063447efe190279be238d482d56dc96516a57a8  new Confirmed (block=0a64308cf3cab2e33a7295cad0ba2f58cce8460466d6317fc3e8cada08ff6607, height=64, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 63bf44ccdae9351ecc4b6ae55c4b28e5fcc63ed02bf584c3222d9c3398ec15f7  new Confirmed (block=1d07c16b46dd5584fa93b01a6648735675b2a57f2072499b44ea60826283299b, height=65, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=03288f83f5d2ca28f068bc278198bb8d477e53c6cc3ba3494859589f5497f3af height=66 version=0x20000000 log2_work=7.066089 tx=67 date='2025-10-26T11:52:40Z' progress=1.000000 cache=0.3MiB(66txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=284796dad1be499289a948c28d201be099d4928e1a5000fd073f75f143525dc1 height=67
+2025-10-26T11:52:28Z UpdateTip: new best=284796dad1be499289a948c28d201be099d4928e1a5000fd073f75f143525dc1 height=67 version=0x20000000 log2_work=7.087463 tx=68 date='2025-10-26T11:52:40Z' progress=1.000000 cache=0.3MiB(67txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=050b6aa96d53f898c11e1c4c1c455e14526d3c92b65006077a1e7e5f034269e2 height=68
+2025-10-26T11:52:28Z UpdateTip: new best=050b6aa96d53f898c11e1c4c1c455e14526d3c92b65006077a1e7e5f034269e2 height=68 version=0x20000000 log2_work=7.108524 tx=69 date='2025-10-26T11:52:41Z' progress=1.000000 cache=0.3MiB(68txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=5f967b27fbec9c9a85f08953c7c920b83e0d7d314d9791fa14ba641da024b334 height=69
+2025-10-26T11:52:28Z UpdateTip: new best=5f967b27fbec9c9a85f08953c7c920b83e0d7d314d9791fa14ba641da024b334 height=69 version=0x20000000 log2_work=7.129283 tx=70 date='2025-10-26T11:52:41Z' progress=1.000000 cache=0.3MiB(69txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7c1670f2ddc539fca89b64bc3cde537c9ba5f08a7c47b5e68dee2893c3cd804f height=70
+2025-10-26T11:52:28Z UpdateTip: new best=7c1670f2ddc539fca89b64bc3cde537c9ba5f08a7c47b5e68dee2893c3cd804f height=70 version=0x20000000 log2_work=7.149747 tx=71 date='2025-10-26T11:52:41Z' progress=1.000000 cache=0.3MiB(70txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6b46155c64c91e1d870ef248dce27c95bff158ed9ecfbf813284b3d99cb0c60a height=71
+2025-10-26T11:52:28Z [faultlab] AddToWallet 915b5b8aceba5f71fa05d77a4fe8c4f5d93d75eb3670f2d06228bf7d3fa4e71f  new Confirmed (block=03288f83f5d2ca28f068bc278198bb8d477e53c6cc3ba3494859589f5497f3af, height=66, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 9ee038aa37dab1504f5270c5031a59449941859c4d2ed45839d27a43262a0773  new Confirmed (block=284796dad1be499289a948c28d201be099d4928e1a5000fd073f75f143525dc1, height=67, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 48601142c0979280672ce11d77b711ba79ce59da120c2da12334d3faed9442d1  new Confirmed (block=050b6aa96d53f898c11e1c4c1c455e14526d3c92b65006077a1e7e5f034269e2, height=68, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 5e5d864e5a1f4c9a7d69b34b67ec3159741210f12b94ecc3d5799ebd996d4a41  new Confirmed (block=5f967b27fbec9c9a85f08953c7c920b83e0d7d314d9791fa14ba641da024b334, height=69, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 74402a918e31a1462d460f7bb398ce64020929926890cf2a89e6fe48d62dfcce  new Confirmed (block=7c1670f2ddc539fca89b64bc3cde537c9ba5f08a7c47b5e68dee2893c3cd804f, height=70, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=6b46155c64c91e1d870ef248dce27c95bff158ed9ecfbf813284b3d99cb0c60a height=71 version=0x20000000 log2_work=7.169925 tx=72 date='2025-10-26T11:52:41Z' progress=1.000000 cache=0.3MiB(71txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=62856e87a1c6ee90551d1159badea3b391ff366437449fb7c5d4d0fb28a5bbfb height=72
+2025-10-26T11:52:28Z UpdateTip: new best=62856e87a1c6ee90551d1159badea3b391ff366437449fb7c5d4d0fb28a5bbfb height=72 version=0x20000000 log2_work=7.189825 tx=73 date='2025-10-26T11:52:41Z' progress=1.000000 cache=0.3MiB(72txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=7407cd12a344ba821f459003b4568b1338459577de5c9e97d9d0341bd2efb533 height=73
+2025-10-26T11:52:28Z UpdateTip: new best=7407cd12a344ba821f459003b4568b1338459577de5c9e97d9d0341bd2efb533 height=73 version=0x20000000 log2_work=7.209453 tx=74 date='2025-10-26T11:52:41Z' progress=1.000000 cache=0.3MiB(73txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=06198c235b1b9a1b1275ce49c0a0035f50aba39a5bfdf6888898841afa5e83bc height=74
+2025-10-26T11:52:28Z UpdateTip: new best=06198c235b1b9a1b1275ce49c0a0035f50aba39a5bfdf6888898841afa5e83bc height=74 version=0x20000000 log2_work=7.228819 tx=75 date='2025-10-26T11:52:42Z' progress=1.000000 cache=0.3MiB(74txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=45cb4ba25a7ad0be82d3c733221c25fa5d2349b4eadc8e39f49fdefedad59487 height=75
+2025-10-26T11:52:28Z UpdateTip: new best=45cb4ba25a7ad0be82d3c733221c25fa5d2349b4eadc8e39f49fdefedad59487 height=75 version=0x20000000 log2_work=7.247928 tx=76 date='2025-10-26T11:52:42Z' progress=1.000000 cache=0.3MiB(75txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=377bf72672915cc2ae46aff1e0745a7ff2ae78de42b1976b6f13adf98b753a32 height=76
+2025-10-26T11:52:28Z [faultlab] AddToWallet e26229d89da33c61c126e754234835ad3ec6fa73ae2aa9a373191433b045849a  new Confirmed (block=6b46155c64c91e1d870ef248dce27c95bff158ed9ecfbf813284b3d99cb0c60a, height=71, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 4a3ad871564f8aaec44d16500b0507e10acf525b9f0944d6b628afdc376eae73  new Confirmed (block=62856e87a1c6ee90551d1159badea3b391ff366437449fb7c5d4d0fb28a5bbfb, height=72, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 157b43ffa15cb58a76485298110116feb31df53c1add132bdfa07380306bc3e6  new Confirmed (block=7407cd12a344ba821f459003b4568b1338459577de5c9e97d9d0341bd2efb533, height=73, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet b0c7d0576930acd20a97eb24fa479542f7d7c6ccd11174b1158e9c3134cc886d  new Confirmed (block=06198c235b1b9a1b1275ce49c0a0035f50aba39a5bfdf6888898841afa5e83bc, height=74, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 9e7be70645d6f7b97cea85cea2a6713fffc1c3d4e5039fede88af3d0afce5d07  new Confirmed (block=45cb4ba25a7ad0be82d3c733221c25fa5d2349b4eadc8e39f49fdefedad59487, height=75, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=377bf72672915cc2ae46aff1e0745a7ff2ae78de42b1976b6f13adf98b753a32 height=76 version=0x20000000 log2_work=7.266787 tx=77 date='2025-10-26T11:52:42Z' progress=1.000000 cache=0.3MiB(76txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6144d1dfcf89b70fb0c687cc2b30e0a20be623236ca959f6536ef36d950ba2dd height=77
+2025-10-26T11:52:28Z UpdateTip: new best=6144d1dfcf89b70fb0c687cc2b30e0a20be623236ca959f6536ef36d950ba2dd height=77 version=0x20000000 log2_work=7.285402 tx=78 date='2025-10-26T11:52:42Z' progress=1.000000 cache=0.3MiB(77txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3d7456d041a4fd6583a1316c5a884934b5fe63010ab61cf32f59ddb46aeede8d height=78
+2025-10-26T11:52:28Z UpdateTip: new best=3d7456d041a4fd6583a1316c5a884934b5fe63010ab61cf32f59ddb46aeede8d height=78 version=0x20000000 log2_work=7.303781 tx=79 date='2025-10-26T11:52:42Z' progress=1.000000 cache=0.3MiB(78txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=10256b5365268ca0127e924334703b79ff31ee293dc7355a0375a7be1f9c3ee6 height=79
+2025-10-26T11:52:28Z UpdateTip: new best=10256b5365268ca0127e924334703b79ff31ee293dc7355a0375a7be1f9c3ee6 height=79 version=0x20000000 log2_work=7.321928 tx=80 date='2025-10-26T11:52:42Z' progress=1.000000 cache=0.3MiB(79txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=043dbdfa54814baf46db5fd33d0329b657a1cd91ceb9b0589f2ffc5051b91ecb height=80
+2025-10-26T11:52:28Z UpdateTip: new best=043dbdfa54814baf46db5fd33d0329b657a1cd91ceb9b0589f2ffc5051b91ecb height=80 version=0x20000000 log2_work=7.339850 tx=81 date='2025-10-26T11:52:43Z' progress=1.000000 cache=0.3MiB(80txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=43d5a9bff682b2480fb4f5e2a894dcf4ed534f998390170bcfb944bcf2f9af2d height=81
+2025-10-26T11:52:28Z [faultlab] AddToWallet a74d78748d7e6bf7788145ffd9ecb33dac2d6bcd56ff532c9d8ad52b23a0762d  new Confirmed (block=377bf72672915cc2ae46aff1e0745a7ff2ae78de42b1976b6f13adf98b753a32, height=76, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 998142a4eeb36658b78d6367f08132d25c583efe6bba0d0916e654ca37ed5b78  new Confirmed (block=6144d1dfcf89b70fb0c687cc2b30e0a20be623236ca959f6536ef36d950ba2dd, height=77, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 4b0407fd8ba4000e01efa72fb32304b0dd6da6e4df976bce4ea41fb806c2c716  new Confirmed (block=3d7456d041a4fd6583a1316c5a884934b5fe63010ab61cf32f59ddb46aeede8d, height=78, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 01871c74e5e867d86308b9f59e4bbaf358493345691398859e040ffa7eccb5a2  new Confirmed (block=10256b5365268ca0127e924334703b79ff31ee293dc7355a0375a7be1f9c3ee6, height=79, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 33dcca428dd80ac2ff9c1660f4a84f96014ddf6a23c84f56ff05883bda2aa980  new Confirmed (block=043dbdfa54814baf46db5fd33d0329b657a1cd91ceb9b0589f2ffc5051b91ecb, height=80, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=43d5a9bff682b2480fb4f5e2a894dcf4ed534f998390170bcfb944bcf2f9af2d height=81 version=0x20000000 log2_work=7.357552 tx=82 date='2025-10-26T11:52:43Z' progress=1.000000 cache=0.3MiB(81txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=08d8749abbf07ab9fcf4f6d4979b4bd7f63e0b9d5718bcf0d0608bd52082ed45 height=82
+2025-10-26T11:52:28Z UpdateTip: new best=08d8749abbf07ab9fcf4f6d4979b4bd7f63e0b9d5718bcf0d0608bd52082ed45 height=82 version=0x20000000 log2_work=7.375039 tx=83 date='2025-10-26T11:52:43Z' progress=1.000000 cache=0.3MiB(82txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=1480ca26c913b2792d0cd2f217108f6738491f065e2ab07777ee0f74792c5170 height=83
+2025-10-26T11:52:28Z UpdateTip: new best=1480ca26c913b2792d0cd2f217108f6738491f065e2ab07777ee0f74792c5170 height=83 version=0x20000000 log2_work=7.392317 tx=84 date='2025-10-26T11:52:43Z' progress=1.000000 cache=0.3MiB(83txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=186baa1ae69930615003552758c72bbb5a7ef4d9732c0ff2a4ed7191b3583e8e height=84
+2025-10-26T11:52:28Z UpdateTip: new best=186baa1ae69930615003552758c72bbb5a7ef4d9732c0ff2a4ed7191b3583e8e height=84 version=0x20000000 log2_work=7.409391 tx=85 date='2025-10-26T11:52:43Z' progress=1.000000 cache=0.3MiB(84txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3f4e8067c0f5ece8ea10c3a4b327bb36e323689cef80add4d2ab8e50be14386c height=85
+2025-10-26T11:52:28Z UpdateTip: new best=3f4e8067c0f5ece8ea10c3a4b327bb36e323689cef80add4d2ab8e50be14386c height=85 version=0x20000000 log2_work=7.426265 tx=86 date='2025-10-26T11:52:43Z' progress=1.000000 cache=0.3MiB(85txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4914ba14ddeb46689f48068cd8a0ad971dd368cd8c6b1de61aa7077628440e97 height=86
+2025-10-26T11:52:28Z [faultlab] AddToWallet 0b2c7206613b594bff6ac8de3ec62faaa02bf2b68a343be25583960830c43633  new Confirmed (block=43d5a9bff682b2480fb4f5e2a894dcf4ed534f998390170bcfb944bcf2f9af2d, height=81, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 7673ce797b72b690ff2e4ad51e51b3815aa0e60091f9e83492dec1ab4384ebb8  new Confirmed (block=08d8749abbf07ab9fcf4f6d4979b4bd7f63e0b9d5718bcf0d0608bd52082ed45, height=82, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 01c78050a60ff09295c381275b415a94278bb25deb32aee6ef8791f67e98c2e7  new Confirmed (block=1480ca26c913b2792d0cd2f217108f6738491f065e2ab07777ee0f74792c5170, height=83, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet c295da08d75c53b5b88d7ababd12fc6585079268a5443e5e91c5ddba8161bf66  new Confirmed (block=186baa1ae69930615003552758c72bbb5a7ef4d9732c0ff2a4ed7191b3583e8e, height=84, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 5ee6601b7fd9bacb3e5f58f3ac859e6a781c608e3573de153d22d69049c8438a  new Confirmed (block=3f4e8067c0f5ece8ea10c3a4b327bb36e323689cef80add4d2ab8e50be14386c, height=85, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=4914ba14ddeb46689f48068cd8a0ad971dd368cd8c6b1de61aa7077628440e97 height=86 version=0x20000000 log2_work=7.442943 tx=87 date='2025-10-26T11:52:44Z' progress=1.000000 cache=0.3MiB(86txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4c47179071c619194ae1d92e5fa90a1b6c01a48296788d83f5cbffbc739d7571 height=87
+2025-10-26T11:52:28Z UpdateTip: new best=4c47179071c619194ae1d92e5fa90a1b6c01a48296788d83f5cbffbc739d7571 height=87 version=0x20000000 log2_work=7.459432 tx=88 date='2025-10-26T11:52:44Z' progress=1.000000 cache=0.3MiB(87txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=3268b9ee116c9632f01ef658d87351933a08e62aeb94048b5f85e9861dfd8a49 height=88
+2025-10-26T11:52:28Z UpdateTip: new best=3268b9ee116c9632f01ef658d87351933a08e62aeb94048b5f85e9861dfd8a49 height=88 version=0x20000000 log2_work=7.475733 tx=89 date='2025-10-26T11:52:44Z' progress=1.000000 cache=0.3MiB(88txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=0fafd92af9fc49d504b5609ef377ff2fa289c28e441a4f8a583971d4feb6ca65 height=89
+2025-10-26T11:52:28Z UpdateTip: new best=0fafd92af9fc49d504b5609ef377ff2fa289c28e441a4f8a583971d4feb6ca65 height=89 version=0x20000000 log2_work=7.491853 tx=90 date='2025-10-26T11:52:44Z' progress=1.000000 cache=0.3MiB(89txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=058f79bca9f39f04b2fac4836c4323b0535dff4b086d3cfe1373f9c8d9053948 height=90
+2025-10-26T11:52:28Z UpdateTip: new best=058f79bca9f39f04b2fac4836c4323b0535dff4b086d3cfe1373f9c8d9053948 height=90 version=0x20000000 log2_work=7.507795 tx=91 date='2025-10-26T11:52:44Z' progress=1.000000 cache=0.3MiB(90txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6c01ea7bfdc84ea8d90e2f0791075ed7aad4db751e911fa2ff9bf378b86f1ace height=91
+2025-10-26T11:52:28Z [faultlab] AddToWallet f38ae7105a963f8a46bd0b3d7f37bcf8feaaa00f6cc81186ee208277d3dc51a7  new Confirmed (block=4914ba14ddeb46689f48068cd8a0ad971dd368cd8c6b1de61aa7077628440e97, height=86, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 586d5f0013078d06e694797df3b170d132638d0909f6796e5c50974c06fa64ce  new Confirmed (block=4c47179071c619194ae1d92e5fa90a1b6c01a48296788d83f5cbffbc739d7571, height=87, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet d598e14234639f3164bb3f7baae348d6802ca94bb6f82615a2d0913584cbd802  new Confirmed (block=3268b9ee116c9632f01ef658d87351933a08e62aeb94048b5f85e9861dfd8a49, height=88, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 9cc06b6b103ff96da6af104eeac4731571d02183f2f7a7b36a90cd049555c347  new Confirmed (block=0fafd92af9fc49d504b5609ef377ff2fa289c28e441a4f8a583971d4feb6ca65, height=89, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet e5314ddb229541bbddef38a1a6f731eef0debb5b392e0b061874219f816fd5af  new Confirmed (block=058f79bca9f39f04b2fac4836c4323b0535dff4b086d3cfe1373f9c8d9053948, height=90, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=6c01ea7bfdc84ea8d90e2f0791075ed7aad4db751e911fa2ff9bf378b86f1ace height=91 version=0x20000000 log2_work=7.523562 tx=92 date='2025-10-26T11:52:44Z' progress=1.000000 cache=0.3MiB(91txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=1c7eca57d6d396615bf488c173b02039446da17550f052d6668a5b369323adfb height=92
+2025-10-26T11:52:28Z UpdateTip: new best=1c7eca57d6d396615bf488c173b02039446da17550f052d6668a5b369323adfb height=92 version=0x20000000 log2_work=7.539159 tx=93 date='2025-10-26T11:52:45Z' progress=1.000000 cache=0.3MiB(92txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=2fe9346121f31dd7bea61347f5257096c1a07b838d2e60756b032478b4fd3bd1 height=93
+2025-10-26T11:52:28Z UpdateTip: new best=2fe9346121f31dd7bea61347f5257096c1a07b838d2e60756b032478b4fd3bd1 height=93 version=0x20000000 log2_work=7.554589 tx=94 date='2025-10-26T11:52:45Z' progress=1.000000 cache=0.3MiB(93txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=1479d5ef9897196cf70d9a49c29f2c986f387fc085ea96a6ca75dd7afdd501f4 height=94
+2025-10-26T11:52:28Z UpdateTip: new best=1479d5ef9897196cf70d9a49c29f2c986f387fc085ea96a6ca75dd7afdd501f4 height=94 version=0x20000000 log2_work=7.569856 tx=95 date='2025-10-26T11:52:45Z' progress=1.000000 cache=0.3MiB(94txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=4f3e8f8b780824340698e6b3f4f7acf8372035a9b241488b54e224da9f0154fb height=95
+2025-10-26T11:52:28Z UpdateTip: new best=4f3e8f8b780824340698e6b3f4f7acf8372035a9b241488b54e224da9f0154fb height=95 version=0x20000000 log2_work=7.584963 tx=96 date='2025-10-26T11:52:45Z' progress=1.000000 cache=0.3MiB(95txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=5983c4b6eed8a9aecb0b2005903b88b02c2e8254e4f3459c2629c689a59b251d height=96
+2025-10-26T11:52:28Z [faultlab] AddToWallet 51b5ca578d6bea5aabdf57d770fcf8bc8d2612a002b55db9d2187e25f55e2bd8  new Confirmed (block=6c01ea7bfdc84ea8d90e2f0791075ed7aad4db751e911fa2ff9bf378b86f1ace, height=91, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 4c984121450511140d1475eda41e187f697399ef46d2f283914d112a4c31242c  new Confirmed (block=1c7eca57d6d396615bf488c173b02039446da17550f052d6668a5b369323adfb, height=92, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 80b53dc4e7a9b1d860f216c00b54edabf1d72a6e5325e4b2ff6d6c550d82071a  new Confirmed (block=2fe9346121f31dd7bea61347f5257096c1a07b838d2e60756b032478b4fd3bd1, height=93, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 1017f4e1c82798cf552c4d8bdb2971b87804423b783b1c366e8b4911b20fef25  new Confirmed (block=1479d5ef9897196cf70d9a49c29f2c986f387fc085ea96a6ca75dd7afdd501f4, height=94, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 81677c1c00ba692414f5bbe57c67b6f7f2884125ce1ed6acf8af985189efcaae  new Confirmed (block=4f3e8f8b780824340698e6b3f4f7acf8372035a9b241488b54e224da9f0154fb, height=95, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=5983c4b6eed8a9aecb0b2005903b88b02c2e8254e4f3459c2629c689a59b251d height=96 version=0x20000000 log2_work=7.599913 tx=97 date='2025-10-26T11:52:45Z' progress=1.000000 cache=0.3MiB(96txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=498cc4c89e837a3a6d711166f188feb59e7b1c5d91c2b5b7144608c2699d12b5 height=97
+2025-10-26T11:52:28Z UpdateTip: new best=498cc4c89e837a3a6d711166f188feb59e7b1c5d91c2b5b7144608c2699d12b5 height=97 version=0x20000000 log2_work=7.614710 tx=98 date='2025-10-26T11:52:45Z' progress=1.000000 cache=0.3MiB(97txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=24eedd51a9a8c9486e56922aff8a249ec3f468066479ee5b5d8b50923c753526 height=98
+2025-10-26T11:52:28Z UpdateTip: new best=24eedd51a9a8c9486e56922aff8a249ec3f468066479ee5b5d8b50923c753526 height=98 version=0x20000000 log2_work=7.629357 tx=99 date='2025-10-26T11:52:46Z' progress=1.000000 cache=0.3MiB(98txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=77fdd3bc6099efd3e4edd4282a15cb75ca646750684e8b056efff27aac682dc3 height=99
+2025-10-26T11:52:28Z UpdateTip: new best=77fdd3bc6099efd3e4edd4282a15cb75ca646750684e8b056efff27aac682dc3 height=99 version=0x20000000 log2_work=7.643856 tx=100 date='2025-10-26T11:52:46Z' progress=1.000000 cache=0.3MiB(99txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=03fe63fa8f718a2cb6f9d79c635efec5f987fb28d17c9901ff6e122c2475e599 height=100
+2025-10-26T11:52:28Z UpdateTip: new best=03fe63fa8f718a2cb6f9d79c635efec5f987fb28d17c9901ff6e122c2475e599 height=100 version=0x20000000 log2_work=7.658211 tx=101 date='2025-10-26T11:52:46Z' progress=1.000000 cache=0.3MiB(100txo)
+2025-10-26T11:52:28Z CreateNewBlock(): block weight: 888 txs: 0 fees: 0 sigops 400
+2025-10-26T11:52:28Z Saw new header hash=6a54742d5bc74382baa98566d7fe9bafca2fed80203be75fe7fb32c2c61b09cb height=101
+2025-10-26T11:52:28Z [faultlab] AddToWallet 66b17e4e24d2470aecdb8c10918c04ba41ce942d18853bdc37c4bd70bfb76b39  new Confirmed (block=5983c4b6eed8a9aecb0b2005903b88b02c2e8254e4f3459c2629c689a59b251d, height=96, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 2f3ff1c51d1e0ea53f6f5b2fd36b1624d46c3f4af2dbd99cbb62acfa4a211fdd  new Confirmed (block=498cc4c89e837a3a6d711166f188feb59e7b1c5d91c2b5b7144608c2699d12b5, height=97, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 53fa7605a552c2c8189af106b73d05de014d662927e0b98e9793e0ffb83eb1c3  new Confirmed (block=24eedd51a9a8c9486e56922aff8a249ec3f468066479ee5b5d8b50923c753526, height=98, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 9d35715136c5836e082de11f339376ab6d97f7d01c6061ff8908c24adbe32e03  new Confirmed (block=77fdd3bc6099efd3e4edd4282a15cb75ca646750684e8b056efff27aac682dc3, height=99, index=0)
+2025-10-26T11:52:28Z [faultlab] AddToWallet b77d9d97e08cb733a7274d490c18e98cb6b2ef178f4b05eaf1f611ee1631a3a3  new Confirmed (block=03fe63fa8f718a2cb6f9d79c635efec5f987fb28d17c9901ff6e122c2475e599, height=100, index=0)
+2025-10-26T11:52:28Z UpdateTip: new best=6a54742d5bc74382baa98566d7fe9bafca2fed80203be75fe7fb32c2c61b09cb height=101 version=0x20000000 log2_work=7.672425 tx=102 date='2025-10-26T11:52:46Z' progress=1.000000 cache=0.3MiB(101txo)
+2025-10-26T11:52:28Z [faultlab] AddToWallet ee9e668065a818dedfc27651826eb87b697f5da2e38b66a956050090e3c16f98  new Confirmed (block=6a54742d5bc74382baa98566d7fe9bafca2fed80203be75fe7fb32c2c61b09cb, height=101, index=0)
+2025-10-26T11:52:28Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:28Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:28Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:28Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:28Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:28Z [faultlab] CommitTransaction:
+CTransaction(hash=2f3deb6198, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(2480ce7bae, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402204b0e4fddc4a071ccb9c47532e47ddd149daedb0d5304009629cb1a89dfdbdd6d02206fb0c5f39afe707328cd3d4c777f842b533e0a562f0da62f32cccef2e8876e2701, 03c733fed108b145cea9f1bab2d009fbbd96ba6d78b4154b54858ffa3c30839c7d)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014ebfe7e705ec3c529d339daa693)
+    CTxOut(nValue=49.99987180, scriptPubKey=001456975448586a05ae39ded231af)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 2f3deb6198685a72ac6d83f99f278885f2ba158efd636726917854a0ff64881f  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:28Z [faultlab] Submitting wtx 2f3deb6198685a72ac6d83f99f278885f2ba158efd636726917854a0ff64881f to mempool for relay
+2025-10-26T11:52:28Z [faultlab] AddToWallet 2f3deb6198685a72ac6d83f99f278885f2ba158efd636726917854a0ff64881f   InMempool
+2025-10-26T11:52:28Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:28Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:28Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:28Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:28Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:28Z [faultlab] CommitTransaction:
+CTransaction(hash=6a86ab7df8, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(2f3deb6198, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022049b4541ee0ff8b5dee5caf28f4efbb90c5cef38d247cb8912878031280dd3398022011a2c083ef3ff97d96e4a8238e4bfdc9fcbc5509acff920da3e5d427be57a6a501, 0349409bd47d2f8af7c4355263b5e3b486819fd915a5f3805fed4debf46007e2a3)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014e1b25ed3bcf2e1018ecfb6d981)
+    CTxOut(nValue=49.99974360, scriptPubKey=0014524d24e0ea23ae1c4b8b8bb781)
+2025-10-26T11:52:28Z [faultlab] AddToWallet 6a86ab7df8d151928b0bcb7ebfb22285cf91d5f1c8d23e7f96dc4bb75097b111  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:28Z [faultlab] Submitting wtx 6a86ab7df8d151928b0bcb7ebfb22285cf91d5f1c8d23e7f96dc4bb75097b111 to mempool for relay
+2025-10-26T11:52:28Z [faultlab] AddToWallet 6a86ab7df8d151928b0bcb7ebfb22285cf91d5f1c8d23e7f96dc4bb75097b111   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=6e58a4bfe7, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(6a86ab7df8, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022002a8b6b7045dee8e810bda0eaa6476a6dd8a12f7caacda9a13c9475080f3517a02203a7169b96dac64279137bf40e350fe9c7efafc515a69527458fa271462ec2d9001, 02912cf6582b414aac00edf2c9bc1a81d6f34ad7363504046ba8295bb78d3bbb65)
+    CTxOut(nValue=0.00010000, scriptPubKey=00147ce60aea448f7ae92ad61e3f7c)
+    CTxOut(nValue=49.99961540, scriptPubKey=00143296f14ac359096d35cf6dc3ca)
+2025-10-26T11:52:29Z [faultlab] AddToWallet 6e58a4bfe7343c5676b60705a10856df46ed161f774fb8373a24ded191deff50  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx 6e58a4bfe7343c5676b60705a10856df46ed161f774fb8373a24ded191deff50 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet 6e58a4bfe7343c5676b60705a10856df46ed161f774fb8373a24ded191deff50   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=81a57596e3, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(6e58a4bfe7, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(30440220759c810c6e881179f1b1b7641962bab6977f2d15f21f56eddd276b4318ce2a6602207bb8c7a0388a671b92a08836e6b87f6462dd9a3c9e8aca7e446d25d9697c556701, 039eb0c8aeeae6eb223a2ca0a2820337a8db360c71cd1351b4114e47d6623d0428)
+    CTxOut(nValue=49.99948720, scriptPubKey=001411032fdfc3c152a2d781b758e8)
+    CTxOut(nValue=0.00010000, scriptPubKey=001442614adc1f8fdbb48838e02ea3)
+2025-10-26T11:52:29Z [faultlab] AddToWallet 81a57596e34da2ba9bcd43fb45865ce10dbbb62d493cdb4cae6c656cb6af1802  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx 81a57596e34da2ba9bcd43fb45865ce10dbbb62d493cdb4cae6c656cb6af1802 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet 81a57596e34da2ba9bcd43fb45865ce10dbbb62d493cdb4cae6c656cb6af1802   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=cb8c78d630, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(81a57596e3, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(30440220419e92f87cd105a84d8a2cee8cba1047972cb88186689a3c989c5f1fb66abc0702201e813858b3283332a3fbf4a75364d7119c70814470873741f8dc8e6e2150ef0c01, 02bc3de783c91e97278b583973fb4983368daf61605d78e4447af090575657ea27)
+    CTxOut(nValue=0.00010000, scriptPubKey=00143efe60a009357516fa4a5f10e6)
+    CTxOut(nValue=49.99935900, scriptPubKey=0014081b946931fa6fc56d063bf6bd)
+2025-10-26T11:52:29Z [faultlab] AddToWallet cb8c78d63023590be38d8d5fa5cabae1d38c50dc58967dac28851cfe1b7fa493  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx cb8c78d63023590be38d8d5fa5cabae1d38c50dc58967dac28851cfe1b7fa493 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet cb8c78d63023590be38d8d5fa5cabae1d38c50dc58967dac28851cfe1b7fa493   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=58dbc419c5, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(cb8c78d630, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402207648b314e0968c6a843b650a5310be3f77a75fff844a3c3f180c20ff399afb2e0220623f5d1efcffbd9192bb9bd4c6c4d7d312eb6dce9f00b69fc1662f074da4ee5f01, 02509788258ff936de8a38e328340d684eb15e086c89fde4c88e3e93b0c5b754f9)
+    CTxOut(nValue=0.00010000, scriptPubKey=00144f408ee999e9d4b82891fa116f)
+    CTxOut(nValue=49.99923080, scriptPubKey=00143ad6b5ac7305ad7b7d58459699)
+2025-10-26T11:52:29Z [faultlab] AddToWallet 58dbc419c54f60b063fc5fe3a1bc4803f9edac4c68d69d0095cac1a5634deb28  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx 58dbc419c54f60b063fc5fe3a1bc4803f9edac4c68d69d0095cac1a5634deb28 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet 58dbc419c54f60b063fc5fe3a1bc4803f9edac4c68d69d0095cac1a5634deb28   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=053c16826b, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(58dbc419c5, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402201588750cdf97cfb11a81807bd75af1018439b7bc3fab5792d0940c0ebaa8eab202200ced7fae03cc2dba3a21d321b5c39a3cd827e63b4173ec3c8288eefb4ae481f401, 026662155df7d14eca1872cc63859e8bd8e5765852b2f69d76ab30735d95663839)
+    CTxOut(nValue=49.99910260, scriptPubKey=00142ec5ca501120b16b861b0848e0)
+    CTxOut(nValue=0.00010000, scriptPubKey=001469eceb40a93eb543dea27fb537)
+2025-10-26T11:52:29Z [faultlab] AddToWallet 053c16826bc1b9e6902b5b8ce6a29fdcc2e7f51fe6b0d0e643a1614e6eed17e7  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx 053c16826bc1b9e6902b5b8ce6a29fdcc2e7f51fe6b0d0e643a1614e6eed17e7 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet 053c16826bc1b9e6902b5b8ce6a29fdcc2e7f51fe6b0d0e643a1614e6eed17e7   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=f8024b6b3d, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(053c16826b, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402202b9d7a56201b08d8f06893ca43a895fb83ff1fd961dbaa800ede02f304f4066402205f86f77f2d9d00fb4fdd8010aa62b5b3b418a6f607989873e66b44344a341d3701, 02d5830f1b02b0fea0d47bb690e445d655e8fa518a2d74bf8ef4a7a8679f467813)
+    CTxOut(nValue=49.99897440, scriptPubKey=0014f663215a7bec29c55ecb335c39)
+    CTxOut(nValue=0.00010000, scriptPubKey=001424f982f08652e915c15d51df62)
+2025-10-26T11:52:29Z [faultlab] AddToWallet f8024b6b3d0c7eab42a13dbfd017853d4d101ea5145f08a7f75239cd390383f6  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx f8024b6b3d0c7eab42a13dbfd017853d4d101ea5145f08a7f75239cd390383f6 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet f8024b6b3d0c7eab42a13dbfd017853d4d101ea5145f08a7f75239cd390383f6   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:6740
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:12300 Bytes:615 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:2660
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:4160 Bytes:208 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 12300, grouped = 4160, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=ef0af3cbdd, ver=2, vin.size=2, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(f8024b6b3d, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(58dbc419c5, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402204eb0074c6d118d9dfcbf2a68f078bb57c84233a3806f03ca6dde8ae8ca00b34802207eccc6453c00af88752e43e993ead1910823faf8fe2a7d84662a7506c3c5e35d01, 024d3e8e98f5fd7f03fc4e5bd07749a24459aa91e2cbf164796482a3b58541b3ad)
+    CScriptWitness(304402203bedff7e623498db4be117a764e808f017206df94a1a138547f2efc678e6d22902207915193608c146c236903d6b68aebcf3ed33adfb2e78b327153c0600077271bb01, 022ac131c6821968ae459e2c6da8313c05bc90ff07468c787ae37b8e0a9d5a2740)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014531797b1ca4cb74771741b0c4f)
+    CTxOut(nValue=49.99893280, scriptPubKey=0014c430c56560b07b30eb03b4d33b)
+2025-10-26T11:52:29Z [faultlab] AddToWallet ef0af3cbdd7ebf375dd91907efc4aefe7e71bf9e0f1ba472884cd2d28c8b19d6  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx ef0af3cbdd7ebf375dd91907efc4aefe7e71bf9e0f1ba472884cd2d28c8b19d6 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet ef0af3cbdd7ebf375dd91907efc4aefe7e71bf9e0f1ba472884cd2d28c8b19d6   InMempool
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:4700
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:8240 Bytes:412 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:1980
+2025-10-26T11:52:29Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:29Z [faultlab] Fee non-grouped = 8240, grouped = 2820, using grouped
+2025-10-26T11:52:29Z [faultlab] CommitTransaction:
+CTransaction(hash=5061f82246, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(ef0af3cbdd, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402207df6c5267d9dd89449b31e268481605f1226e8f67bde35f07dd5ce37ca5a94e60220333cb534bba55ad299a570b7fe6b66fad93deb4cd6618785e69856d8eca4fa9901, 022c2c1c191a7e7a27a2aa7f4d83814254d6dbd8909bc276a117619b1ae6764abc)
+    CTxOut(nValue=0.00010000, scriptPubKey=00142674df6e0ef61e5a7555fb046d)
+    CTxOut(nValue=49.99880460, scriptPubKey=0014c06f55dcdb583ebfe5f0b4e329)
+2025-10-26T11:52:29Z [faultlab] AddToWallet 5061f8224674395472a60a2dea466e53ef365a7068eb1fe527701f82af3f7542  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:29Z [faultlab] Submitting wtx 5061f8224674395472a60a2dea466e53ef365a7068eb1fe527701f82af3f7542 to mempool for relay
+2025-10-26T11:52:29Z [faultlab] AddToWallet 5061f8224674395472a60a2dea466e53ef365a7068eb1fe527701f82af3f7542   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:4700
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:8240 Bytes:412 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 2820, grouped = 8240, using non-grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=c8d8034d3c, ver=2, vin.size=1, vout.size=2, nLockTime=39)
+    CTxIn(COutPoint(5061f82246, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022042dcfd4af9be6a390987eddd1ba54fd15a166da721751c43558e8098a5cb4fba02200f5b2c5c4ce28615213a3864305a598f78d25b99a2c7f2360cd5acbcbe34107301, 02615b708e7e63b5c56cdc5394a0c61edb77ad6592bc8571d251206b6d24238f4c)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014b8450d723269deedccb9fa01ea)
+    CTxOut(nValue=49.99867640, scriptPubKey=00141c1c470ee1418de02430546fe5)
+2025-10-26T11:52:30Z [faultlab] AddToWallet c8d8034d3c2084fb761a28e76ac40e4c0cb676128465c034709aa53221af6b4a  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx c8d8034d3c2084fb761a28e76ac40e4c0cb676128465c034709aa53221af6b4a to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet c8d8034d3c2084fb761a28e76ac40e4c0cb676128465c034709aa53221af6b4a   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:6740
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:12300 Bytes:615 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:4700
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:8240 Bytes:412 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 12300, grouped = 8240, using grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=7996a919d3, ver=2, vin.size=5, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(cb8c78d630, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(c8d8034d3c, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(81a57596e3, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(6a86ab7df8, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(2f3deb6198, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(30440220210368c180d2eeb8e3d0d0008aaaf2bb903bd2aa9d9f82fcc5b9087aed3ebfd40220556e57ebc7ef85a51c418eb56d1993f49c992ba6649a1a3058b5cdd70c64dfb601, 029a1da6d5eb3c70bacf662521dcb2d4228f70bca4b69883ea89a37db4cd41e2d9)
+    CScriptWitness(3044022026d25e4b784c3862b9ce776e220a48754737b652bf6c40137dc4f7dd0e4b3e4f022025d9b14415338b2ac46ec9d9b1603d0faae9a7baed67e87e71be785fcbf9e7aa01, 03ca71b6bfb022c1563f30497b7087666b3fd01671ea014fdd2ff40f87afda34e9)
+    CScriptWitness(3044022011d2ccc61180bbf22c17b3c6e06e6e7b2e053311b27dc7eccd98121f159eadd2022012ca4ed1d31bcd1422a61857b0636b013672675237f2e33e20d232ca43d7ab6001, 0338e9cad66a1add63337507ca71d758211104c35e0409587284c33f6416ac6bfb)
+    CScriptWitness(304402202d0066f5d8e03498db5ee8d174d5321f7fd4fdb99b88af99b7d9f17309917ae2022048c0b589f0cba68321ff0c1dadeb958d5bfb129fcc2d9494a48296861148fe5f01, 020c3f06add052ac75e6ed6562110ed6c2adcb1dbbe6a86a83a4ba14ebeed58979)
+    CScriptWitness(304402200c606c3471084d5538536c4f4c689454acf54e1a136686bb98dea3003750365f02200c61cb23bc1fcff1d239216b84e353c866405568cad85d221b878f1958042bb201, 0246f3b39162e75dacacec88097f33de4f2da3f204fb8c78f0577e63da66f14e31)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014734480811f42578f3393bb40fa)
+    CTxOut(nValue=49.99889400, scriptPubKey=0014c60ec829bb957180286c930b5e)
+2025-10-26T11:52:30Z [faultlab] AddToWallet 7996a919d329991820484b2aac31bfa4a75017ae3e030ad241729736a98ecd46  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx 7996a919d329991820484b2aac31bfa4a75017ae3e030ad241729736a98ecd46 to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet 7996a919d329991820484b2aac31bfa4a75017ae3e030ad241729736a98ecd46   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=593b326f95, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(7996a919d3, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022055890aeea9364d12da370a23164817f19ebdcc80a26ee105e8cafae77b23a9c702203eee484cfc25cacab2fa51fe23ebd63cd500f67da7364f9f8b2bc7ea57c1930301, 025999d5b03af7174baccaecb658e16a2d05fbbd233cf0599b5ea5510fb77d55cc)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014bcf17f45f5290ae56af83e7410)
+    CTxOut(nValue=49.99876580, scriptPubKey=0014d256d389a8fc7b0b4e76714708)
+2025-10-26T11:52:30Z [faultlab] AddToWallet 593b326f9579394bab2f272fa4e608c0b888d139c8894c2b0ac5ab0e31304f6b  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx 593b326f9579394bab2f272fa4e608c0b888d139c8894c2b0ac5ab0e31304f6b to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet 593b326f9579394bab2f272fa4e608c0b888d139c8894c2b0ac5ab0e31304f6b   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:2660
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:4160 Bytes:208 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:5380
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:9580 Bytes:479 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 4160, grouped = 9580, using non-grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=09654c56dd, ver=2, vin.size=2, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(593b326f95, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(6e58a4bfe7, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(30440220666a21c300f112e06a4da79fa95e9d444d8bfa73c257e3c4addcf557368a514302205154c5e151fd80d17df77e007afeb4458afb7bbec71838f7fdc403d048f2b93d01, 03acba2862a8ec4396a493b8ffe559c7a9ede06269509ca49124eb3d12d3c78c67)
+    CScriptWitness(3044022006464f6a67fa5945e264eb8e55f4c7270e88ecd9865cf0b11fc26a641a2b434102207fea401b16b65fe1a75f4cfa0e614025a7b0bf1786a0ced215c0d2af40284b0001, 03b6b73399a18f598dc2977644f9c8492066259026d53389a4988f1a045a029e98)
+    CTxOut(nValue=0.00010000, scriptPubKey=00141f39ecc3c15a1a7b9c65123ed6)
+    CTxOut(nValue=49.99872420, scriptPubKey=00140854494170c8465f77505f7113)
+2025-10-26T11:52:30Z [faultlab] AddToWallet 09654c56dde65c7bd7ddeeaf3232df6b9a9d2c293668129ae73b52c0b8bb50a4  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx 09654c56dde65c7bd7ddeeaf3232df6b9a9d2c293668129ae73b52c0b8bb50a4 to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet 09654c56dde65c7bd7ddeeaf3232df6b9a9d2c293668129ae73b52c0b8bb50a4   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:5380
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:9580 Bytes:479 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:3340
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:5520 Bytes:276 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 9580, grouped = 5520, using grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=555d026b9e, ver=2, vin.size=3, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(09654c56dd, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(593b326f95, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(c8d8034d3c, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022043a5903b5aa27626e07fbdf607fa172dc4c02b5bdbf0f259b5238532c0b5b8310220630cbd2b09d7bd3ad3bc6da49c90e0b81ac82cbca3c38b519db76a808913f40f01, 027881e7f25ddd0ff6798a2fb41f4a690a4232f12b7a028e48513ba3929d073b1b)
+    CScriptWitness(304402200d6ad039c4c2ec6d936d93762e6880e5eb9ad11ddc5a6ca121458571aab82bc502202bebff9ebe90ab9d6f62afd717b6a6eac7dd563e7012c42a3fb08d44348768e301, 02accd8ab9450c6f73a3ac79816ae09ea9f556275e3b7e6dca264ce29c45ddb72e)
+    CScriptWitness(304402200cce221d7932e5b184f75c2899b5c0121067d9447c83923c4f3bd0a6bcbb3888022022e91f113b6b5e6cb8a869977764a50440c17f74e39490fc885c9a8b9668af3401, 02cb4ffc5b2d2852ab86b8461273478dbea2c4a756b650acc728c79a71e76c213e)
+    CTxOut(nValue=49.99876900, scriptPubKey=00149bed4929b448bcb4955e4d0150)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014b39e0fa21a30e017052bd3e43f)
+2025-10-26T11:52:30Z [faultlab] AddToWallet 555d026b9e8dbfae8522aa6e6e613a102e64b897b2e7f57055c577b73549f724  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx 555d026b9e8dbfae8522aa6e6e613a102e64b897b2e7f57055c577b73549f724 to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet 555d026b9e8dbfae8522aa6e6e613a102e64b897b2e7f57055c577b73549f724   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=b8c666d8f5, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(555d026b9e, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402205055e1f60dc3b31c898d7ab1d531eca76b6277d7f3d44e4c41640e01dbf5711e022004af44615a5d2b58bf84a80f8247daccfc4d7a9263c534655a66cf0e8be6476301, 03333e80f56764d2658babc44c5334bccd4cfb743922519aec75680cbbc058f175)
+    CTxOut(nValue=0.00010000, scriptPubKey=00148714a26b1ffe575f92c84d99a5)
+    CTxOut(nValue=49.99864080, scriptPubKey=00140605d22018b7cc532806cef790)
+2025-10-26T11:52:30Z [faultlab] AddToWallet b8c666d8f51238c418a3f4a14f411f7ebabc7a1728a98e205f8b08dab32a844c  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx b8c666d8f51238c418a3f4a14f411f7ebabc7a1728a98e205f8b08dab32a844c to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet b8c666d8f51238c418a3f4a14f411f7ebabc7a1728a98e205f8b08dab32a844c   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:6740
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:12300 Bytes:615 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:6060
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:10940 Bytes:547 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 12300, grouped = 10940, using grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=a3920a8c00, ver=2, vin.size=7, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(f8024b6b3d, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(5061f82246, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(ef0af3cbdd, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(555d026b9e, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(b8c666d8f5, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(7996a919d3, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(053c16826b, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402200df023a7744602c226fc19840cee18890f740c4248912f16f5290fabab4a3de90220490af3066b219bac4c29dcff8ff4819c2ebce7ac0ccdfaf20109672f6bc5e7ff01, 025378424e251124ad8a9d544a2051ebef9e6a7deb13eb48335ef7186f3de674e2)
+    CScriptWitness(3044022036240a64dcf56c953614a00c93e03136ab29695ee1c0db39841a21e82b529a7002201e0911d05e90e752bad0bef3d8228254971ddd97f9c4d8888c6b2009ac96f29e01, 0369e1520c3feb079664ca9ccaac2902f5f80234cf7d1f3410a10f5361ece969cc)
+    CScriptWitness(304402201692255e65e884670cb165368da51e672046ebbd1f21cd3fd7281940820dec48022002d035eb3e294117fac6f8d36735fbe8cb8d938b205da6967c466a1760936e2c01, 039d3494db7286c4038197a6198c535005a78646fd47e2def40e74e05515a28eec)
+    CScriptWitness(304402203d79eb7004b7ff15a46b2847109a4555953169183f8519635decae411084478f02206c82188bd72a587c6cc1f92624f02ad04f2fb6c14c5f2920069d680c02cf43fc01, 03842e0a9a790aceefa02da42cf1dce463591cdde7f8e97b16c96da0eaf2604dbe)
+    CScriptWitness(30440220779221f2c6f48c83c4b339ab050365f4c65f92d1d15473783713fcd07d183e4d02200819e3215e38a71589dc0d2f39c2c0d8a0c9c3ce8a81b56b13e33f3db5c0a74c01, 03af55f3197e8ec9c7d9c02c0bb341f95bfe1ace6572daa4748658dc18be6e86fb)
+    CScriptWitness(304402203f61403b33b619ff9bade845869769214451828e54a52c8359fa251487eb0cb40220752e8d8245d1158e9807d9ce706ec3b3afb0aff76900f2b0e261962c40ab61b401, 0314bbdb0f8669e6af1bb608c80e9f43d533653128f86fd141e216a6ecc26ec80d)
+    CScriptWitness(304402202172ce75995a72dc272fd3c530d8b7be7d2b5769bc18d6d666294af404eeb93502201946746aae1ae0276ace0f8f08818696728f861429e2ceec46f564116750536701, 02080bb088de0641ed9f777b946c481fd62528b3e34edd609bc21dd0252e3b152d)
+    CTxOut(nValue=49.99903140, scriptPubKey=00147d3b67285a71398061857f779b)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014a9deff0198c5f5bc048df305d3)
+2025-10-26T11:52:30Z [faultlab] AddToWallet a3920a8c009174d47cdebd3228c992bb0b7780b83a4ed5e7c2066a7c08fbb92c  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx a3920a8c009174d47cdebd3228c992bb0b7780b83a4ed5e7c2066a7c08fbb92c to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet a3920a8c009174d47cdebd3228c992bb0b7780b83a4ed5e7c2066a7c08fbb92c   InMempool
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:30Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:30Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:30Z [faultlab] CommitTransaction:
+CTransaction(hash=36a9052f69, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(a3920a8c00, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402207477ad037f4475d04d5326782bd86f83f4ccf0c7f73cde72d8298877c0889c240220683bf055ce9813a7121a96db81f743e6ed63c55fedf3253f9f96ab7fbc36c45101, 02bfe5663bdc6ddd4196d071560ba2f6225b3e14d467f8df410c34ae195761b480)
+    CTxOut(nValue=49.99890320, scriptPubKey=0014abfae62c021a21eff81cfb13c3)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014c1aec146d3c058f6679b8c8472)
+2025-10-26T11:52:30Z [faultlab] AddToWallet 36a9052f6960e221d6daab8bb692c0832908b8860ae286578c4991d8a2401ea3  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:30Z [faultlab] Submitting wtx 36a9052f6960e221d6daab8bb692c0832908b8860ae286578c4991d8a2401ea3 to mempool for relay
+2025-10-26T11:52:30Z [faultlab] AddToWallet 36a9052f6960e221d6daab8bb692c0832908b8860ae286578c4991d8a2401ea3   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=bbbd37e87a, ver=2, vin.size=1, vout.size=2, nLockTime=35)
+    CTxIn(COutPoint(36a9052f69, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022047fe0fcf528df23db35f4ef96223a93ddf3deb43202c11dec5f3b7516b7a6da4022052e762e625ffa77c086efb6a7a24a296424e5a08ae5e3b94578ee2fcbed3475801, 02e292624f4d5e48344b82e51032a812dd2edb33d58e9e8c03fe6b4a60c1b067ba)
+    CTxOut(nValue=0.00010000, scriptPubKey=00147e583e3f39ffcb62d2819ac932)
+    CTxOut(nValue=49.99877500, scriptPubKey=001409845d567a842daa6d443e4094)
+2025-10-26T11:52:31Z [faultlab] AddToWallet bbbd37e87a14bd0a937ca9c9c298da724298e0a4ca3a078a3d28b8ebed5ebc80  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx bbbd37e87a14bd0a937ca9c9c298da724298e0a4ca3a078a3d28b8ebed5ebc80 to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet bbbd37e87a14bd0a937ca9c9c298da724298e0a4ca3a078a3d28b8ebed5ebc80   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=77792f0695, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(bbbd37e87a, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402203e769ed3115cf6638522a2cf8951292b6a0e66bd27c6ed34a7ad7d22fd7631100220131d9882c0d25b3757c88b675ec32f43c2b67a4abbd3e19babe675ce63b9133a01, 031f464b34bbcdf08e31f42be20635c2775f3e8da784c9bfbb31e77df0ebe5a37b)
+    CTxOut(nValue=49.99864680, scriptPubKey=0014ea4a87dab3871836398be4eba3)
+    CTxOut(nValue=0.00010000, scriptPubKey=00141c1644fff1680bdb8f0a9b8159)
+2025-10-26T11:52:31Z [faultlab] AddToWallet 77792f0695a96b3961a43db7871e6f44f0b89f54643b8ef8f8862bb0974e0e93  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx 77792f0695a96b3961a43db7871e6f44f0b89f54643b8ef8f8862bb0974e0e93 to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet 77792f0695a96b3961a43db7871e6f44f0b89f54643b8ef8f8862bb0974e0e93   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=6889efe568, ver=2, vin.size=1, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(77792f0695, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402204c7bcc958c24467e0e6f9a224e4ed21e64c72e2c6bbfb1f6d34c4df010f8cc4102201285d53c944c65a3f6a1ab7979871784d49e4c746fc39476b69c5b643fa9e67a01, 0365484e45414cad3a7f573d0ad75d8109ca002517246556052b98febbaed08d8b)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014d227d163b0432565e3ba3f919c)
+    CTxOut(nValue=49.99851860, scriptPubKey=001471950f219023fa228e2f2c3841)
+2025-10-26T11:52:31Z [faultlab] AddToWallet 6889efe568874fc400f18273e9beb2ada1e333ee4104d3626b2945d26c1560c7  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx 6889efe568874fc400f18273e9beb2ada1e333ee4104d3626b2945d26c1560c7 to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet 6889efe568874fc400f18273e9beb2ada1e333ee4104d3626b2945d26c1560c7   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=6afa7ea601, ver=2, vin.size=1, vout.size=2, nLockTime=93)
+    CTxIn(COutPoint(6889efe568, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022022fc4234eda90284e5f408d7a31d1050102f45a8eecdc98f437d7402afb53ebe0220720f449376c3a7b0c4c0842a83a8e1d715864b9185b7fc70edeffcdd88d37a8901, 03dac50e4730162b47cb02d2dcbe404f70779dca01f7a2e6224e6113fffe4a2bca)
+    CTxOut(nValue=49.99839040, scriptPubKey=0014eaebb2ffc075d70b429d4a2800)
+    CTxOut(nValue=0.00010000, scriptPubKey=001427b6136c3e4cdd335298eac603)
+2025-10-26T11:52:31Z [faultlab] AddToWallet 6afa7ea60176865b1e6974b4df1aeff752f35b2374b143fa9094e81c855966f3  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx 6afa7ea60176865b1e6974b4df1aeff752f35b2374b143fa9094e81c855966f3 to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet 6afa7ea60176865b1e6974b4df1aeff752f35b2374b143fa9094e81c855966f3   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:2660
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:4160 Bytes:208 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:6740
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:12300 Bytes:615 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 4160, grouped = 12300, using non-grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=caec87fa28, ver=2, vin.size=2, vout.size=2, nLockTime=19)
+    CTxIn(COutPoint(36a9052f69, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(6afa7ea601, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402207ae881af0ee8877937b74b56b96fa266462482d8128ec4683d861f3786e2b821022068b0617c5b4665bd0446bf76f6dbd2e3953fb13fd8ace382190cfb890c738eda01, 02303350ab42d2f6cf6a8e627b6da4728c96368cecb3c953cea3c96905097fffb0)
+    CScriptWitness(3044022058667dab4495a6a8b80af4c4a4f511e1b1597f265eeb24342b5e081b4439817d02201f76774219870724b7f8be643c52d067587d375e145c88782ad8c3b02ea9a99c01, 03d6df758cef344132baa2ce80eb3f5684193fd2a618a70bb04e09b7411e93b345)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014396f6af6936233c3678a69e951)
+    CTxOut(nValue=49.99834880, scriptPubKey=0014808f21a6666ebb629a5191794b)
+2025-10-26T11:52:31Z [faultlab] AddToWallet caec87fa28421cf084cd192d66d65f7164e20364a78561af11f8f8c14fcb33ad  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx caec87fa28421cf084cd192d66d65f7164e20364a78561af11f8f8c14fcb33ad to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet caec87fa28421cf084cd192d66d65f7164e20364a78561af11f8f8c14fcb33ad   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:srd, Waste Metric Score:3340
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:5520 Bytes:276 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:6740
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:12300 Bytes:615 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 5520, grouped = 12300, using non-grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=fe81e467e8, ver=2, vin.size=3, vout.size=2, nLockTime=101)
+    CTxIn(COutPoint(a3920a8c00, 1), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(caec87fa28, 0), scriptSig=, nSequence=4294967293)
+    CTxIn(COutPoint(caec87fa28, 1), scriptSig=, nSequence=4294967293)
+    CScriptWitness(3044022036d4fe4044cafb75afc92a594c735a71e84f763f836914b44d4972148c147b8502205b52cb7f0d9b9a1d39c5dbbb593a58ce53b225db81a3a171b323fc84cea7163201, 03ccd0b74123d3f08ebba00dd666454fbe75df71f05326b83c63e04ac3e3f5b4f5)
+    CScriptWitness(3043022070906d903150fd425f9c6ed6b35469d6efa138ee86346a4b64fde25f6c33e5f2021f45ce01dbf34f45e433538701b9cf44dbfe3f5ce739647f7acf1ed75a04d46e01, 02fcb91ac3434fe4f00d0fc7ca7ecd07df7bdede7208cc9fdb1dbd9a4d35fe31f8)
+    CScriptWitness(3044022005823d7923cf61319c9b2952acd26170e676dfd6829a399cc59e9851c3cefec9022043d9a2c1da6af7dfcb3c9488c5c4ed3dceaf9ed3579afc1fb31e1dc41511171901, 0261640d31c785f32b188963b76b14ee1c028b087f2e80d54ada4ce4aa3c6e3bdf)
+    CTxOut(nValue=49.99839360, scriptPubKey=001460295eac7ab1db76e0ba358f68)
+    CTxOut(nValue=0.00010000, scriptPubKey=00143930b16ce026bf85202a72322c)
+2025-10-26T11:52:31Z [faultlab] AddToWallet fe81e467e8f7d5caf56323b0502cf9c22906b58dcb05397fff3b523bb5c5f36d  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx fe81e467e8f7d5caf56323b0502cf9c22906b58dcb05397fff3b523bb5c5f36d to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet fe81e467e8f7d5caf56323b0502cf9c22906b58dcb05397fff3b523bb5c5f36d   InMempool
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Coin Selection: Algorithm:knapsack, Waste Metric Score:1980
+2025-10-26T11:52:31Z [faultlab] Fee Calculation: Fee:2820 Bytes:141 Tgt:0 (requested 6) Reason:"Fallback fee" Decay 0.00000: Estimation: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out) Fail: (-1 - -1) 0.00% 0.0/(0.0 0 mem 0.0 out)
+2025-10-26T11:52:31Z [faultlab] Fee non-grouped = 2820, grouped = 2820, using grouped
+2025-10-26T11:52:31Z [faultlab] CommitTransaction:
+CTransaction(hash=58e2226352, ver=2, vin.size=1, vout.size=2, nLockTime=66)
+    CTxIn(COutPoint(fe81e467e8, 0), scriptSig=, nSequence=4294967293)
+    CScriptWitness(304402207ef85a49d803dbe0fdde5090d80f17f51af29dc5cf5953c03f89c187e106ce49022065c5e0af054733b4b053d393287ca29ab7cb3e5cbf8694ac6873f8af5810f00701, 0380f7894e652a2e38db900809fe381972da3c1d1a34d727b0bd71c61fcafd154f)
+    CTxOut(nValue=0.00010000, scriptPubKey=0014f8a8633c75d99f5e2020ab6815)
+    CTxOut(nValue=49.99826540, scriptPubKey=001475fbc67d82730ce321929d8279)
+2025-10-26T11:52:31Z [faultlab] AddToWallet 58e2226352e36e98f868d4e3c21354fb8157c5b666f77d397b3c745ca5456996  newupdate Inactive (abandoned=0)
+2025-10-26T11:52:31Z [faultlab] Submitting wtx 58e2226352e36e98f868d4e3c21354fb8157c5b666f77d397b3c745ca5456996 to mempool for relay
+2025-10-26T11:52:31Z [faultlab] AddToWallet 58e2226352e36e98f868d4e3c21354fb8157c5b666f77d397b3c745ca5456996   InMempool

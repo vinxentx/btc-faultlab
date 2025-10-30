@@ -1,5 +1,8 @@
+# --- THESIS-OPTIMIZED DEFAULTS ---
+# Use these settings for publication-quality experiments
+
 # --- Topologie & Last ---
-node_count: 8
+node_count: 32
 tx_rate: 10
 regions: ["eu","us"]
 
@@ -12,9 +15,9 @@ crash_mode: "burst"          # "burst" | "staggered"
 recovery_mode: "cold"        # "cold" | "fast"
 reindex_on_restart: "{{ recovery_mode == 'cold' }}"
 
-# --- Omission / Netzqualität ---
-loss_pct: 5
-latency_ms: 200
+# --- Omission / Netzqualität (REALISTIC, NOT AGGRESSIVE) ---
+loss_pct: 2                  # 2% packet loss (was 5% - too aggressive)
+latency_ms: 100              # 100ms latency (was 200ms - more realistic)
 bandwidth_mbit: 10
 
 # --- Bitcoin ---
@@ -29,10 +32,10 @@ rpc_pass: "pass"
 zmq_block: "tcp://0.0.0.0:28332"
 zmq_tx: "tcp://0.0.0.0:28333"
 
-# --- Phasen (Sekunden) ---
-warmup_s: 120
-observe_s: 600
-cooldown_s: 30
+# --- Phasen (Sekunden) - OPTIMIZED FOR FULL RECOVERY OBSERVATION ---
+warmup_s: 180                # 3 min warmup (was 2 min - more stable baseline)
+observe_s: 1800              # 30 min observation (was 10 min - FULL recovery)
+cooldown_s: 60               # 1 min cooldown (was 30s)
 
 # --- Reproduzierbarkeit ---
 seed: 42

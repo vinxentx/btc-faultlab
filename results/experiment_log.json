@@ -1,0 +1,3541 @@
+[
+  {
+    "timestamp": "2025-09-08T11:22:32.538791+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:25:04.578596+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:25:06.248725+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:25:07.912824+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:25:09.583108+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:05.188105+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:06.888109+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:08.597142+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:10.277430+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:11.947323+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:13.619033+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:15.285734+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:16.955974+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:18.673766+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:20.604843+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:22.389490+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:24.159340+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:25.844174+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:27.517551+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:29.178361+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:30.858459+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:32.539074+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:34.224802+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.1,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:35.911255+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:37.590344+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:39.262192+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:40.947195+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:42.658233+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:44.366669+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:46.055673+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:47.779877+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:49.489797+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.2,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:51.183681+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:52.865061+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:54.546543+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:56.222542+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:57.900505+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:29:59.585786+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:01.299042+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:02.970148+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:04.652714+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:06.338884+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:08.024442+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:09.698475+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:11.388811+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:13.070277+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:14.740957+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:16.426585+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:18.106339+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:19.788347+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.4,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:21.577075+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:23.266371+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:24.955042+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:26.640623+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:28.321264+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:29.990525+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 300
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:31.669602+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:33.347116+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:35.032308+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "crash_fraction": 0.5,
+      "crash_duration_s": 600
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:41.425146+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 0,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:43.106968+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 0,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:44.779300+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 0,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:46.468857+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 0,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:48.155684+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 0,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:49.847081+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 0,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:51.543337+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 0,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:53.232553+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 0,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:54.917426+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 0,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:56.599110+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 0,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:58.274222+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 50,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:30:59.963460+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 50,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:01.809766+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 50,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:03.524283+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 50,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:05.220560+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 50,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:06.903421+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 50,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:08.581460+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 50,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:10.269827+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 50,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:11.948709+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 50,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:13.625040+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 50,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:15.296727+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 100,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:16.977213+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 100,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:18.658225+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 100,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:20.338914+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 100,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:22.015851+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 100,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:23.692323+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 100,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:25.372783+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 100,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:27.055385+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 100,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:28.728525+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 100,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:30.404939+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 100,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:32.091962+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 200,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:33.771747+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 200,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:35.447984+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 200,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:37.128650+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 200,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:38.809518+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 200,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:40.486855+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 200,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:42.170233+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 200,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:43.840147+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 200,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:45.520129+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 200,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:47.204391+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 200,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:48.993005+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 500,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:50.676336+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 500,
+      "loss_pct": 0
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:52.348997+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 500,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:54.036614+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 500,
+      "loss_pct": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:55.717556+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 500,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:57.410126+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 500,
+      "loss_pct": 2
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:31:59.079062+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 500,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:00.779839+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 500,
+      "loss_pct": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:02.456123+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 42,
+      "latency_ms": 500,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:04.138159+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "seed": 43,
+      "latency_ms": 500,
+      "loss_pct": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:10.817564+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "tx_rate": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:12.520142+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "tx_rate": 1
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:14.219215+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "tx_rate": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:15.911650+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "tx_rate": 5
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:17.725202+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "tx_rate": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:19.416765+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "tx_rate": 10
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:21.136719+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "tx_rate": 20
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:22.848627+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "tx_rate": 20
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:24.559554+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "tx_rate": 50
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:26.257783+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "tx_rate": 50
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:27.953443+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "tx_rate": 100
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:32:29.646234+00:00",
+    "config": {
+      "node_count": 32,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "tx_rate": 100
+    },
+    "status": "SUCCESS",
+    "run_id": "20250906T090020Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T11:39:15.664190+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n"
+  },
+  {
+    "timestamp": "2025-09-08T11:59:54.298574+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250908T114044Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T12:33:05.632363+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250908T122110Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T12:47:13.470908+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T123613Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T12:58:35.321078+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T124732Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T13:09:56.180016+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T125854Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T13:21:54.071056+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T131038Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T13:33:45.659202+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T132227Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T13:45:37.058480+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T133420Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T13:58:08.269137+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T134636Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T14:10:28.391868+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T135855Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T14:22:47.372436+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T141114Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T14:35:51.079897+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T142401Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T14:48:40.218547+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T143651Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T15:01:28.808934+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 44,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T144940Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T17:36:22.702029+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250908T172425Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T17:50:07.906038+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T173857Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T18:01:37.566466+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T175027Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T18:13:47.971433+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T180221Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T18:25:46.415623+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T181420Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T18:38:34.955231+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T182652Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T18:51:06.676830+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T183923Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T19:04:26.189758+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T185226Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-08T19:20:14.269709+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 43,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250908T190529Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T13:37:44.748960+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250909T132555Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T13:50:43.245840+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250909T133853Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T15:02:46.903936+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250909T140338Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T16:16:52.167535+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250909T153757Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T16:56:40.354134+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 16
+    },
+    "status": "SUCCESS",
+    "run_id": "20250909T161731Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T17:37:04.292048+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 24
+    },
+    "status": "SUCCESS",
+    "run_id": "20250909T165735Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-09T18:18:02.241016+00:00",
+    "config": {
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 300,
+      "latency_ms": 100,
+      "loss_pct": 2,
+      "seed": 42,
+      "node_count": 32
+    },
+    "status": "SUCCESS",
+    "run_id": "20250909T173819Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T14:26:39.577440+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /Users/vincenttietze/btc-faultlab/.venv/bin/python3.13, but\nfuture installation of another Python interpreter could change the meaning of\nthat path. See https://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-10T14:26:41.030051+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /Users/vincenttietze/btc-faultlab/.venv/bin/python3.13, but\nfuture installation of another Python interpreter could change the meaning of\nthat path. See https://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-10T14:27:24.502594+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /Users/vincenttietze/btc-faultlab/.venv/bin/python3.13, but\nfuture installation of another Python interpreter could change the meaning of\nthat path. See https://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-10T14:27:26.936031+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /Users/vincenttietze/btc-faultlab/.venv/bin/python3.13, but\nfuture installation of another Python interpreter could change the meaning of\nthat path. See https://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-10T15:30:45.619233+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T145139Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T16:10:20.315301+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T153114Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T16:49:55.608880+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T161049Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T17:29:30.712295+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T165024Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T18:09:05.935983+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T172959Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T18:48:41.167833+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T180934Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T19:28:15.956318+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T184910Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T20:07:50.687208+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T192844Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T20:47:25.874352+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T200819Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T21:27:05.235128+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250910T204758Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-10T21:58:39.908808+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /Users/vincenttietze/btc-faultlab/.venv/bin/python3.13, but\nfuture installation of another Python interpreter could change the meaning of\nthat path. See https://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T13:08:32.777653+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T13:08:41.279139+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T13:28:15.385254+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250926T130945Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T14:11:19.856352+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250926T135201Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T14:32:10.877121+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T14:35:43.840615+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T14:41:50.710698+00:00",
+    "config": {
+      "node_count": 4
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T15:03:14.567444+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250926T144346Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T15:57:44.025624+00:00",
+    "config": {
+      "warmup_s": 240,
+      "observe_s": 1200
+    },
+    "status": "SUCCESS",
+    "run_id": "20250926T152635Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T16:59:26.318326+00:00",
+    "config": {
+      "node_count": 4
+    },
+    "status": "SUCCESS",
+    "run_id": "20250926T164113Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T17:23:40.569981+00:00",
+    "config": {
+      "observe_s": 60
+    },
+    "status": "SUCCESS",
+    "run_id": "20250926T171543Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T17:24:37.979562+00:00",
+    "config": {
+      "observe_s": 60
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T17:38:51.094717+00:00",
+    "config": {
+      "warmup_s": 240,
+      "observe_s": 1200
+    },
+    "status": "SUCCESS",
+    "run_id": "20250926T172554Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T17:55:18.219450+00:00",
+    "config": {
+      "observe_s": 60
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T17:55:50.786434+00:00",
+    "config": {
+      "warmup_s": 240,
+      "observe_s": 1200
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T18:22:41.760242+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Deploy failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T18:30:22.417106+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-26T18:43:38.537310+00:00",
+    "config": {
+      "warmup_s": 240,
+      "observe_s": 600,
+      "cooldown_s": 120
+    },
+    "status": "SUCCESS",
+    "run_id": "20250926T183147Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T19:23:59.805851+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250926T190426Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T19:38:09.286636+00:00",
+    "config": {
+      "warmup_s": 240,
+      "observe_s": 600,
+      "cooldown_s": 120
+    },
+    "status": "SUCCESS",
+    "run_id": "20250926T192624Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-26T19:43:35.917858+00:00",
+    "config": {
+      "node_count": 4
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-27T10:59:45.305155+00:00",
+    "config": {
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250927T104133Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T11:20:02.289363+00:00",
+    "config": {
+      "node_count": 8
+    },
+    "status": "SUCCESS",
+    "run_id": "20250927T110152Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T11:22:33.625692+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Deploy failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-27T11:45:01.324187+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T112601Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T12:05:34.700427+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T114707Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T12:28:20.438589+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T120902Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T12:32:52.028041+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Deploy failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-27T12:57:25.302653+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T123810Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T13:20:07.503239+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T130050Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T14:17:19.328652+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T135133Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T14:53:58.439777+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T142811Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-27T15:53:15.670602+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250927T152726Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T11:01:03.805164+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T104231Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T11:21:08.680515+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T110243Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T11:49:51.418530+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T113123Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T12:39:13.444044+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T121958Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T13:00:52.621911+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T124140Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T13:05:07.813650+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.\n[DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin has been superseded by the the option `result_format=yaml` in callback plugin ansible.builtin.default from ansible-core 2.13 onwards. This feature will be removed from collection 'community.general' version 12.0.0.\n[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-28T13:28:21.738408+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T130907Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T13:52:31.451189+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T133316Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-28T14:24:52.792875+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250928T140540Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-29T13:27:03.533852+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250929T130806Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-09-29T13:51:21.691906+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Data collection failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-29T14:44:09.665905+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Deploy failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-29T15:05:48.520519+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Data collection failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-29T15:29:16.370676+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Data collection failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-29T15:37:23.018055+00:00",
+    "config": {},
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Data collection failed: [DEPRECATION WARNING]: community.general.yaml has been deprecated. The plugin \nhas been superseded by the the option `result_format=yaml` in callback plugin \nansible.builtin.default from ansible-core 2.13 onwards. This feature will be \nremoved from community.general in version 12.0.0. Deprecation warnings can be \ndisabled by setting deprecation_warnings=False in ansible.cfg.\n[WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-09-29T16:36:25.839846+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20250929T161434Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-08T21:35:09.568921+00:00",
+    "config": {},
+    "status": "SUCCESS",
+    "run_id": "20251008T211403Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-08T23:16:01.034529+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251008T222609Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-08T23:52:16.308013+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "status": "SUCCESS",
+    "run_id": "20251008T231719Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T00:28:29.840939+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "status": "SUCCESS",
+    "run_id": "20251008T235334Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T01:26:24.717923+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T002948Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T02:07:50.887759+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T012744Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T02:49:14.150308+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T020908Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T03:25:26.855283+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T025030Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T04:07:03.356664+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T032644Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T04:48:37.774413+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T040822Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T05:30:03.468283+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T044957Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T06:13:26.421284+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T053120Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-09T07:00:45.709542+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "status": "SUCCESS",
+    "run_id": "20251009T061445Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-21T21:28:47.797724+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 300,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251021T211639Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T11:08:19.649417+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T11:08:21.230242+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Bootstrap failed: [WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T11:14:19.709371+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Deploy failed: ERROR: Unhandled exception when retrieving DEFAULT_LOCAL_TMP:\n[Errno 1] Operation not permitted: '/Users/vincenttietze/.ansible/tmp/ansible-local-8814se84rva3'. [Errno 1] Operation not permitted: '/Users/vincenttietze/.ansible/tmp/ansible-local-8814se84rva3'\n"
+  },
+  {
+    "timestamp": "2025-10-26T11:14:20.007913+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Deploy failed: ERROR: Unhandled exception when retrieving DEFAULT_LOCAL_TMP:\n[Errno 1] Operation not permitted: '/Users/vincenttietze/.ansible/tmp/ansible-local-8816ymoam3yu'. [Errno 1] Operation not permitted: '/Users/vincenttietze/.ansible/tmp/ansible-local-8816ymoam3yu'\n"
+  },
+  {
+    "timestamp": "2025-10-26T11:44:09.340518+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Data collection failed: [WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T11:54:21.463689+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 30,
+      "observe_s": 60,
+      "cooldown_s": 10,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T115226Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T12:07:29.266881+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Host 'localhost' is using the discovered Python interpreter at '/Users/vincenttietze/btc-faultlab/.venv/bin/python3.13', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T12:14:50.298248+00:00",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T12:23:46.706308+00:00",
+    "config": {
+      "node_count": 64,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T121833Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T12:39:05.147313+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 30,
+      "observe_s": 60,
+      "cooldown_s": 10,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T123624Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T12:48:45.263062+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T13:00:40.638942+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 50,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T16:01:11.551395+00:00",
+    "config": {
+      "test_32nodes": {
+        "node_count": 32,
+        "tx_rate": 50,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "reindex_on_restart": false,
+        "loss_pct": 0,
+        "latency_ms": 10,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 120,
+        "cooldown_s": 30,
+        "seed": 42
+      }
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T18:17:34.132206+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 30,
+      "observe_s": 60,
+      "cooldown_s": 10,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T181457Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T18:24:27.573917+00:00",
+    "config": {
+      "node_count": 16,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T181850Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T18:35:28.991891+00:00",
+    "config": {
+      "node_count": 64,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T182741Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T18:56:54.839070+00:00",
+    "config": {
+      "test_64nodes": {
+        "node_count": 64,
+        "tx_rate": 10,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "reindex_on_restart": false,
+        "loss_pct": 0,
+        "latency_ms": 10,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 120,
+        "cooldown_s": 30,
+        "seed": 42
+      }
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T182741Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T21:43:14.930657+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Data collection failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-26T22:34:55.879493+00:00",
+    "config": {
+      "node_count": 128,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T215046Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-26T22:48:19.022423+00:00",
+    "config": {
+      "node_count": 64,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251026T223959Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T17:45:12.263510+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 20,
+      "crash_mode": "burst",
+      "recovery_mode": "fast_resync",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 999
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-29T17:54:16.528961+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 20,
+      "crash_mode": "burst",
+      "recovery_mode": "fast_resync",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 999
+    },
+    "status": "SUCCESS",
+    "run_id": "20251029T174836Z",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T17:57:31.257830+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 20,
+      "crash_mode": "burst",
+      "recovery_mode": "fast_resync",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 999
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-29T18:34:47.684747+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 20,
+      "crash_mode": "burst",
+      "recovery_mode": "fast_resync",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 999
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-29T22:06:31.823500+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.25,
+      "crash_duration_s": 20,
+      "crash_mode": "burst",
+      "recovery_mode": "fast_resync",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 999
+    },
+    "status": "FAILED",
+    "run_id": null,
+    "error": "Experiment failed: [WARNING]: Platform darwin on host localhost is using the discovered Python\ninterpreter at /opt/homebrew/bin/python3.13, but future installation of another\nPython interpreter could change the meaning of that path. See\nhttps://docs.ansible.com/ansible-\ncore/2.18/reference_appendices/interpreter_discovery.html for more information.\n"
+  },
+  {
+    "timestamp": "2025-10-29T22:13:30.654977+00:00",
+    "config": {
+      "node_count": 4,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "reindex_on_restart": false,
+      "loss_pct": 0,
+      "latency_ms": 10,
+      "bandwidth_mbit": 100,
+      "warmup_s": 60,
+      "observe_s": 120,
+      "cooldown_s": 30,
+      "seed": 42
+    },
+    "status": "SUCCESS",
+    "run_id": "20251029T220735Z",
+    "error": null
+  }
+]

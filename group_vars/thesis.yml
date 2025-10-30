@@ -1,0 +1,45 @@
+# --- Bitcoin Fault Tolerance Thesis Configuration ---
+# Optimized for recovery dynamics and performance degradation analysis
+# Based on scientific best practices for fault injection experiments
+
+# --- Network Topology ---
+node_count: 32                # Standard configuration (matches thesis experiments)
+tx_rate: 10                   # Realistic transaction load (10 tx/s)
+regions: ["eu", "us", "asia"] # Geographic distribution
+
+# --- Fault Injection (Thesis Focus) ---
+crash_fraction: 0.30          # 30% node crashes (10 out of 32) - significant but recoverable
+crash_duration_s: 300         # 5 minutes crash duration - realistic outage
+crash_mode: "burst"           # "burst" | "staggered" - burst = worst-case simultaneous failure
+recovery_mode: "cold"         # "cold" | "fast" - cold = realistic full resync
+reindex_on_restart: true      # Force full blockchain reindex (realistic recovery overhead)
+
+# --- Network Conditions (Realistic, Not Aggressive) ---
+loss_pct: 2                   # 2% packet loss - typical poor network
+latency_ms: 100               # 100ms latency - realistic intercontinental
+bandwidth_mbit: 10            # 10 Mbps bandwidth - residential connection
+
+# --- Bitcoin Configuration ---
+image: "bitcoin/bitcoin:27.0"
+network_name: "btcnet"
+workdir: "{{ playbook_dir | realpath | dirname }}"
+
+# RPC Configuration
+rpc_user: "user"
+rpc_pass: "pass"
+zmq_block: "tcp://0.0.0.0:28332"
+zmq_tx: "tcp://0.0.0.0:28333"
+
+# --- Experiment Timing (OPTIMIZED FOR THESIS) ---
+warmup_s: 180                 # 3 minutes warmup - stable baseline establishment
+observe_s: 1800               # 30 minutes observation - FULL recovery analysis
+cooldown_s: 60                # 1 minute cooldown - final state capture
+
+# --- Reproducibility ---
+seed: 42                      # Fixed seed for deterministic experiments
+
+# --- Thesis-Specific Settings ---
+enable_recovery_metrics: true
+enable_consensus_metrics: true
+enable_resource_monitoring: true
+detailed_logging: true

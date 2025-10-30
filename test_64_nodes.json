@@ -1,0 +1,16 @@
+{
+  "node_count": 64,
+  "tx_rate": 50,
+  "crash_fraction": 0.0,
+  "crash_duration_s": 0,
+  "crash_mode": "burst",
+  "recovery_mode": "cold",
+  "reindex_on_restart": false,
+  "loss_pct": 0,
+  "latency_ms": 50,
+  "bandwidth_mbit": 100,
+  "warmup_s": 60,
+  "observe_s": 120,
+  "cooldown_s": 30,
+  "seed": 42
+}

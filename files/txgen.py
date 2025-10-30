@@ -53,8 +53,8 @@ if __name__ == "__main__":
     if log_dir:
         os.makedirs(log_dir, exist_ok=True)
 
-    # Wait for RPC to be reachable
-    wait_for_rpc(proto + "://" + host, auth=auth, timeout_s=180)
+    # Wait for RPC to be reachable (longer timeout for large networks)
+    wait_for_rpc(proto + "://" + host, auth=auth, timeout_s=600)
 
     # Wallet setup
     try:
@@ -72,12 +72,20 @@ if __name__ == "__main__":
 
     wallet = "faultlab"
     addr = rpc_call(proto + "://" + host, "getnewaddress", auth=auth, wallet=wallet)
-    rpc_call(proto + "://" + host, "generatetoaddress", [101, addr], auth=auth, wallet=wallet)
+    # Generate enough blocks so we have mature coinbase outputs to spend
+    # Need 101 blocks for first reward to mature, plus extra buffer for high tx rates
+    print(f"Generating initial blocks for funding...")
+    rpc_call(proto + "://" + host, "generatetoaddress", [201, addr], auth=auth, wallet=wallet)
+    print(f"Initial funding complete, wallet has mature coins")
 
     interval = 1.0 / args.rate if args.rate > 0 else 0.1
+    # Mine more frequently for high transaction rates
+    mine_interval = max(1.0, 10.0 / args.rate) if args.rate > 10 else 5.0
+    print(f"Starting transaction generation: rate={args.rate} tx/s, mining every {mine_interval:.1f}s")
+    
     with open(args.log, "w", encoding="utf-8") as f:
         f.write("submit_ts_utc,txid\n")
-        next_mine = time.time() + 10
+        next_mine = time.time() + mine_interval
         while True:
             try:
                 dst = rpc_call(proto + "://" + host, "getnewaddress", auth=auth, wallet=wallet)
@@ -98,5 +106,5 @@ if __name__ == "__main__":
             if time.time() >= next_mine:
                 print("Mining block...")
                 rpc_call(proto + "://" + host, "generatetoaddress", [1, addr], auth=auth, wallet=wallet)
-                next_mine = time.time() + 10
+                next_mine = time.time() + mine_interval
             time.sleep(max(0, interval))

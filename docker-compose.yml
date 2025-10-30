@@ -19,14 +19,11 @@ services:
       - "-rpcallowip=0.0.0.0/0"
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Core tier - dense mesh with spillover
     volumes:
       - "node01_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node01/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -60,14 +57,11 @@ services:
       - "-rpcallowip=0.0.0.0/0"
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Core tier - dense mesh with spillover
     volumes:
       - "node02_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node02/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -101,14 +95,11 @@ services:
       - "-rpcallowip=0.0.0.0/0"
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Core tier - dense mesh with spillover
     volumes:
       - "node03_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node03/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -142,14 +133,11 @@ services:
       - "-rpcallowip=0.0.0.0/0"
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Core tier - dense mesh with spillover
     volumes:
       - "node04_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node04/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -159,170 +147,6 @@ services:
       - "20456:18444"
       - "30344:28332"
       - "30345:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  node05:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "node05"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command: 
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
-    volumes:
-      - "node05_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/node05/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "20459:18443"
-      - "20460:18444"
-      - "30348:28332"
-      - "30349:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  node06:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "node06"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command: 
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
-    volumes:
-      - "node06_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/node06/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "20463:18443"
-      - "20464:18444"
-      - "30352:28332"
-      - "30353:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  node07:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "node07"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command: 
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
-    volumes:
-      - "node07_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/node07/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "20467:18443"
-      - "20468:18444"
-      - "30356:28332"
-      - "30357:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  node08:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "node08"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command: 
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
-    volumes:
-      - "node08_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/node08/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "20471:18443"
-      - "20472:18444"
-      - "30360:28332"
-      - "30361:28333"
     healthcheck:
       test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
       interval: 30s
@@ -362,8 +186,4 @@ volumes:
   node02_data: {}
   node03_data: {}
   node04_data: {}
-  node05_data: {}
-  node06_data: {}
-  node07_data: {}
-  node08_data: {}
   txlogs: {}

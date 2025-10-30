@@ -1,0 +1,9 @@
+{
+  "run_dir": "/Users/vincenttietze/btc-faultlab/results/20251026T123624Z",
+  "total_submitted": 663,
+  "total_confirmed": 663,
+  "availability": 1.0,
+  "median_latency": 3.296845,
+  "p95_latency": 28.392905699999996,
+  "avg_throughput": 4.722473604826546
+}

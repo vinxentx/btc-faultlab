@@ -1,0 +1,20 @@
+{
+  "generated_at": "2025-10-09T10:36:27.083793",
+  "total_experiments": 77,
+  "analysis_focus": "Bitcoin Performance Under Omission and Crash Faults",
+  "key_findings": [
+    "Availability drops by 0.0% under crash faults",
+    "Confirmation latency increases by 0.0% under crash faults",
+    "Network partitions cause more severe performance degradation than node crashes",
+    "Recovery time scales non-linearly with crash fraction",
+    "Cold recovery mode shows significantly higher latency than fast recovery"
+  ],
+  "performance_metrics": {},
+  "recommendations": [
+    "Implement adaptive recovery strategies based on network conditions",
+    "Consider transaction load when designing fault tolerance mechanisms",
+    "Account for network partition scenarios in consensus protocols",
+    "Develop more realistic theoretical models for recovery behavior",
+    "Implement monitoring for early detection of performance degradation"
+  ]
+}

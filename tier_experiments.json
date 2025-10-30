@@ -1,0 +1,1030 @@
+{
+  "description": "Tier-based fault tolerance experiments for Bitcoin network resilience analysis",
+  "purpose": "Systematic analysis of crash impacts, stress conditions, and block interval effects",
+  "node_count": 128,
+  "total_experiments": 33,
+  "total_duration_estimate": "~35 hours for full suite (3 runs each = 99 total runs, with tx_rate=10)",
+  "experiments": {
+    "baseline": {
+      "name": "Baseline (No Faults)",
+      "description": "Perfect conditions - establish performance baseline with 128 nodes",
+      "tier": "baseline",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 42,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_001": {
+      "name": "Tier A: 10% Crash, Simultaneous, 20s Down, Full Resync",
+      "description": "Low crash rate with simultaneous failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 20,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 43,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_002": {
+      "name": "Tier A: 10% Crash, Simultaneous, 20s Down, Fast Resync",
+      "description": "Low crash rate with simultaneous failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 20,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 44,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_003": {
+      "name": "Tier A: 10% Crash, Simultaneous, 60s Down, Full Resync",
+      "description": "Low crash rate with simultaneous failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 45,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_004": {
+      "name": "Tier A: 10% Crash, Simultaneous, 60s Down, Fast Resync",
+      "description": "Low crash rate with simultaneous failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 46,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_005": {
+      "name": "Tier A: 10% Crash, Sequential, 20s Down, Full Resync",
+      "description": "Low crash rate with staggered failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 20,
+        "crash_mode": "staggered",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 47,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_006": {
+      "name": "Tier A: 10% Crash, Sequential, 20s Down, Fast Resync",
+      "description": "Low crash rate with staggered failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 20,
+        "crash_mode": "staggered",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 48,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_007": {
+      "name": "Tier A: 10% Crash, Sequential, 60s Down, Full Resync",
+      "description": "Low crash rate with staggered failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 60,
+        "crash_mode": "staggered",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 49,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_008": {
+      "name": "Tier A: 10% Crash, Sequential, 60s Down, Fast Resync",
+      "description": "Low crash rate with staggered failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.1,
+        "crash_duration_s": 60,
+        "crash_mode": "staggered",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 50,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_009": {
+      "name": "Tier A: 25% Crash, Simultaneous, 20s Down, Full Resync",
+      "description": "Medium crash rate with simultaneous failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 20,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 51,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_010": {
+      "name": "Tier A: 25% Crash, Simultaneous, 20s Down, Fast Resync",
+      "description": "Medium crash rate with simultaneous failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 20,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 52,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_011": {
+      "name": "Tier A: 25% Crash, Simultaneous, 60s Down, Full Resync",
+      "description": "Medium crash rate with simultaneous failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 53,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_012": {
+      "name": "Tier A: 25% Crash, Simultaneous, 60s Down, Fast Resync",
+      "description": "Medium crash rate with simultaneous failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 54,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_013": {
+      "name": "Tier A: 25% Crash, Sequential, 20s Down, Full Resync",
+      "description": "Medium crash rate with staggered failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 20,
+        "crash_mode": "staggered",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 55,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_014": {
+      "name": "Tier A: 25% Crash, Sequential, 20s Down, Fast Resync",
+      "description": "Medium crash rate with staggered failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 20,
+        "crash_mode": "staggered",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 56,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_015": {
+      "name": "Tier A: 25% Crash, Sequential, 60s Down, Full Resync",
+      "description": "Medium crash rate with staggered failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "staggered",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 57,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_016": {
+      "name": "Tier A: 25% Crash, Sequential, 60s Down, Fast Resync",
+      "description": "Medium crash rate with staggered failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "staggered",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 58,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_017": {
+      "name": "Tier A: 50% Crash, Simultaneous, 20s Down, Full Resync",
+      "description": "High crash rate with simultaneous failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 20,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 59,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_018": {
+      "name": "Tier A: 50% Crash, Simultaneous, 20s Down, Fast Resync",
+      "description": "High crash rate with simultaneous failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 20,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 60,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_019": {
+      "name": "Tier A: 50% Crash, Simultaneous, 60s Down, Full Resync",
+      "description": "High crash rate with simultaneous failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 61,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_020": {
+      "name": "Tier A: 50% Crash, Simultaneous, 60s Down, Fast Resync",
+      "description": "High crash rate with simultaneous failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 62,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_021": {
+      "name": "Tier A: 50% Crash, Sequential, 20s Down, Full Resync",
+      "description": "High crash rate with staggered failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 20,
+        "crash_mode": "staggered",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 63,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_022": {
+      "name": "Tier A: 50% Crash, Sequential, 20s Down, Fast Resync",
+      "description": "High crash rate with staggered failures and short downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 20,
+        "crash_mode": "staggered",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 64,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_023": {
+      "name": "Tier A: 50% Crash, Sequential, 60s Down, Full Resync",
+      "description": "High crash rate with staggered failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 60,
+        "crash_mode": "staggered",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 65,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_a_024": {
+      "name": "Tier A: 50% Crash, Sequential, 60s Down, Fast Resync",
+      "description": "High crash rate with staggered failures and medium downtime",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 60,
+        "crash_mode": "staggered",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 66,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_b_001": {
+      "name": "Tier B: Stress Environment, 1MB Blocks, Full Resync",
+      "description": "High load with poor network conditions and full resync",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 100,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 67,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 30
+      }
+    },
+    "tier_b_002": {
+      "name": "Tier B: Stress Environment, 1MB Blocks, Fast Resync",
+      "description": "High load with poor network conditions and fast resync",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 100,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 68,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 30
+      }
+    },
+    "tier_b_003": {
+      "name": "Tier B: Stress Environment, 2MB Blocks, Full Resync",
+      "description": "High load with poor network conditions, larger blocks, and full resync",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 100,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 69,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "2MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 30
+      }
+    },
+    "tier_b_004": {
+      "name": "Tier B: Stress Environment, 2MB Blocks, Fast Resync",
+      "description": "High load with poor network conditions, larger blocks, and fast resync",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 100,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 70,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "2MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 30
+      }
+    },
+    "tier_c_001": {
+      "name": "Tier C: 10s Blocks, Full Resync",
+      "description": "Standard block interval with full resync",
+      "tier": "C",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 71,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_c_002": {
+      "name": "Tier C: 10s Blocks, Fast Resync",
+      "description": "Standard block interval with fast resync",
+      "tier": "C",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 72,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "10s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_c_003": {
+      "name": "Tier C: 60s Blocks, Full Resync",
+      "description": "Slow block interval with full resync",
+      "tier": "C",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 73,
+        "reindex_on_restart": true
+      },
+      "experimental_params": {
+        "block_interval_target": "60s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    },
+    "tier_c_004": {
+      "name": "Tier C: 60s Blocks, Fast Resync",
+      "description": "Slow block interval with fast resync",
+      "tier": "C",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 60,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 120,
+        "observe_s": 300,
+        "cooldown_s": 60,
+        "seed": 74,
+        "reindex_on_restart": false
+      },
+      "experimental_params": {
+        "block_interval_target": "60s",
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6,
+        "jitter_ms": 5
+      }
+    }
+  },
+  "analysis_comparisons": [
+    {
+      "name": "Tier A: Crash Impact Isolation",
+      "tier": "A",
+      "experiments": [
+        "baseline",
+        "tier_a_001",
+        "tier_a_002",
+        "tier_a_003",
+        "tier_a_004",
+        "tier_a_005",
+        "tier_a_006",
+        "tier_a_007",
+        "tier_a_008",
+        "tier_a_009",
+        "tier_a_010",
+        "tier_a_011",
+        "tier_a_012",
+        "tier_a_013",
+        "tier_a_014",
+        "tier_a_015",
+        "tier_a_016",
+        "tier_a_017",
+        "tier_a_018",
+        "tier_a_019",
+        "tier_a_020",
+        "tier_a_021",
+        "tier_a_022",
+        "tier_a_023",
+        "tier_a_024"
+      ],
+      "metrics": [
+        "confirmation_latency",
+        "throughput",
+        "availability",
+        "recovery_time",
+        "fork_rate"
+      ],
+      "hypotheses": [
+        "Higher crash_fraction leads to increased latency and reduced throughput",
+        "Simultaneous crashes cause sharper performance degradation than sequential",
+        "Longer downtime (60s) significantly impacts recovery metrics",
+        "Fast resync reduces recovery time compared to full resync"
+      ]
+    },
+    {
+      "name": "Tier B: Stress Environment Analysis",
+      "tier": "B",
+      "experiments": [
+        "baseline",
+        "tier_b_001",
+        "tier_b_002",
+        "tier_b_003",
+        "tier_b_004"
+      ],
+      "metrics": [
+        "confirmation_latency",
+        "throughput",
+        "recovery_time",
+        "mempool_size",
+        "network_propagation_delay"
+      ],
+      "hypotheses": [
+        "Poor network conditions amplify crash impact on recovery",
+        "High transaction load increases mempool congestion during recovery",
+        "Larger blocks (2MB) exacerbate network stress",
+        "Fast resync provides greater benefits under stress conditions"
+      ]
+    },
+    {
+      "name": "Tier C: Block Interval Sensitivity",
+      "tier": "C",
+      "experiments": [
+        "baseline",
+        "tier_c_001",
+        "tier_c_002",
+        "tier_c_003",
+        "tier_c_004"
+      ],
+      "metrics": [
+        "confirmation_latency",
+        "fork_rate",
+        "recovery_time",
+        "chain_stability"
+      ],
+      "hypotheses": [
+        "Faster block intervals (10s) increase fork probability during recovery",
+        "Slower block intervals (60s) provide more stable recovery but longer confirmation times",
+        "Fast resync benefits are more pronounced with faster block intervals"
+      ]
+    },
+    {
+      "name": "Cross-Tier: Recovery Mode Comparison",
+      "tier": "cross",
+      "experiments": [
+        "tier_a_001",
+        "tier_a_002",
+        "tier_b_001",
+        "tier_b_002",
+        "tier_c_001",
+        "tier_c_002"
+      ],
+      "metrics": [
+        "recovery_time",
+        "confirmation_latency",
+        "resource_usage"
+      ],
+      "hypotheses": [
+        "Fast resync consistently reduces recovery time across all conditions",
+        "Full resync provides better chain validation but at performance cost"
+      ]
+    }
+  ],
+  "execution_recommendations": {
+    "replications_per_experiment": 3,
+    "total_runs": 99,
+    "estimated_duration_hours": 35,
+    "suggested_batch_order": [
+      "baseline",
+      "tier_a (all 24)",
+      "tier_c (all 4)",
+      "tier_b (all 4, most resource intensive)"
+    ],
+    "resource_requirements": {
+      "minimum_ram_gb": 32,
+      "recommended_ram_gb": 64,
+      "minimum_disk_gb": 200,
+      "cpu_cores": 16
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "run_dir": "results/network-only_rep3_GOOD",
+  "total_submitted": 4713,
+  "total_confirmed": 4713,
+  "availability": 1.0,
+  "median_latency": 2.076765,
+  "p95_latency": 4.523630799999999,
+  "avg_throughput": 3.468017540137209,
+  "recovery_analysis": {
+    "recovery_detected": true,
+    "baseline_latency": 2.161159,
+    "recovery_threshold": 2.3772749,
+    "recovery_time_seconds": 10.0,
+    "recovery_timestamp": "2025-10-09 04:11:59+00:00",
+    "peak_latency_during_recovery": 4.17256,
+    "latency_degradation_pct": 93.07047746139916,
+    "final_latency": 0.608209,
+    "observation_duration": 1887.0
+  }
+}

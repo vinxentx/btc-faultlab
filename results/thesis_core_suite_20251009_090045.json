@@ -1,0 +1,254 @@
+[
+  {
+    "experiment": "baseline",
+    "replication": 1,
+    "run_id": "20251008T222609Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "timestamp": "2025-10-09T01:16:01.038007",
+    "attempts": 1
+  },
+  {
+    "experiment": "baseline",
+    "replication": 2,
+    "run_id": "20251008T231719Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "timestamp": "2025-10-09T01:52:16.310799",
+    "attempts": 1
+  },
+  {
+    "experiment": "baseline",
+    "replication": 3,
+    "run_id": "20251008T235334Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "timestamp": "2025-10-09T02:28:29.843974",
+    "attempts": 1
+  },
+  {
+    "experiment": "crash_only",
+    "replication": 1,
+    "run_id": "20251009T002948Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "timestamp": "2025-10-09T03:26:24.720943",
+    "attempts": 1
+  },
+  {
+    "experiment": "crash_only",
+    "replication": 2,
+    "run_id": "20251009T012744Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "timestamp": "2025-10-09T04:07:50.891449",
+    "attempts": 1
+  },
+  {
+    "experiment": "crash_only",
+    "replication": 3,
+    "run_id": "20251009T020908Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 0,
+      "bandwidth_mbit": 100,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "timestamp": "2025-10-09T04:49:14.153674",
+    "attempts": 1
+  },
+  {
+    "experiment": "network_only",
+    "replication": 1,
+    "run_id": "20251009T025030Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "timestamp": "2025-10-09T05:25:26.858231",
+    "attempts": 1
+  },
+  {
+    "experiment": "network_only",
+    "replication": 2,
+    "run_id": "20251009T032644Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "timestamp": "2025-10-09T06:07:03.360121",
+    "attempts": 1
+  },
+  {
+    "experiment": "network_only",
+    "replication": 3,
+    "run_id": "20251009T040822Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "timestamp": "2025-10-09T06:48:37.777535",
+    "attempts": 1
+  },
+  {
+    "experiment": "combined",
+    "replication": 1,
+    "run_id": "20251009T044957Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 42
+    },
+    "timestamp": "2025-10-09T07:30:03.471130",
+    "attempts": 1
+  },
+  {
+    "experiment": "combined",
+    "replication": 2,
+    "run_id": "20251009T053120Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 43
+    },
+    "timestamp": "2025-10-09T08:13:26.424661",
+    "attempts": 1
+  },
+  {
+    "experiment": "combined",
+    "replication": 3,
+    "run_id": "20251009T061445Z",
+    "config": {
+      "node_count": 32,
+      "tx_rate": 10,
+      "crash_fraction": 0.3,
+      "crash_duration_s": 300,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 2,
+      "latency_ms": 100,
+      "bandwidth_mbit": 10,
+      "warmup_s": 180,
+      "observe_s": 1800,
+      "cooldown_s": 60,
+      "seed": 44
+    },
+    "timestamp": "2025-10-09T09:00:45.712952",
+    "attempts": 1
+  }
+]

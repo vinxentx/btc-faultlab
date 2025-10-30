@@ -1,0 +1,123 @@
+2025-10-26T12:18:27Z Bitcoin Core version v27.0.0 (release build)
+2025-10-26T12:18:27Z Script verification uses 7 additional threads
+2025-10-26T12:18:27Z Using the 'arm_shani(1way,2way)' SHA256 implementation
+2025-10-26T12:18:27Z Default data directory /home/bitcoin/.bitcoin
+2025-10-26T12:18:27Z Using data directory /home/bitcoin/.bitcoin/regtest
+2025-10-26T12:18:27Z Config file: /home/bitcoin/.bitcoin/bitcoin.conf
+2025-10-26T12:18:27Z Config file arg: [regtest] fallbackfee="0.0002"
+2025-10-26T12:18:27Z Config file arg: [regtest] maxmempool="500"
+2025-10-26T12:18:27Z Config file arg: [regtest] rpcallowip="0.0.0.0/0"
+2025-10-26T12:18:27Z Config file arg: [regtest] rpcbind="0.0.0.0"
+2025-10-26T12:18:27Z Config file arg: [regtest] rpcpassword=****
+2025-10-26T12:18:27Z Config file arg: [regtest] rpcuser=****
+2025-10-26T12:18:27Z Config file arg: [regtest] server="1"
+2025-10-26T12:18:27Z Command-line arg: connect="node60:18444"
+2025-10-26T12:18:27Z Command-line arg: connect="node62:18444"
+2025-10-26T12:18:27Z Command-line arg: datadir="/home/bitcoin/.bitcoin"
+2025-10-26T12:18:27Z Command-line arg: discover="1"
+2025-10-26T12:18:27Z Command-line arg: dnsseed="0"
+2025-10-26T12:18:27Z Command-line arg: listen="1"
+2025-10-26T12:18:27Z Command-line arg: maxconnections="64"
+2025-10-26T12:18:27Z Command-line arg: printtoconsole="1"
+2025-10-26T12:18:27Z Command-line arg: regtest="1"
+2025-10-26T12:18:27Z Command-line arg: rpcallowip="0.0.0.0/0"
+2025-10-26T12:18:27Z Command-line arg: rpcbind="0.0.0.0"
+2025-10-26T12:18:27Z Command-line arg: rpcpassword=****
+2025-10-26T12:18:27Z Command-line arg: rpcuser=****
+2025-10-26T12:18:27Z Command-line arg: server="1"
+2025-10-26T12:18:27Z Command-line arg: txindex="1"
+2025-10-26T12:18:27Z Command-line arg: zmqpubhashblock="tcp://0.0.0.0:28332"
+2025-10-26T12:18:27Z Command-line arg: zmqpubhashtx="tcp://0.0.0.0:28333"
+2025-10-26T12:18:27Z Using at most 64 automatic connections (1048576 file descriptors available)
+2025-10-26T12:18:27Z Using 16 MiB out of 16 MiB requested for signature cache, able to store 524288 elements
+2025-10-26T12:18:27Z Using 16 MiB out of 16 MiB requested for script execution cache, able to store 524288 elements
+2025-10-26T12:18:27Z scheduler thread start
+2025-10-26T12:18:27Z Binding RPC on address 0.0.0.0 port 18443
+2025-10-26T12:18:27Z WARNING: the RPC server is not safe to expose to untrusted networks such as the public internet
+2025-10-26T12:18:27Z Binding RPC on address 0.0.0.0 port 18443
+2025-10-26T12:18:27Z Binding RPC on address 0.0.0.0 port 18443 failed.
+2025-10-26T12:18:27Z Config options rpcuser and rpcpassword will soon be deprecated. Locally-run instances may remove rpcuser to use cookie-based auth, or may be replaced with rpcauth. Please see share/rpcauth for rpcauth auth generation.
+2025-10-26T12:18:27Z Starting HTTP server with 4 worker threads
+2025-10-26T12:18:27Z Using wallet directory /home/bitcoin/.bitcoin/regtest/wallets
+2025-10-26T12:18:27Z init message: Verifying wallet(s)…
+2025-10-26T12:18:27Z Using /16 prefix for IP bucketing
+2025-10-26T12:18:27Z init message: Loading P2P addresses…
+2025-10-26T12:18:27Z Loaded 0 addresses from peers.dat  0ms
+2025-10-26T12:18:27Z init message: Loading banlist…
+2025-10-26T12:18:27Z SetNetworkActive: true
+2025-10-26T12:18:27Z Script verification uses 7 additional threads
+2025-10-26T12:18:27Z Cache configuration:
+2025-10-26T12:18:27Z * Using 2.0 MiB for block index database
+2025-10-26T12:18:27Z * Using 56.0 MiB for transaction index database
+2025-10-26T12:18:27Z * Using 8.0 MiB for chain state database
+2025-10-26T12:18:27Z * Using 384.0 MiB for in-memory UTXO set (plus up to 476.8 MiB of unused mempool space)
+2025-10-26T12:18:27Z init message: Loading block index…
+2025-10-26T12:18:27Z Validating signatures for all blocks.
+2025-10-26T12:18:27Z Setting nMinimumChainWork=0000000000000000000000000000000000000000000000000000000000000000
+2025-10-26T12:18:27Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/blocks/index
+2025-10-26T12:18:27Z Opened LevelDB successfully
+2025-10-26T12:18:27Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/blocks/index: 0000000000000000
+2025-10-26T12:18:27Z LoadBlockIndexDB: last block file = 0
+2025-10-26T12:18:27Z LoadBlockIndexDB: last block file info: CBlockFileInfo(blocks=1581, size=4299578, heights=0...1516, time=2011-02-02...2025-10-26)
+2025-10-26T12:18:27Z Checking all blk files are present...
+2025-10-26T12:18:27Z Initializing chainstate Chainstate [ibd] @ height -1 (null)
+2025-10-26T12:18:27Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-10-26T12:18:27Z Opened LevelDB successfully
+2025-10-26T12:18:27Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: cccb9d812b5ea6b5
+2025-10-26T12:18:27Z Loaded best chain: hashBestChain=6656fbcc5293743f6521fb549b43c5746c3b9c43561678838f49a40fdae8892a height=1516 date=2025-10-26T11:39:47Z progress=1.000000
+2025-10-26T12:18:27Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/chainstate
+2025-10-26T12:18:27Z Opened LevelDB successfully
+2025-10-26T12:18:27Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/chainstate: cccb9d812b5ea6b5
+2025-10-26T12:18:27Z [Chainstate [ibd] @ height 1516 (6656fbcc5293743f6521fb549b43c5746c3b9c43561678838f49a40fdae8892a)] resized coinsdb cache to 8.0 MiB
+2025-10-26T12:18:27Z [Chainstate [ibd] @ height 1516 (6656fbcc5293743f6521fb549b43c5746c3b9c43561678838f49a40fdae8892a)] resized coinstip cache to 384.0 MiB
+2025-10-26T12:18:27Z init message: Verifying blocks…
+2025-10-26T12:18:27Z Verifying last 6 blocks at level 3
+2025-10-26T12:18:27Z Verification progress: 0%
+2025-10-26T12:18:27Z Verification progress: 16%
+2025-10-26T12:18:27Z Verification progress: 33%
+2025-10-26T12:18:27Z Verification progress: 50%
+2025-10-26T12:18:27Z Verification progress: 66%
+2025-10-26T12:18:27Z Verification progress: 83%
+2025-10-26T12:18:27Z Verification progress: 99%
+2025-10-26T12:18:27Z Verification: No coin database inconsistencies in last 6 blocks (69 transactions)
+2025-10-26T12:18:27Z  block index              80ms
+2025-10-26T12:18:27Z Opening LevelDB in /home/bitcoin/.bitcoin/regtest/indexes/txindex
+2025-10-26T12:18:27Z Opened LevelDB successfully
+2025-10-26T12:18:27Z Using obfuscation key for /home/bitcoin/.bitcoin/regtest/indexes/txindex: 0000000000000000
+2025-10-26T12:18:27Z Setting NODE_NETWORK on non-prune mode
+2025-10-26T12:18:27Z block tree size = 1581
+2025-10-26T12:18:27Z nBestHeight = 1516
+2025-10-26T12:18:27Z Bound to 127.0.0.1:18445
+2025-10-26T12:18:27Z Bound to [::]:18444
+2025-10-26T12:18:27Z Bound to 0.0.0.0:18444
+2025-10-26T12:18:27Z init message: Starting network threads…
+2025-10-26T12:18:27Z DNS seeding disabled
+2025-10-26T12:18:27Z init message: Done loading
+2025-10-26T12:18:27Z msghand thread start
+2025-10-26T12:18:27Z addcon thread start
+2025-10-26T12:18:27Z torcontrol thread start
+2025-10-26T12:18:27Z net thread start
+2025-10-26T12:18:27Z opencon thread start
+2025-10-26T12:18:27Z connect() to 172.19.0.29:18444 failed after wait: Connection refused (111)
+2025-10-26T12:18:27Z initload thread start
+2025-10-26T12:18:27Z txindex thread start
+2025-10-26T12:18:27Z txindex is enabled at height 1516
+2025-10-26T12:18:27Z txindex thread exit
+2025-10-26T12:18:27Z Loading 276 mempool transactions from disk...
+2025-10-26T12:18:27Z Leaving InitialBlockDownload (latching to false)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 10% (tried 28, 248 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 20% (tried 56, 220 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 30% (tried 83, 193 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 40% (tried 111, 165 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 50% (tried 138, 138 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 60% (tried 166, 110 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 70% (tried 194, 82 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 80% (tried 221, 55 remaining)
+2025-10-26T12:18:27Z Progress loading mempool transactions from disk: 90% (tried 249, 27 remaining)
+2025-10-26T12:18:27Z Imported mempool transactions from disk: 276 succeeded, 0 failed, 0 expired, 0 already there, 0 waiting for initial broadcast
+2025-10-26T12:18:27Z initload thread exit
+2025-10-26T12:18:28Z connect() to 172.19.0.29:18444 failed after wait: Connection refused (111)
+2025-10-26T12:18:28Z connect() to 172.19.0.48:18444 failed after wait: Connection refused (111)
+2025-10-26T12:18:29Z New manual v2 peer connected: version: 70016, blocks=1516, peer=1
+2025-10-26T12:18:30Z connect() to 172.19.0.48:18444 failed after wait: Connection refused (111)
+2025-10-26T12:18:33Z New manual v2 peer connected: version: 70016, blocks=1516, peer=3

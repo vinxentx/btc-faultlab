@@ -49,13 +49,54 @@
   ansible.builtin.pause: { seconds: "{{ crash_duration_s }}" }
 
 # Recovery start
-- name: Recovery (cold vs fast)
+- name: Recovery with full resync (reindex blockchain)
+  when:
+    - (crash_count | int) > 0
+    - recovery_mode == "full_resync"
+    - reindex_on_restart | default(false) | bool
+  loop: "{{ crash_nodes }}"
+  loop_control: { loop_var: c }
+  ansible.builtin.shell: |
+    # Start container
+    docker start {{ c }}
+    sleep 2
+    # Stop bitcoind and restart with -reindex
+    docker exec {{ c }} bitcoin-cli -regtest stop 2>/dev/null || true
+    sleep 2
+    docker exec {{ c }} bitcoind -regtest -reindex -daemon
+
+- name: Recovery with fast resync (no reindex)
+  when:
+    - (crash_count | int) > 0
+    - recovery_mode == "fast_resync" or (reindex_on_restart | default(false) | bool == false)
+  loop: "{{ crash_nodes }}"
+  loop_control: { loop_var: c }
+  ansible.builtin.shell: |
+    docker start {{ c }}
+
+# Log recovery start
+- name: Log recovery start timestamp
+  when: (crash_count | int) > 0
+  ansible.builtin.shell: |
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "{{ run_dir }}/events.log"
+  changed_when: true
+
+# Wait for recovered nodes to finish syncing (using initialblockdownload RPC)
+- name: Wait for recovered nodes to complete blockchain sync
   when: (crash_count | int) > 0
   loop: "{{ crash_nodes }}"
   loop_control: { loop_var: c }
   ansible.builtin.shell: |
-    {% if recovery_mode == 'cold' %}
-    docker start {{ c }} && docker exec {{ c }} bash -lc "echo reindex={{ 1 if reindex_on_restart else 0 }} >/dev/null"
-    {% else %}
-    docker start {{ c }}
-    {% endif %}
+    docker exec {{ c }} bitcoin-cli -regtest getblockchaininfo | jq -r '.initialblockdownload'
+  register: ibd_status
+  until: ibd_status.stdout == "false"
+  retries: 120
+  delay: 2
+  failed_when: false
+
+# Log recovery completion
+- name: Log recovery completion timestamp
+  when: (crash_count | int) > 0
+  ansible.builtin.shell: |
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_complete nodes={{ crash_nodes | default([]) | join(',') }}" >> "{{ run_dir }}/events.log"
+  changed_when: true
