@@ -15,6 +15,14 @@
     group: "staff"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
+- name: Ensure wallet config dir exists
+  ansible.builtin.file:
+    path: "{{ workdir }}/config/wallet"
+    state: directory
+    mode: "0755"
+    owner: "{{ lookup('env','USER') }}"
+    group: "staff"
+
 - name: Template docker-compose.yml
   ansible.builtin.template:
     src: "docker-compose.yml.j2"
@@ -29,6 +37,14 @@
     group: "staff"
   loop: "{{ range(1, node_count + 1) | list }}"
 
+- name: Render wallet bitcoin.conf file
+  ansible.builtin.template:
+    src: "bitcoin.conf.j2"
+    dest: "{{ workdir }}/config/wallet/bitcoin.conf"
+    mode: "0644"
+    owner: "{{ lookup('env','USER') }}"
+    group: "staff"
+
 - name: Precreate named volumes for node data
   ansible.builtin.shell: |
     docker volume create {{ network_name }}_node{{ '%02d'|format(item) }}_data
@@ -39,6 +55,16 @@
   ansible.builtin.shell: |
     docker run --rm -u 0:0 -v {{ network_name }}_node{{ '%02d'|format(item) }}_data:/data alpine:3.19 sh -lc "mkdir -p /data && chown -R 101:101 /data"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
+  changed_when: true
+
+- name: Precreate named volume for wallet data
+  ansible.builtin.shell: |
+    docker volume create {{ network_name }}_wallet_data
+  changed_when: true
+
+- name: Chown wallet volume to 101:101 (bitcoin user inside container)
+  ansible.builtin.shell: |
+    docker run --rm -u 0:0 -v {{ network_name }}_wallet_data:/data alpine:3.19 sh -lc "mkdir -p /data && chown -R 101:101 /data"
   changed_when: true
 
 ## Host data dirs no longer required (using named volumes)

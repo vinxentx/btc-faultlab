@@ -26,11 +26,14 @@
   changed_when: true
 
 # Falls txlog im allgemeinen results liegt, verlinke ihn in diesen Run
-- name: Copy txlog from Docker volume to run directory
+- name: Copy txlog and mining log from Docker volume to run directory
   ansible.builtin.shell: |
-    # Copy txlog.csv from btcnet_txlogs named volume if present
+    # Copy txlog.csv and txlog_mining.csv from btcnet_txlogs named volume if present
     if docker volume inspect btcnet_txlogs >/dev/null 2>&1; then \
-      docker run --rm -v btcnet_txlogs:/v -v {{ rd }}:/out alpine:3.19 sh -lc "if [ -f /v/txlog.csv ]; then cp -f /v/txlog.csv /out/txlog.csv; fi"; \
+      docker run --rm -v btcnet_txlogs:/v -v {{ rd }}:/out alpine:3.19 sh -lc "
+        if [ -f /v/txlog.csv ]; then cp -f /v/txlog.csv /out/txlog.csv; fi; \
+        if [ -f /v/txlog_mining.csv ]; then cp -f /v/txlog_mining.csv /out/mining.csv; fi
+      "; \
     fi
   changed_when: false
 
@@ -44,4 +47,50 @@
     fi
   args:
     chdir: "{{ workdir }}"
+  changed_when: true
+
+- name: Collect node health status at experiment end
+  ansible.builtin.shell: |
+    # Collect final health status for all nodes
+    echo "node,status,block_height,peer_count" > "{{ rd }}/node_health.csv"
+    for i in $(seq -f "%02g" 1 {{ node_count }}); do
+      node="node$i"
+      if docker ps --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^$node$"; then
+        # Node is running - get stats
+        height=$(docker exec $node bitcoin-cli -regtest getblockcount 2>/dev/null || echo "N/A")
+        peers=$(docker exec $node bitcoin-cli -regtest getconnectioncount 2>/dev/null || echo "N/A")
+        echo "$node,running,$height,$peers" >> "{{ rd }}/node_health.csv"
+      else
+        # Node is not running
+        echo "$node,stopped,N/A,N/A" >> "{{ rd }}/node_health.csv"
+      fi
+    done
+  changed_when: true
+
+- name: Save final mining statistics summary
+  ansible.builtin.shell: |
+    if [ -f "{{ rd }}/mining.csv" ]; then
+      python3 << 'PYTHON_SCRIPT'
+    import csv
+    import json
+    from collections import Counter
+    
+    with open('{{ rd }}/mining.csv', 'r') as f:
+        reader = csv.DictReader(f)
+        miners = [row['miner'] for row in reader if row['miner']]
+    
+    stats = Counter(miners)
+    total = sum(stats.values())
+    
+    if total > 0:
+        with open('{{ rd }}/mining_summary.json', 'w') as f:
+            summary = {
+                'total_blocks': total,
+                'miners': {miner: {'blocks': count, 'percentage': round(count/total*100, 2)} 
+                           for miner, count in stats.items()},
+                'unique_miners': len(stats)
+            }
+            json.dump(summary, f, indent=2)
+    PYTHON_SCRIPT
+    fi
   changed_when: true

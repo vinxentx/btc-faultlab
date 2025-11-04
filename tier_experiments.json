@@ -686,7 +686,7 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 100,
+        "tx_rate": 30,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -713,7 +713,7 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 100,
+        "tx_rate": 30,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -740,7 +740,7 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 100,
+        "tx_rate": 30,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -767,7 +767,7 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 100,
+        "tx_rate": 30,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",

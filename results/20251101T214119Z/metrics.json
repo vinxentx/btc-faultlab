@@ -1,0 +1,17 @@
+{
+  "run_dir": "/Users/vincenttietze/btc-faultlab/results/20251101T214119Z",
+  "total_submitted": 5205,
+  "total_confirmed": 5205,
+  "availability": 1.0,
+  "median_latency": 6.301361,
+  "p95_latency": 12.095320800000003,
+  "avg_throughput": 6.9795965417867425,
+  "recovery_analysis": {
+    "recovery_detected": true,
+    "method": "events_log",
+    "start_timestamp": "2025-11-01 21:46:00+00:00",
+    "end_timestamp": "2025-11-01 21:46:29+00:00",
+    "recovery_time_seconds": 29.0,
+    "nodes": "node14,node42,node13,node55,node45,node52"
+  }
+}

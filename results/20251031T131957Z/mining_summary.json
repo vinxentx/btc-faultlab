@@ -1,0 +1,14 @@
+{
+  "total_blocks": 126,
+  "miners": {
+    "node02:18443": {
+      "blocks": 62,
+      "percentage": 49.21
+    },
+    "node01:18443": {
+      "blocks": 64,
+      "percentage": 50.79
+    }
+  },
+  "unique_miners": 2
+}

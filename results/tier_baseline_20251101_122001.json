@@ -1,0 +1,71 @@
+[
+  {
+    "experiment": "baseline",
+    "replication": 1,
+    "run_id": "20251101T103203Z",
+    "config": {
+      "node_count": 64,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 42,
+      "reindex_on_restart": false
+    },
+    "timestamp": "2025-11-01T11:46:35.127371",
+    "attempts": 1
+  },
+  {
+    "experiment": "baseline",
+    "replication": 2,
+    "run_id": "20251101T104847Z",
+    "config": {
+      "node_count": 64,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 43,
+      "reindex_on_restart": false
+    },
+    "timestamp": "2025-11-01T12:03:18.907482",
+    "attempts": 1
+  },
+  {
+    "experiment": "baseline",
+    "replication": 3,
+    "run_id": "20251101T110533Z",
+    "config": {
+      "node_count": 64,
+      "tx_rate": 10,
+      "crash_fraction": 0.0,
+      "crash_duration_s": 0,
+      "crash_mode": "burst",
+      "recovery_mode": "cold",
+      "loss_pct": 0,
+      "latency_ms": 50,
+      "bandwidth_mbit": 100,
+      "warmup_s": 120,
+      "observe_s": 300,
+      "cooldown_s": 60,
+      "seed": 44,
+      "reindex_on_restart": false
+    },
+    "timestamp": "2025-11-01T12:20:01.526268",
+    "attempts": 1
+  }
+]

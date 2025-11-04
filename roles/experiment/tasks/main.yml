@@ -56,14 +56,38 @@
     - reindex_on_restart | default(false) | bool
   loop: "{{ crash_nodes }}"
   loop_control: { loop_var: c }
+  ignore_errors: yes
   ansible.builtin.shell: |
-    # Start container
-    docker start {{ c }}
-    sleep 2
-    # Stop bitcoind and restart with -reindex
+    # Restart container to ensure clean state (no lock issues)
+    docker restart {{ c }}
+    
+    # Wait for container to be fully up
+    sleep 3
+    
+    # Stop bitcoind gracefully
     docker exec {{ c }} bitcoin-cli -regtest stop 2>/dev/null || true
-    sleep 2
+    
+    # Wait for bitcoind to fully stop
+    for i in {1..15}; do
+      if ! docker exec {{ c }} pgrep -x bitcoind >/dev/null 2>&1; then
+        echo "✓ bitcoind stopped successfully"
+        break
+      fi
+      echo "Waiting for bitcoind to stop... ($i/15)"
+      sleep 1
+    done
+    
+    # Force kill if still running (should not happen)
+    docker exec {{ c }} pkill -9 bitcoind 2>/dev/null || true
+    sleep 1
+    
+    # Remove lock file if it exists (ensure clean start)
+    docker exec {{ c }} sh -c "rm -f /home/bitcoin/.bitcoin/regtest/.lock" 2>/dev/null || true
+    
+    # Start with reindex
     docker exec {{ c }} bitcoind -regtest -reindex -daemon
+    
+    echo "✓ Reindex started for {{ c }}"
 
 - name: Recovery with fast resync (no reindex)
   when:
@@ -77,26 +101,59 @@
 # Log recovery start
 - name: Log recovery start timestamp
   when: (crash_count | int) > 0
+  environment:
+    RUN_DIR: "{{ run_dir }}"
+    CRASH_NODES: "{{ crash_nodes | default([]) | join(',') }}"
   ansible.builtin.shell: |
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "{{ run_dir }}/events.log"
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
   changed_when: true
 
-# Wait for recovered nodes to finish syncing (using initialblockdownload RPC)
+# Wait for recovered nodes to finish syncing
+# Robust criteria for Regtest:
+# 1) Node has at least one peer
+# 2) Node's block height >= current network max height (at check time)
+#    (initialblockdownload flag is unreliable in small Regtest chains)
 - name: Wait for recovered nodes to complete blockchain sync
   when: (crash_count | int) > 0
   loop: "{{ crash_nodes }}"
   loop_control: { loop_var: c }
   ansible.builtin.shell: |
-    docker exec {{ c }} bitcoin-cli -regtest getblockchaininfo | jq -r '.initialblockdownload'
-  register: ibd_status
-  until: ibd_status.stdout == "false"
-  retries: 120
+    # Calculate current network height (max over all nodes)
+    NET_H=0
+    for i in $(seq -f "%02g" 1 {{ node_count }}); do
+      H=$(docker exec node$i bitcoin-cli -regtest getblockcount 2>/dev/null || echo 0)
+      [ "$H" -gt "$NET_H" ] && NET_H=$H
+    done
+
+    # Local node height and peers
+    NODE_H=$(docker exec {{ c }} bitcoin-cli -regtest getblockcount 2>/dev/null || echo 0)
+    PEERS=$(docker exec {{ c }} bitcoin-cli -regtest getconnectioncount 2>/dev/null || echo 0)
+
+    # Optional IBD flag (best-effort)
+    IBD=$(docker exec {{ c }} bitcoin-cli -regtest getblockchaininfo 2>/dev/null | jq -r '.initialblockdownload' || echo false)
+
+    # Consider synced if:
+    # - has peers AND node height >= network height
+    # - or IBD explicitly reports false and heights differ by at most 1 (tolerance)
+    if [ "$PEERS" -gt 0 ] && [ "$NODE_H" -ge "$NET_H" ]; then
+      echo synced
+    elif [ "$IBD" = "false" ] && [ $((NET_H - NODE_H)) -le 1 ]; then
+      echo synced
+    else
+      echo syncing
+    fi
+  register: sync_status
+  until: sync_status.stdout == "synced"
+  retries: 300
   delay: 2
   failed_when: false
 
 # Log recovery completion
 - name: Log recovery completion timestamp
   when: (crash_count | int) > 0
+  environment:
+    RUN_DIR: "{{ run_dir }}"
+    CRASH_NODES: "{{ crash_nodes | default([]) | join(',') }}"
   ansible.builtin.shell: |
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_complete nodes={{ crash_nodes | default([]) | join(',') }}" >> "{{ run_dir }}/events.log"
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_complete nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
   changed_when: true

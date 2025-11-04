@@ -1,9 +1,0 @@
-{
-  "run_dir": "results/combined_rep2_GOOD",
-  "total_submitted": 1714,
-  "total_confirmed": 1714,
-  "availability": 1.0,
-  "median_latency": 1.9908875,
-  "p95_latency": 4.490049399999999,
-  "avg_throughput": 2.3214896927265656
-}

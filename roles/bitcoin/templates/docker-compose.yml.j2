@@ -105,6 +105,52 @@ services:
       start_period: 40s
 {% endfor %}
 
+  wallet:
+    image: "{{ image }}"
+    container_name: "wallet"
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser={{ rpc_user }}"
+      - "-rpcpassword={{ rpc_pass }}"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+{% if core_size > 0 %}
+      # Connect to multiple core nodes for redundancy (backup peers)
+      # Connect to first 10 core nodes (or all if fewer than 10)
+{% set wallet_peers = [core_size, 10] | min %}
+{% for i in range(1, wallet_peers + 1) %}
+      - "-connect=node{{ '%02d'|format(i) }}:18444"
+{% endfor %}
+{% endif %}
+    volumes:
+      - "wallet_data:/home/bitcoin/.bitcoin"
+      - "{{ workdir }}/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "{{ network_name }}" ]
+    ports:
+      - "21043:18443"
+      - "21044:18444"
+      - "31032:28332"
+      - "31033:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   txgen:
     image: "python:3.12-slim"
     container_name: "txgen"
@@ -116,14 +162,16 @@ services:
       - "txlogs:/results"
     command: >
       bash -lc "pip install requests && python -u /app/txgen.py --rate {{ tx_rate }}
-      --rpc http://{{ rpc_user }}:{{ rpc_pass }}@node01:18443
-      --log /results/txlog.csv"
+      --rpc http://{{ rpc_user }}:{{ rpc_pass }}@wallet:18443
+      --log /results/txlog.csv
+      --node-count {{ node_count }}
+      --mining-percentage 0.08"
     depends_on:
-      node01:
+      wallet:
         condition: service_healthy
     networks: [ "{{ network_name }}" ]
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://{{ rpc_user }}:{{ rpc_pass }}@node01:18443', timeout=5)"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://{{ rpc_user }}:{{ rpc_pass }}@wallet:18443', timeout=5)"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -136,4 +184,5 @@ volumes:
 {% for i in range(1, n + 1) %}
   node{{ '%02d'|format(i) }}_data: {}
 {% endfor %}
+  wallet_data: {}
   txlogs: {}

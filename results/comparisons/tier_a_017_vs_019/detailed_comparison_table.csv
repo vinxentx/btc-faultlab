@@ -1,0 +1,6 @@
+Metric,"Tier A-017: 50% Crash, 20s Down, Full Resync (Mean ± Std)","Tier A-019: 50% Crash, 60s Down, Full Resync (Mean ± Std)",Change (%),"95% CI Tier A-017: 50% Crash, 20s Down, Full Resync","95% CI Tier A-019: 50% Crash, 60s Down, Full Resync"
+Median Latency (s),6.12 ± 0.11,6.01 ± 0.14,-1.9%,"[6.00, 6.25]","[5.85, 6.17]"
+P95 Latency (s),12.18 ± 0.35,11.09 ± 0.86,-8.9%,N/A,N/A
+Throughput (tx/s),7.01 ± 0.03,6.94 ± 0.08,-1.0%,"[6.98, 7.05]","[6.85, 7.03]"
+Availability (%),100.00%,100.00%,0.0%,N/A,N/A
+Recovery Time (s),143.7 ± 2.4,174.3 ± 33.1,+21.3%,"[141.0, 146.3]","[136.9, 211.8]"

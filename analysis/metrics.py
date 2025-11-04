@@ -32,6 +32,41 @@ def parse_events(path):
                             continue
     return events
 
+def compute_event_recovery_metrics(run_dir, events):
+    """Compute recovery metrics purely from events.log (Option 1).
+
+    Looks for 'recovery_start' and 'recovery_complete' events and derives
+    duration and involved nodes without relying on initialblockdownload.
+    """
+    if not events:
+        return None
+    start_ts = None
+    end_ts = None
+    start_nodes = None
+    end_nodes = None
+    for (ts, evt, rest) in events:
+        if evt == "recovery_start" and start_ts is None:
+            start_ts = ts
+            # parse nodes=...
+            if rest and "nodes=" in rest:
+                start_nodes = rest.split("nodes=", 1)[1].strip()
+        elif evt == "recovery_complete" and end_ts is None:
+            end_ts = ts
+            if rest and "nodes=" in rest:
+                end_nodes = rest.split("nodes=", 1)[1].strip()
+
+    if start_ts and end_ts and end_ts >= start_ts:
+        duration = (end_ts - start_ts).total_seconds()
+        return {
+            "recovery_detected": True,
+            "method": "events_log",
+            "start_timestamp": start_ts,
+            "end_timestamp": end_ts,
+            "recovery_time_seconds": duration,
+            "nodes": end_nodes or start_nodes or ""
+        }
+    return None
+
 def rolling_rate(times, window=60):
     """Calculate rolling transaction rate"""
     out = []
@@ -42,6 +77,45 @@ def rolling_rate(times, window=60):
             dq.popleft()
         out.append((t, len(dq)/window))
     return out
+
+def binned_rate(times, bin_size=10):
+    """
+    Calculate transaction rate using fixed time bins.
+    More accurate than rolling window - no ramp-up/cool-down artifacts.
+    
+    Args:
+        times: List of confirmation timestamps (pd.Timestamp)
+        bin_size: Bin size in seconds (default: 10)
+    
+    Returns:
+        List of (timestamp, rate) tuples where rate is tx/s
+    """
+    if not times or len(times) == 0:
+        return []
+    
+    # Convert to pandas Series for easier manipulation
+    times_series = pd.Series(times)
+    
+    # Create bins from first to last timestamp
+    start_time = times_series.min().floor('1s')
+    end_time = times_series.max().ceil('1s')
+    
+    # Create bin edges
+    bins = pd.date_range(start=start_time, end=end_time, freq=f'{bin_size}s')
+    
+    if len(bins) < 2:
+        return []
+    
+    # Count confirmations per bin
+    counts, _ = np.histogram(times_series, bins=bins)
+    
+    # Calculate rate (confirmations per second)
+    rates = counts / bin_size
+    
+    # Return (bin_center_time, rate) tuples
+    bin_centers = bins[:-1] + pd.Timedelta(seconds=bin_size/2)
+    
+    return list(zip(bin_centers, rates))
 
 def compute_availability(submit_times, confirmed_times, t1=None, t2=None):
     """Compute system availability"""
@@ -205,13 +279,18 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
     loss_pct = float(exp_config.get('loss_pct', 0))
     latency_ms = float(exp_config.get('latency_ms', 0))
     
-    if crash_frac == 0 and loss_pct == 0 and latency_ms == 0:
+    # Define thresholds for baseline vs fault injection
+    # Realistic baseline networks have some latency but no packet loss or crashes
+    BASELINE_LATENCY_THRESHOLD = 100  # ms - typical internet latency
+    BASELINE_LOSS_THRESHOLD = 1  # % - minimal acceptable loss
+    
+    if crash_frac == 0 and loss_pct <= BASELINE_LOSS_THRESHOLD and latency_ms <= BASELINE_LATENCY_THRESHOLD:
         exp_type = "Baseline (No Faults)"
         has_faults = False
-    elif crash_frac > 0 and loss_pct == 0 and latency_ms == 0:
+    elif crash_frac > 0 and loss_pct <= BASELINE_LOSS_THRESHOLD and latency_ms <= BASELINE_LATENCY_THRESHOLD:
         exp_type = f"Crash-Only ({crash_frac*100:.0f}% Node Failures)"
         has_faults = True
-    elif crash_frac == 0 and (loss_pct > 0 or latency_ms > 0):
+    elif crash_frac == 0 and (loss_pct > BASELINE_LOSS_THRESHOLD or latency_ms > BASELINE_LATENCY_THRESHOLD):
         exp_type = f"Network-Only ({loss_pct:.0f}% Loss, {latency_ms:.0f}ms Latency)"
         has_faults = True
     else:
@@ -420,11 +499,40 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
             ax3.text(0.5, 0.5, 'No fault injection time found', ha='center', va='center', transform=ax3.transAxes)
             ax3.set_title('Performance Before/After Fault Injection')
     elif not has_faults:
-        # For baseline, show steady-state throughput instead
-        axes[1, 0].text(0.5, 0.5, f'Baseline Run - No Fault Injection\n\nSteady-state performance measurement', 
-                       ha='center', va='center', transform=axes[1, 0].transAxes, 
-                       fontsize=12, bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.3))
-        axes[1, 0].set_title('Baseline Performance (No Faults)')
+        # For baseline, show throughput stability over time
+        ax3 = axes[1, 0]
+        if tps_series and len(tps_series) > 0:
+            times = [t for (t, _) in tps_series]
+            values = [v for (_, v) in tps_series]
+            
+            # Skip first minute (warmup artifacts)
+            if len(times) > 60:
+                warmup_cutoff = times[0] + pd.Timedelta(seconds=60)
+                stable_data = [(t, v) for (t, v) in zip(times, values) if t >= warmup_cutoff]
+                if stable_data:
+                    times, values = zip(*stable_data)
+                    times, values = list(times), list(values)
+            
+            ax3.plot(times, values, linewidth=2, color='green', alpha=0.8, label='Throughput')
+            median_tps = np.median(values)
+            ax3.axhline(median_tps, linestyle='--', color='blue', linewidth=2, 
+                       label=f'Median: {median_tps:.2f} tx/s')
+            
+            # Add stability band (±10%)
+            ax3.fill_between(times, median_tps * 0.9, median_tps * 1.1, 
+                           alpha=0.2, color='green', label='±10% band')
+            
+            ax3.set_ylabel('Throughput (tx/s)')
+            ax3.set_title('Baseline Throughput Stability')
+            ax3.legend()
+            ax3.grid(True, alpha=0.3)
+            ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+            ax3.xaxis.set_major_locator(mdates.MinuteLocator(interval=2))
+            plt.setp(ax3.xaxis.get_majorticklabels(), rotation=45)
+        else:
+            ax3.text(0.5, 0.5, 'Insufficient data for throughput analysis', 
+                    ha='center', va='center', transform=ax3.transAxes)
+            ax3.set_title('Baseline Throughput Stability')
     else:
         axes[1, 0].text(0.5, 0.5, 'No data for before/after analysis', ha='center', va='center', transform=axes[1, 0].transAxes)
         axes[1, 0].set_title('Performance Before/After Fault Injection')
@@ -468,11 +576,54 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
             ax4.text(0.5, 0.5, 'No fault injection time found', ha='center', va='center', transform=ax4.transAxes)
             ax4.set_title('System Recovery Analysis')
     elif not has_faults:
-        # For baseline, show latency stability instead
-        axes[1, 1].text(0.5, 0.5, f'Baseline Run - No Recovery Needed\n\nStable latency throughout observation', 
-                       ha='center', va='center', transform=axes[1, 1].transAxes,
-                       fontsize=12, bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.3))
-        axes[1, 1].set_title('Baseline Stability (No Faults)')
+        # For baseline, show latency stability over time
+        ax4 = axes[1, 1]
+        if not df_conf.empty and len(df_conf) > 0:
+            # Skip first minute (warmup artifacts)
+            if events:
+                warmup_start = events[0][0] if events else df_conf['confirm_ts_utc'].min()
+                warmup_cutoff = warmup_start + pd.Timedelta(seconds=60)
+                stable_data = df_conf[df_conf['confirm_ts_utc'] >= warmup_cutoff].copy()
+            else:
+                stable_data = df_conf.copy()
+            
+            if not stable_data.empty:
+                # Rolling average for smoother visualization
+                window_size = min(50, len(stable_data) // 10)
+                if window_size > 1:
+                    rolling_latency = stable_data['latency_seconds'].rolling(window=window_size).mean()
+                    ax4.plot(stable_data['confirm_ts_utc'], rolling_latency, 
+                           linewidth=2, color='orange', alpha=0.8, 
+                           label=f'Latency (rolling avg, window={window_size})')
+                else:
+                    ax4.plot(stable_data['confirm_ts_utc'], stable_data['latency_seconds'], 
+                           linewidth=1, color='orange', alpha=0.6, label='Latency')
+                
+                # Add median line
+                median_latency = stable_data['latency_seconds'].median()
+                ax4.axhline(median_latency, linestyle='--', color='blue', linewidth=2,
+                          label=f'Median: {median_latency:.2f}s')
+                
+                # Add stability band (±20%)
+                ax4.fill_between(stable_data['confirm_ts_utc'], 
+                               median_latency * 0.8, median_latency * 1.2,
+                               alpha=0.2, color='orange', label='±20% band')
+                
+                ax4.set_ylabel('Confirmation Latency (s)')
+                ax4.set_title('Baseline Latency Stability')
+                ax4.legend()
+                ax4.grid(True, alpha=0.3)
+                ax4.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+                ax4.xaxis.set_major_locator(mdates.MinuteLocator(interval=2))
+                plt.setp(ax4.xaxis.get_majorticklabels(), rotation=45)
+            else:
+                ax4.text(0.5, 0.5, 'Insufficient stable data', 
+                        ha='center', va='center', transform=ax4.transAxes)
+                ax4.set_title('Baseline Latency Stability')
+        else:
+            ax4.text(0.5, 0.5, 'No confirmation data available', 
+                    ha='center', va='center', transform=ax4.transAxes)
+            ax4.set_title('Baseline Latency Stability')
     else:
         axes[1, 1].text(0.5, 0.5, 'No data for recovery analysis', ha='center', va='center', transform=axes[1, 1].transAxes)
         axes[1, 1].set_title('System Recovery Analysis')
@@ -494,25 +645,46 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
         time_windows = []
         availability_windows = []
         
-        for i in range(0, len(tps_series), window_size):
+        # For baseline, skip warmup period to avoid false drops
+        start_idx = 0
+        if not has_faults and events and len(tps_series) > 60:
+            # Skip first 60 seconds for baseline
+            warmup_start = events[0][0] if events else tps_series[0][0]
+            warmup_cutoff = warmup_start + pd.Timedelta(seconds=60)
+            start_idx = next((i for i, (t, _) in enumerate(tps_series) if t >= warmup_cutoff), 0)
+        
+        for i in range(start_idx, len(tps_series), window_size):
             window_data = tps_series[i:i+window_size]
             if len(window_data) >= 5:  # Minimum data points
                 window_time = window_data[0][0]
                 window_throughput = np.mean([v for (_, v) in window_data if not np.isnan(v)])
                 
                 # Estimate availability based on throughput
-                expected_throughput = 10  # Based on tx_rate
-                availability = min(1.0, window_throughput / expected_throughput)
+                # For baseline, use more lenient threshold (80% of expected)
+                expected_throughput = float(exp_config.get('tx_rate', 10))
+                threshold = expected_throughput * (0.8 if not has_faults else 0.5)
+                availability = min(1.0, window_throughput / threshold)
                 
                 time_windows.append(window_time)
                 availability_windows.append(availability)
         
         if time_windows:
-            ax1.plot(time_windows, availability_windows, linewidth=2, color='green', alpha=0.8)
+            color = 'green' if not has_faults else 'orange'
+            ax1.plot(time_windows, availability_windows, linewidth=2, color=color, alpha=0.8)
+            
+            # For baseline, add target line at 100%
+            if not has_faults:
+                ax1.axhline(1.0, linestyle='--', color='blue', linewidth=1, alpha=0.5, label='Target: 100%')
+                avg_availability = np.mean(availability_windows)
+                ax1.text(0.02, 0.98, f'Avg: {avg_availability*100:.1f}%', 
+                        transform=ax1.transAxes, va='top', ha='left',
+                        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+            
             ax1.set_ylabel('Estimated Availability')
             ax1.set_title('System Availability Over Time')
+            ax1.legend()
             ax1.grid(True, alpha=0.3)
-            ax1.set_ylim(0, 1)
+            ax1.set_ylim(0, 1.05)
             
             # Format x-axis
             ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
@@ -587,7 +759,7 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
         ax3.text(0.5, 0.5, 'No metrics available', ha='center', va='center', transform=ax3.transAxes)
         ax3.set_title('Performance Metrics Summary')
     
-    # Fault events timeline
+    # Experiment phases timeline
     ax4 = axes[1, 1]
     
     if events:
@@ -598,8 +770,18 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
         for (ts, evt, _) in events:
             if evt in ("start_warmup", "after_netem", "end_observe"):
                 event_times.append(ts)
-                event_labels.append(evt.replace('_', ' ').title())
-                event_colors.append('green' if evt == "start_warmup" else 'red' if evt == "after_netem" else 'blue')
+                # Adjust labels based on experiment type
+                if not has_faults and evt == "after_netem":
+                    label = "Start Observation"
+                else:
+                    label = evt.replace('_', ' ').title()
+                event_labels.append(label)
+                # Color coding: green=start, red=fault, blue=end, yellow=baseline observation
+                if not has_faults and evt == "after_netem":
+                    event_colors.append('orange')
+                else:
+                    event_colors.append('green' if evt == "start_warmup" else 'red' if evt == "after_netem" else 'blue')
+
         
         if event_times:
             y_pos = range(len(event_times))
@@ -607,7 +789,8 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
             ax4.set_yticks(y_pos)
             ax4.set_yticklabels(event_labels)
             ax4.set_xlabel('Event Timeline')
-            ax4.set_title('Fault Events Timeline')
+            title = 'Experiment Phases' if not has_faults else 'Fault Events Timeline'
+            ax4.set_title(title)
             ax4.grid(True, alpha=0.3)
             
             # Add time labels
@@ -615,15 +798,197 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
                 ax4.text(0.5, i, time.strftime('%H:%M:%S'), ha='center', va='center', 
                         transform=ax4.get_yaxis_transform(), fontsize=8)
         else:
-            ax4.text(0.5, 0.5, 'No fault events found', ha='center', va='center', transform=ax4.transAxes)
-            ax4.set_title('Fault Events Timeline')
+            ax4.text(0.5, 0.5, 'No events found', ha='center', va='center', transform=ax4.transAxes)
+            title = 'Experiment Phases' if not has_faults else 'Fault Events Timeline'
+            ax4.set_title(title)
     else:
         ax4.text(0.5, 0.5, 'No events data', ha='center', va='center', transform=ax4.transAxes)
-        ax4.set_title('Fault Events Timeline')
+        title = 'Experiment Phases' if not has_faults else 'Fault Events Timeline'
+        ax4.set_title(title)
     
     plt.tight_layout()
     plt.savefig(os.path.join(plots_dir, "system_health_dashboard.png"), dpi=300, bbox_inches='tight')
     plt.close()
+
+def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf):
+    """
+    Create a detailed throughput comparison plot using multiple methods.
+    This addresses the artifact issues in rolling window calculations.
+    """
+    plots_dir = os.path.join(run_dir, "plots")
+    os.makedirs(plots_dir, exist_ok=True)
+    
+    # Load experiment configuration
+    metadata_file = os.path.join(run_dir, "metadata.yml")
+    exp_config = {}
+    if os.path.exists(metadata_file):
+        with open(metadata_file, 'r') as f:
+            for line in f:
+                if ':' in line:
+                    key, val = line.strip().split(':', 1)
+                    exp_config[key.strip()] = val.strip()
+    
+    # Determine experiment type
+    crash_frac = float(exp_config.get('crash_fraction', 0))
+    loss_pct = float(exp_config.get('loss_pct', 0))
+    latency_ms = float(exp_config.get('latency_ms', 0))
+    
+    BASELINE_LATENCY_THRESHOLD = 100
+    BASELINE_LOSS_THRESHOLD = 1
+    
+    if crash_frac == 0 and loss_pct <= BASELINE_LOSS_THRESHOLD and latency_ms <= BASELINE_LATENCY_THRESHOLD:
+        exp_type = "Baseline (No Faults)"
+        has_faults = False
+    elif crash_frac > 0 and loss_pct <= BASELINE_LOSS_THRESHOLD and latency_ms <= BASELINE_LATENCY_THRESHOLD:
+        exp_type = f"Crash-Only ({crash_frac*100:.0f}% Node Failures)"
+        has_faults = True
+    elif crash_frac == 0 and (loss_pct > BASELINE_LOSS_THRESHOLD or latency_ms > BASELINE_LATENCY_THRESHOLD):
+        exp_type = f"Network-Only ({loss_pct:.0f}% Loss, {latency_ms:.0f}ms Latency)"
+        has_faults = True
+    else:
+        exp_type = f"Combined Faults ({crash_frac*100:.0f}% Crashes + {loss_pct:.0f}% Loss + {latency_ms:.0f}ms Latency)"
+        has_faults = True
+    
+    # Prepare data
+    submit_times = sorted(df_sub["submit_ts_utc"].tolist()) if not df_sub.empty else []
+    conf_times = sorted(df_conf["confirm_ts_utc"].tolist()) if not df_conf.empty else []
+    
+    if not conf_times:
+        print("⚠️  No confirmation data for throughput comparison plot")
+        return
+    
+    # Calculate throughput using different methods
+    binned_10s = binned_rate(conf_times, bin_size=10)
+    binned_30s = binned_rate(conf_times, bin_size=30)
+    rolling_60s = rolling_rate(conf_times, window=60)
+    
+    # Also calculate submission rate for comparison
+    submission_binned = binned_rate(submit_times, bin_size=10) if submit_times else []
+    
+    # Create figure with 3 subplots
+    fig, axes = plt.subplots(3, 1, figsize=(16, 12))
+    fig.suptitle(f'Throughput Analysis - Method Comparison\n{exp_type}', 
+                 fontsize=16, fontweight='bold')
+    
+    # Plot 1: Fixed Time Bins (10s) vs Rolling Window (60s)
+    ax1 = axes[0]
+    if binned_10s:
+        times_10s = [t for (t, _) in binned_10s]
+        values_10s = [v for (_, v) in binned_10s]
+        ax1.plot(times_10s, values_10s, linewidth=2, color='blue', alpha=0.8, 
+                label='Fixed Bins (10s) - No Artifacts', marker='o', markersize=3)
+    
+    if rolling_60s:
+        times_rolling = [t for (t, _) in rolling_60s]
+        values_rolling = [v for (_, v) in rolling_60s]
+        ax1.plot(times_rolling, values_rolling, linewidth=1.5, color='red', alpha=0.6, 
+                linestyle='--', label='Rolling Window (60s) - Has Artifacts')
+    
+    # Add event markers
+    if has_faults and events:
+        for (ts, evt, _) in events:
+            if evt == "after_netem":
+                ax1.axvline(ts, linestyle=":", alpha=0.7, color='red', 
+                          linewidth=2, label='Fault Injection')
+    elif events:
+        for (ts, evt, _) in events:
+            if evt == "start_warmup":
+                ax1.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='Start')
+            elif evt == "end_observe":
+                ax1.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='End')
+    
+    ax1.set_ylabel('Confirmation Rate (tx/s)', fontsize=11)
+    ax1.set_title('Method Comparison: Fixed Time Bins vs Rolling Window', fontsize=12)
+    ax1.grid(True, alpha=0.3)
+    ax1.legend(loc='best')
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    plt.setp(ax1.xaxis.get_majorticklabels(), rotation=45)
+    
+    # Plot 2: Multiple Bin Sizes Comparison
+    ax2 = axes[1]
+    if binned_10s:
+        times_10s = [t for (t, _) in binned_10s]
+        values_10s = [v for (_, v) in binned_10s]
+        ax2.plot(times_10s, values_10s, linewidth=2, color='blue', alpha=0.8, 
+                label='10-second bins (high resolution)', marker='o', markersize=2)
+    
+    if binned_30s:
+        times_30s = [t for (t, _) in binned_30s]
+        values_30s = [v for (_, v) in binned_30s]
+        ax2.plot(times_30s, values_30s, linewidth=2.5, color='green', alpha=0.7, 
+                label='30-second bins (smoothed)', marker='s', markersize=4)
+    
+    # Add target rate line
+    target_rate = float(exp_config.get('tx_rate', 10))
+    if target_rate > 0:
+        ax2.axhline(target_rate, linestyle='--', color='orange', linewidth=2, 
+                   alpha=0.7, label=f'Target Rate: {target_rate} tx/s')
+    
+    ax2.set_ylabel('Confirmation Rate (tx/s)', fontsize=11)
+    ax2.set_title('Bin Size Comparison: 10s vs 30s', fontsize=12)
+    ax2.grid(True, alpha=0.3)
+    ax2.legend(loc='best')
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
+    
+    # Plot 3: Submission vs Confirmation Rate
+    ax3 = axes[2]
+    if submission_binned:
+        times_sub = [t for (t, _) in submission_binned]
+        values_sub = [v for (_, v) in submission_binned]
+        ax3.plot(times_sub, values_sub, linewidth=2, color='purple', alpha=0.6, 
+                linestyle=':', label='Submission Rate (Mempool Input)', marker='x', markersize=3)
+    
+    if binned_10s:
+        times_10s = [t for (t, _) in binned_10s]
+        values_10s = [v for (_, v) in binned_10s]
+        ax3.plot(times_10s, values_10s, linewidth=2, color='blue', alpha=0.8, 
+                label='Confirmation Rate (Blockchain Output)', marker='o', markersize=3)
+    
+    # Calculate and show backlog if submission > confirmation
+    if submission_binned and binned_10s and len(submission_binned) > 0 and len(binned_10s) > 0:
+        avg_submit = np.mean([v for (_, v) in submission_binned])
+        avg_confirm = np.mean([v for (_, v) in binned_10s])
+        backlog_rate = avg_submit - avg_confirm
+        
+        if abs(backlog_rate) > 0.1:
+            backlog_text = f"Avg Backlog Rate: {backlog_rate:+.2f} tx/s"
+            if backlog_rate > 0:
+                backlog_text += " (Mempool growing)"
+            else:
+                backlog_text += " (Mempool shrinking)"
+            ax3.text(0.02, 0.98, backlog_text, transform=ax3.transAxes, 
+                    fontsize=10, verticalalignment='top',
+                    bbox=dict(boxstyle="round,pad=0.5", facecolor="yellow", alpha=0.7))
+    
+    ax3.set_ylabel('Transaction Rate (tx/s)', fontsize=11)
+    ax3.set_xlabel('Time (UTC)', fontsize=11)
+    ax3.set_title('Mempool Dynamics: Submission vs Confirmation Rate', fontsize=12)
+    ax3.grid(True, alpha=0.3)
+    ax3.legend(loc='best')
+    ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    plt.setp(ax3.xaxis.get_majorticklabels(), rotation=45)
+    
+    # Add summary statistics box
+    if binned_10s:
+        values = [v for (_, v) in binned_10s]
+        stats_text = (
+            f"Fixed Bin Statistics (10s):\n"
+            f"Mean: {np.mean(values):.2f} tx/s\n"
+            f"Median: {np.median(values):.2f} tx/s\n"
+            f"Std Dev: {np.std(values):.2f} tx/s\n"
+            f"Min: {np.min(values):.2f} tx/s\n"
+            f"Max: {np.max(values):.2f} tx/s"
+        )
+        fig.text(0.98, 0.02, stats_text, fontsize=9, verticalalignment='bottom',
+                horizontalalignment='right', fontfamily='monospace',
+                bbox=dict(boxstyle="round,pad=0.5", facecolor="lightblue", alpha=0.8))
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(plots_dir, "throughput_comparison.png"), dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print("✅ Created throughput_comparison.png")
 
 def main():
     parser = argparse.ArgumentParser(description="Enhanced Bitcoin fault analysis")
@@ -680,6 +1045,9 @@ def main():
     # Create enhanced plots
     create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series)
     
+    # Create throughput comparison plot (new - addresses rolling window artifacts)
+    create_throughput_comparison_plot(run_dir, events, df_sub, df_conf)
+    
     # Calculate metrics
     metrics = {
         "run_dir": run_dir,
@@ -691,22 +1059,28 @@ def main():
         "avg_throughput": np.mean([v for (_, v) in tps_series]) if tps_series else 0
     }
     
-    # Add recovery detection metrics (pass crash_fraction to skip for baseline tests)
-    recovery_metrics = detect_recovery_completion(df_conf, events, crash_fraction=crash_fraction)
-    if recovery_metrics:
-        metrics["recovery_analysis"] = recovery_metrics
-        
-        if recovery_metrics.get("recovery_detected"):
-            print(f"\n🔄 RECOVERY DETECTED:")
-            print(f"   Baseline latency: {recovery_metrics['baseline_latency']:.2f}s")
-            print(f"   Peak latency: {recovery_metrics['peak_latency_during_recovery']:.2f}s")
-            print(f"   Degradation: {recovery_metrics['latency_degradation_pct']:.1f}%")
-            print(f"   Recovery time: {recovery_metrics['recovery_time_seconds']:.0f}s ({recovery_metrics['recovery_time_seconds']/60:.1f} min)")
-        else:
-            print(f"\n⚠️  RECOVERY NOT COMPLETE:")
-            print(f"   Baseline latency: {recovery_metrics['baseline_latency']:.2f}s")
-            print(f"   Current latency: {recovery_metrics['final_latency']:.2f}s")
-            print(f"   Observation duration: {recovery_metrics['observation_duration']:.0f}s")
+    # Prefer events-based recovery (Option 1); fall back to latency-based if missing
+    events_recovery = compute_event_recovery_metrics(run_dir, events)
+    if events_recovery:
+        metrics["recovery_analysis"] = events_recovery
+        print(f"\n🔄 RECOVERY (events-based): {events_recovery['recovery_time_seconds']:.0f}s")
+    else:
+        # Add recovery detection metrics (pass crash_fraction to skip for baseline tests)
+        recovery_metrics = detect_recovery_completion(df_conf, events, crash_fraction=crash_fraction)
+        if recovery_metrics:
+            metrics["recovery_analysis"] = recovery_metrics
+            
+            if recovery_metrics.get("recovery_detected"):
+                print(f"\n🔄 RECOVERY DETECTED:")
+                print(f"   Baseline latency: {recovery_metrics['baseline_latency']:.2f}s")
+                print(f"   Peak latency: {recovery_metrics['peak_latency_during_recovery']:.2f}s")
+                print(f"   Degradation: {recovery_metrics['latency_degradation_pct']:.1f}%")
+                print(f"   Recovery time: {recovery_metrics['recovery_time_seconds']:.0f}s ({recovery_metrics['recovery_time_seconds']/60:.1f} min)")
+            else:
+                print(f"\n⚠️  RECOVERY NOT COMPLETE:")
+                print(f"   Baseline latency: {recovery_metrics['baseline_latency']:.2f}s")
+                print(f"   Current latency: {recovery_metrics['final_latency']:.2f}s")
+                print(f"   Observation duration: {recovery_metrics['observation_duration']:.0f}s")
     
     # Save metrics
     with open(os.path.join(run_dir, "metrics.json"), "w") as f:

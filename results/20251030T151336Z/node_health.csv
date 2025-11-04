@@ -1,0 +1,9 @@
+node,status,block_height,peer_count
+node01,running,312,0
+node02,running,311,0
+node03,running,0,0
+node04,running,0,0
+node05,running,0,0
+node06,running,0,0
+node07,running,0,0
+node08,running,0,0

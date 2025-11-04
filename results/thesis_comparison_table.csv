@@ -1,5 +1,0 @@
-experiment,runs,Median Latency (s),Throughput (tx/s),Availability (%),Recovery Time (min)
-baseline,3,2.01 ± nan,2.16 ± 3.75,33.3,0.1
-combined,81,16.32 ± 65.48,1.36 ± 2.05,50.6,0.3
-crash_only,3,2.00 ± nan,2.11 ± 3.66,33.3,0.0
-network_only,3,2.07 ± 0.01,2.34 ± 2.03,66.7,0.1

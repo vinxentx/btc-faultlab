@@ -1,0 +1,20 @@
+{
+  "run_dir": "/Users/vincenttietze/btc-faultlab/results/20251030T172404Z",
+  "total_submitted": 2805,
+  "total_confirmed": 2805,
+  "availability": 1.0,
+  "median_latency": 5.249514,
+  "p95_latency": 18.287138999999993,
+  "avg_throughput": 4.738538324420677,
+  "recovery_analysis": {
+    "recovery_detected": true,
+    "baseline_latency": 6.894201000000001,
+    "recovery_threshold": 7.583621100000001,
+    "recovery_time_seconds": 0.0,
+    "recovery_timestamp": "2025-10-30 17:26:29+00:00",
+    "peak_latency_during_recovery": NaN,
+    "latency_degradation_pct": NaN,
+    "final_latency": 2.298079,
+    "observation_duration": 517.0
+  }
+}

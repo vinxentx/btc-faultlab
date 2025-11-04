@@ -1,0 +1,32 @@
+[
+  {
+    "height": 288,
+    "hash": "62c479226246db1e372cc54779e768519d1776195d6e27cf48f549b2af171ca1",
+    "branchlen": 0,
+    "status": "active"
+  },
+  {
+    "height": 191,
+    "hash": "0537d186a97a0da17d8aa719cd67f33d5db14338bd7c5b9654dd739ba0ae59c4",
+    "branchlen": 7,
+    "status": "headers-only"
+  },
+  {
+    "height": 189,
+    "hash": "0dd0c42f68f854cc65d5c16f03ddaaa5791a811a128aaa84aa530c50d179e6d7",
+    "branchlen": 5,
+    "status": "headers-only"
+  },
+  {
+    "height": 181,
+    "hash": "574e726c82d7ef928374b99481353c164c086f8a96a462599f73f0d5ee875caa",
+    "branchlen": 9,
+    "status": "valid-headers"
+  },
+  {
+    "height": 181,
+    "hash": "511cab2a59d6010a86d6a54b204ce3800e43752c33db873dfa6e05b4a46a5ef0",
+    "branchlen": 9,
+    "status": "valid-fork"
+  }
+]

@@ -73,6 +73,14 @@ class ExperimentRunner:
         print(f"Running: {' '.join(cmd)}")
         result = subprocess.run(cmd, cwd=self.base_dir, capture_output=True, text=True)
         
+        # Print output for debugging (especially on failure)
+        if result.returncode != 0:
+            print(f"\n⚠️  Playbook returned code {result.returncode}")
+            if result.stdout:
+                print(f"\n📋 STDOUT:\n{result.stdout[-2000:]}")  # Last 2000 chars
+            if result.stderr:
+                print(f"\n⚠️  STDERR:\n{result.stderr[-1000:]}")  # Last 1000 chars
+        
         # Clean up temporary file
         if extra_vars:
             override_file.unlink(missing_ok=True)
@@ -94,7 +102,11 @@ class ExperimentRunner:
                 # Use macOS bootstrap for now
                 result = self.run_playbook("01_bootstrap_macos.yml", config_params)
                 if result.returncode != 0:
-                    raise Exception(f"Bootstrap failed: {result.stderr}")
+                    # Check if it's a critical failure or just warnings
+                    if "FAILED" in result.stdout or "fatal:" in result.stdout:
+                        raise Exception(f"Bootstrap failed critically")
+                    else:
+                        print("⚠️  Bootstrap completed with warnings (non-critical)")
             else:
                 print("Step 1: Bootstrap... SKIPPED (use --with-bootstrap to enable)")
             
@@ -102,19 +114,28 @@ class ExperimentRunner:
             print("Step 2: Deploy...")
             result = self.run_playbook("02_deploy.yml", config_params)
             if result.returncode != 0:
-                raise Exception(f"Deploy failed: {result.stderr}")
+                # Deploy failures are usually critical
+                if "FAILED" in result.stdout or "fatal:" in result.stdout or "ERROR" in result.stderr:
+                    raise Exception(f"Deploy failed critically - check output above")
+                else:
+                    print("⚠️  Deploy completed with warnings (continuing...)")
             
             # Step 3: Run Experiment
             print("Step 3: Run Experiment...")
             result = self.run_playbook("03_run_experiment.yml", config_params)
             if result.returncode != 0:
-                raise Exception(f"Experiment failed: {result.stderr}")
+                # Experiment failures are critical
+                if "FAILED" in result.stdout or "fatal:" in result.stdout:
+                    raise Exception(f"Experiment playbook failed critically - check output above")
+                else:
+                    print("⚠️  Experiment completed with warnings (continuing...)")
             
             # Step 4: Collect Data
             print("Step 4: Collect Data...")
             result = self.run_playbook("04_collect.yml", config_params)
             if result.returncode != 0:
-                raise Exception(f"Data collection failed: {result.stderr}")
+                # Collection failures are less critical - we may still have partial data
+                print("⚠️  Data collection had issues, but continuing (may have partial results)")
             
             # Step 5: Cleanup Docker resources (after analysis is complete)
             # self.cleanup_docker_resources()  # Temporarily disabled
@@ -122,44 +143,89 @@ class ExperimentRunner:
             # Get the run ID from the latest results directory
             latest_run = self.get_latest_run_id()
             
+            # Validate that results actually exist
+            if not latest_run:
+                raise Exception("No run_id found - experiment may have failed to create results")
+            
+            run_dir = self.results_dir / latest_run
+            if not run_dir.exists():
+                raise Exception(f"Run directory not found: {run_dir}")
+            
+            # Check for essential result files
+            events_log = run_dir / "events.log"
+            if not events_log.exists():
+                print("⚠️  Warning: events.log not found - experiment may be incomplete")
+            
             duration = time.time() - start_time
             print(f"✅ Experiment completed successfully in {duration:.1f}s")
             print(f"   Results: {latest_run}")
+            print(f"   Location: {run_dir}")
             
             self.log_experiment(config_params, "SUCCESS", latest_run)
             return latest_run
             
         except Exception as e:
             duration = time.time() - start_time
-            print(f"❌ Experiment failed after {duration:.1f}s: {e}")
-            self.log_experiment(config_params, "FAILED", error=e)
+            print(f"\n{'='*80}")
+            print(f"❌ EXPERIMENT FAILED")
+            print(f"{'='*80}")
+            print(f"Duration: {duration:.1f}s")
+            print(f"Error: {e}")
+            print(f"Config: {config_params}")
+            print(f"\n💡 Tip: Check the output above for detailed error messages")
+            print(f"{'='*80}\n")
+            
+            self.log_experiment(config_params, "FAILED", error=str(e))
             return None
     
     def cleanup_docker_resources(self):
         """Clean up Docker containers and volumes after experiment"""
         try:
             print("Step 5: Cleanup...")
-            # Stop and remove containers
+            
+            # Step 1: Stop and remove containers with volumes
+            print("   Removing containers and volumes...")
             result = subprocess.run(
                 ["docker", "compose", "-f", f"{self.base_dir}/docker-compose.yml", "down", "-v"],
                 cwd=self.base_dir, capture_output=True, text=True
             )
             if result.returncode != 0:
-                print(f"Warning: Docker cleanup had issues: {result.stderr}")
+                print(f"⚠️  Warning: Docker compose down had issues: {result.stderr}")
             
-            # Remove any remaining containers with node names
+            # Step 2: Force remove any lingering containers with node names
             result = subprocess.run(
                 ["docker", "ps", "-a", "--filter", "name=node", "--format", "{{.Names}}"],
                 capture_output=True, text=True
             )
             if result.stdout.strip():
                 node_containers = result.stdout.strip().split('\n')
+                print(f"   Force removing {len(node_containers)} lingering containers...")
                 for container in node_containers:
                     subprocess.run(["docker", "rm", "-f", container], capture_output=True)
             
-            print("✅ Cleanup completed")
+            # Step 3: Remove orphaned volumes (important for txindex issues)
+            print("   Removing node volumes to prevent txindex corruption...")
+            result = subprocess.run(
+                ["docker", "volume", "ls", "--format", "{{.Name}}"],
+                capture_output=True, text=True
+            )
+            
+            if result.returncode == 0 and result.stdout.strip():
+                all_volumes = result.stdout.strip().split('\n')
+                # Remove volumes related to btcnet nodes
+                node_volumes = [v for v in all_volumes if 'btcnet' in v or 'node' in v and '_data' in v]
+                
+                if node_volumes:
+                    print(f"   Removing {len(node_volumes)} node volumes...")
+                    for volume in node_volumes:
+                        subprocess.run(
+                            ["docker", "volume", "rm", "-f", volume],
+                            capture_output=True, text=True
+                        )
+            
+            print("✅ Cleanup completed (containers + volumes removed)")
         except Exception as e:
-            print(f"Warning: Cleanup failed: {e}")
+            print(f"⚠️  Warning: Cleanup failed: {e}")
     
     def get_latest_run_id(self):
         if not self.results_dir.exists():

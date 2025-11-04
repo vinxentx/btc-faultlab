@@ -4,9 +4,23 @@
     run_id: "{{ lookup('pipe','date -u +%Y%m%dT%H%M%SZ') }}"
     run_dir: "{{ workdir }}/results/{{ run_id }}"
   tasks:
+    - name: Generate timestamp
+      ansible.builtin.set_fact:
+        timestamp: "{{ lookup('pipe','date -u +%Y%m%dT%H%M%SZ') }}"
+    
+    - name: Generate run_id with experiment name if available
+      ansible.builtin.set_fact:
+        run_id: "{{ (experiment_name | default('')) | replace('_', '-') | lower }}-{{ timestamp }}"
+      when: experiment_name is defined and experiment_name | length > 0
+    
+    - name: Generate run_id with timestamp only (fallback)
+      ansible.builtin.set_fact:
+        run_id: "{{ timestamp }}"
+      when: experiment_name is not defined or experiment_name | length == 0
+    
     - name: Freeze run_id (compute once)
       ansible.builtin.set_fact:
-        run_id: "{{ run_id if run_id is defined and run_id | length > 0 else lookup('pipe','date -u +%Y%m%dT%H%M%SZ') }}"
+        run_id: "{{ run_id if run_id is defined and run_id | length > 0 else timestamp }}"
 
     - name: Freeze run_dir based on frozen run_id
       ansible.builtin.set_fact:
@@ -103,7 +117,7 @@
 
     - name: Inject crashes
       include_role: { name: experiment }
-      vars: { phase: "crash", run_dir: "{{ run_dir }}" }
+      vars: { phase: "crash" }
 
     - name: Observe recovery period
       ansible.builtin.pause: { seconds: "{{ observe_s }}" }

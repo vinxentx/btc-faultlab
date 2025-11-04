@@ -1,0 +1,15 @@
+run_id: 20251031T151427Z
+node_count: 64
+tx_rate: 10
+crash_fraction: 0.25
+crash_duration_s: 60
+crash_mode: burst
+recovery_mode: full_resync
+reindex_on_restart: True
+loss_pct: 0
+latency_ms: 50
+bandwidth_mbit: 100
+warmup_s: 120
+observe_s: 300
+cooldown_s: 60
+seed: 53
