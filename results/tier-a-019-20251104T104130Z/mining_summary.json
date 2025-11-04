@@ -1,0 +1,10 @@
+{
+  "total_blocks": 1,
+  "miners": {
+    "node05:18443": {
+      "blocks": 1,
+      "percentage": 100.0
+    }
+  },
+  "unique_miners": 1
+}

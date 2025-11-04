@@ -27,6 +27,10 @@ network_name: "btcnet"
 # Projektwurzel = Ordner über playbooks/
 workdir: "{{ playbook_dir | realpath | dirname }}"
 
+# --- OS-spezifische Gruppe (macOS vs Linux) ---
+# macOS verwendet "staff", Linux/Ubuntu verwendet USER-Gruppe
+file_group: "{{ 'staff' if ansible_os_family == 'Darwin' else lookup('env', 'USER') }}"
+
 rpc_user: "user"
 rpc_pass: "pass"
 zmq_block: "tcp://0.0.0.0:28332"

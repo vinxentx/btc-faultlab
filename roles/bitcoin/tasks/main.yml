@@ -4,7 +4,7 @@
     state: directory
     mode: "0755"
     owner: "{{ lookup('env','USER') }}"
-    group: "staff"
+    group: "{{ file_group }}"
 
 - name: Ensure per-node config dirs exist
   ansible.builtin.file:
@@ -12,7 +12,7 @@
     state: directory
     mode: "0755"
     owner: "{{ lookup('env','USER') }}"
-    group: "staff"
+    group: "{{ file_group }}"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
 - name: Ensure wallet config dir exists
@@ -21,7 +21,7 @@
     state: directory
     mode: "0755"
     owner: "{{ lookup('env','USER') }}"
-    group: "staff"
+    group: "{{ file_group }}"
 
 - name: Template docker-compose.yml
   ansible.builtin.template:
@@ -34,7 +34,7 @@
     dest: "{{ workdir }}/config/node{{ '%02d'|format(item) }}/bitcoin.conf"
     mode: "0644"
     owner: "{{ lookup('env','USER') }}"
-    group: "staff"
+    group: "{{ file_group }}"
   loop: "{{ range(1, node_count + 1) | list }}"
 
 - name: Render wallet bitcoin.conf file
@@ -43,7 +43,7 @@
     dest: "{{ workdir }}/config/wallet/bitcoin.conf"
     mode: "0644"
     owner: "{{ lookup('env','USER') }}"
-    group: "staff"
+    group: "{{ file_group }}"
 
 - name: Precreate named volumes for node data
   ansible.builtin.shell: |
@@ -75,7 +75,7 @@
     state: directory
     mode: "0755"
     owner: "{{ lookup('env','USER') }}"
-    group: "staff"
+    group: "{{ file_group }}"
 
 - name: Validate all required files exist
   ansible.builtin.stat:

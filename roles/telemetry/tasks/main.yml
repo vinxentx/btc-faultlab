@@ -1,7 +1,9 @@
 # Finde jüngsten Run-Ordner OHNE run_dir zu evaluieren (vermeidet Rekursion).
+# Findet nur Verzeichnisse mit metadata.yml (robust für alle Run-Formate)
+# Sortiert nach mtime (Modifikationszeit) - funktioniert auf macOS und Linux
 - name: Determine latest run directory under results/
   ansible.builtin.set_fact:
-    rd: "{{ workdir }}/results/{{ lookup('pipe', 'ls -1td ' ~ workdir ~ '/results/*/ | head -n1 | xargs basename') | trim }}"
+    rd: "{{ workdir }}/results/{{ lookup('pipe', 'python3 -c \"import os, glob; dirs = [d for d in glob.glob(\\\"' ~ workdir ~ '/results/*\\\") if os.path.isdir(d) and os.path.exists(os.path.join(d, \\\"metadata.yml\\\"))]; print(max(dirs, key=os.path.getmtime).split(\\\"/\\\")[-1] if dirs else \\\"\\\")\"') | trim }}"
 
 - name: Ensure results dir exists
   ansible.builtin.file:

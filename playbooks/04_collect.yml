@@ -1,7 +1,9 @@
 - hosts: controller
   gather_facts: false
   vars:
-    run_id: "{{ lookup('pipe','ls -1t {{ workdir }}/results | head -n1') | trim }}"
+    # Find latest run directory by checking for metadata.yml (works with all run name formats)
+    # Sortiert nach mtime (Modifikationszeit) - funktioniert auf macOS und Linux
+    run_id: "{{ lookup('pipe','python3 -c \"import os, glob; dirs = [d for d in glob.glob(\\\"' ~ workdir ~ '/results/*\\\") if os.path.isdir(d) and os.path.exists(os.path.join(d, \\\"metadata.yml\\\"))]; print(max(dirs, key=os.path.getmtime).split(\\\"/\\\")[-1] if dirs else \\\"\\\")\"') | trim }}"
     run_dir: "{{ workdir }}/results/{{ run_id }}"
   tasks:
     - include_role: { name: telemetry }

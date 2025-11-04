@@ -228,16 +228,28 @@ class ExperimentRunner:
             print(f"⚠️  Warning: Cleanup failed: {e}")
     
     def get_latest_run_id(self):
+        """Find the latest run directory by checking for metadata.yml and sorting by mtime.
+        
+        This method works with both old format (20251030T111956Z) and new format
+        (tier-a-019-20251104T104130Z) run IDs.
+        """
         if not self.results_dir.exists():
             return None
         
-        run_dirs = [d for d in self.results_dir.iterdir() 
-                   if d.is_dir() and d.name.startswith("202")]
+        run_dirs = []
+        for entry in self.results_dir.iterdir():
+            if not entry.is_dir():
+                continue
+            # Check for metadata.yml as indicator of a valid run directory
+            if (entry / "metadata.yml").exists():
+                run_dirs.append(entry)
         
         if not run_dirs:
             return None
         
-        return max(run_dirs, key=lambda x: x.name).name
+        # Sort by modification time (most recent first)
+        run_dirs.sort(key=lambda d: d.stat().st_mtime, reverse=True)
+        return run_dirs[0].name
     
     def run_parameter_sweep(self, sweep_config):
         """Run a parameter sweep experiment"""
