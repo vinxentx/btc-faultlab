@@ -71,7 +71,7 @@ class ExperimentRunner:
             cmd.extend(["-e", f"@{override_file}"])
         
         print(f"Running: {' '.join(cmd)}")
-        result = subprocess.run(cmd, cwd=self.base_dir, capture_output=True, text=True)
+        result = subprocess.run(cmd, cwd=self.base_dir, text=True)
         
         # Print output for debugging (especially on failure)
         if result.returncode != 0:
