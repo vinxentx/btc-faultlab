@@ -137,8 +137,11 @@ if __name__ == "__main__":
     print(f"✅ Initial funding complete, wallet has mature coins")
 
     interval = 1.0 / args.rate if args.rate > 0 else 0.1
-    # Mine more frequently for high transaction rates
-    mine_interval = max(1.0, 10.0 / args.rate) if args.rate > 10 else 5.0
+    # Mine every 3s for standard rates (<=10 tx/s), more frequently for higher rates
+    if args.rate <= 10:
+        mine_interval = 3.0  # Fixed 3s for standard experiments
+    else:
+        mine_interval = max(1.0, 10.0 / args.rate)  # Dynamic for high rates
     print(f"⚡ Starting transaction generation: rate={args.rate} tx/s, mining every {mine_interval:.1f}s")
     print(f"💎 Mining will rotate between {len(mining_nodes)} distributed miners")
     
