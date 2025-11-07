@@ -28,13 +28,14 @@
   changed_when: true
 
 # Falls txlog im allgemeinen results liegt, verlinke ihn in diesen Run
-- name: Copy txlog and mining log from Docker volume to run directory
+- name: Copy txlog, mining log, and performance metrics from Docker volume to run directory
   ansible.builtin.shell: |
-    # Copy txlog.csv and txlog_mining.csv from btcnet_txlogs named volume if present
+    # Copy txlog.csv, txlog_mining.csv, and txlog_performance.csv from btcnet_txlogs named volume if present
     if docker volume inspect btcnet_txlogs >/dev/null 2>&1; then \
       docker run --rm -v btcnet_txlogs:/v -v {{ rd }}:/out alpine:3.19 sh -lc "
         if [ -f /v/txlog.csv ]; then cp -f /v/txlog.csv /out/txlog.csv; fi; \
-        if [ -f /v/txlog_mining.csv ]; then cp -f /v/txlog_mining.csv /out/mining.csv; fi
+        if [ -f /v/txlog_mining.csv ]; then cp -f /v/txlog_mining.csv /out/mining.csv; fi; \
+        if [ -f /v/txlog_performance.csv ]; then cp -f /v/txlog_performance.csv /out/txlog_performance.csv; fi
       "; \
     fi
   changed_when: false
