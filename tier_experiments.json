@@ -3,7 +3,7 @@
   "purpose": "Systematic analysis of crash impacts, stress conditions, and block interval effects",
   "node_count": 128,
   "total_experiments": 33,
-  "total_duration_estimate": "~35 hours for full suite (3 runs each = 99 total runs, with tx_rate=10)",
+  "total_duration_estimate": "~45 hours for full suite (3 runs each = 99 total runs, with observe_s=600)",
   "experiments": {
     "baseline": {
       "name": "Baseline (No Faults)",
@@ -20,7 +20,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 42,
         "reindex_on_restart": false
@@ -47,7 +47,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 43,
         "reindex_on_restart": true
@@ -74,7 +74,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 44,
         "reindex_on_restart": false
@@ -101,7 +101,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 45,
         "reindex_on_restart": true
@@ -128,7 +128,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 46,
         "reindex_on_restart": false
@@ -155,7 +155,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 47,
         "reindex_on_restart": true
@@ -182,7 +182,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 48,
         "reindex_on_restart": false
@@ -209,7 +209,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 49,
         "reindex_on_restart": true
@@ -236,7 +236,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 50,
         "reindex_on_restart": false
@@ -263,7 +263,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 51,
         "reindex_on_restart": true
@@ -290,7 +290,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 52,
         "reindex_on_restart": false
@@ -317,7 +317,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 53,
         "reindex_on_restart": true
@@ -344,7 +344,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 54,
         "reindex_on_restart": false
@@ -371,7 +371,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 55,
         "reindex_on_restart": true
@@ -398,7 +398,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 56,
         "reindex_on_restart": false
@@ -425,7 +425,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 57,
         "reindex_on_restart": true
@@ -452,7 +452,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 58,
         "reindex_on_restart": false
@@ -479,7 +479,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 59,
         "reindex_on_restart": true
@@ -506,7 +506,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 60,
         "reindex_on_restart": false
@@ -533,7 +533,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 61,
         "reindex_on_restart": true
@@ -560,7 +560,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 62,
         "reindex_on_restart": false
@@ -587,7 +587,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 63,
         "reindex_on_restart": true
@@ -614,7 +614,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 64,
         "reindex_on_restart": false
@@ -641,7 +641,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 65,
         "reindex_on_restart": true
@@ -668,7 +668,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 66,
         "reindex_on_restart": false
@@ -695,7 +695,7 @@
         "latency_ms": 200,
         "bandwidth_mbit": 10,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 67,
         "reindex_on_restart": true
@@ -722,7 +722,7 @@
         "latency_ms": 200,
         "bandwidth_mbit": 10,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 68,
         "reindex_on_restart": false
@@ -749,7 +749,7 @@
         "latency_ms": 200,
         "bandwidth_mbit": 10,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 69,
         "reindex_on_restart": true
@@ -776,7 +776,7 @@
         "latency_ms": 200,
         "bandwidth_mbit": 10,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 70,
         "reindex_on_restart": false
@@ -803,7 +803,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 71,
         "reindex_on_restart": true
@@ -830,7 +830,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 72,
         "reindex_on_restart": false
@@ -857,7 +857,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 73,
         "reindex_on_restart": true
@@ -884,7 +884,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 300,
-        "observe_s": 300,
+        "observe_s": 600,
         "cooldown_s": 60,
         "seed": 74,
         "reindex_on_restart": false
@@ -1013,7 +1013,7 @@
   "execution_recommendations": {
     "replications_per_experiment": 3,
     "total_runs": 99,
-    "estimated_duration_hours": 35,
+    "estimated_duration_hours": 45,
     "suggested_batch_order": [
       "baseline",
       "tier_a (all 24)",
