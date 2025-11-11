@@ -1,6 +1,0 @@
-Metric,Baseline (Mean ± Std),With Crashes (Mean ± Std),Change (%),95% CI Baseline,95% CI Crashes
-Median Latency (s),6.37 ± 0.09,6.20 ± 0.13,-2.7%,"[6.27, 6.48]","[6.06, 6.35]"
-P95 Latency (s),12.28 ± 0.48,12.86 ± 1.76,+4.7%,N/A,N/A
-Throughput (tx/s),7.26 ± 0.04,7.07 ± 0.06,-2.7%,"[7.22, 7.31]","[7.00, 7.14]"
-Availability (%),100.00%,100.00%,0.0%,N/A,N/A
-Recovery Time (s),N/A (no crashes),81.0 ± 14.1,N/A,N/A,"[65.0, 97.0]"

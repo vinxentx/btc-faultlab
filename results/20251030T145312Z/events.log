@@ -1,5 +1,0 @@
-2025-10-30T14:53:14Z start_warmup
-2025-10-30T14:55:38Z after_netem
-2025-10-30T14:57:26Z recovery_start nodes=node32,node07,node26,node13,node18,node11,node28,node27
-2025-10-30T14:57:29Z recovery_complete nodes=node32,node07,node26,node13,node18,node11,node28,node27
-2025-10-30T15:02:44Z end_observe

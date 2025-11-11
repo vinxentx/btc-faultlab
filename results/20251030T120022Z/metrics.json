@@ -1,9 +1,0 @@
-{
-  "run_dir": "results/20251030T120022Z",
-  "total_submitted": 2496,
-  "total_confirmed": 2496,
-  "availability": 1.0,
-  "median_latency": 5.253389500000001,
-  "p95_latency": 19.0281565,
-  "avg_throughput": 5.28583733974359
-}

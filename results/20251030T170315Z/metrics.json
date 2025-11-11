@@ -1,9 +1,0 @@
-{
-  "run_dir": "/Users/vincenttietze/btc-faultlab/results/20251030T170315Z",
-  "total_submitted": 2463,
-  "total_confirmed": 2463,
-  "availability": 1.0,
-  "median_latency": 11.153378,
-  "p95_latency": 143.6197507,
-  "avg_throughput": 6.31001488699418
-}
