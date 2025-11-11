@@ -17,6 +17,15 @@
     docker logs node{{ '%02d'|format(i) }} > "{{ rd }}/node{{ '%02d'|format(i) }}.log" 2>&1
   changed_when: true
 
+- name: Dump txgen docker logs
+  ansible.builtin.shell: |
+    if docker ps -a --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^txgen$"; then
+      docker logs txgen > "{{ rd }}/txgen.log" 2>&1
+    else
+      echo "txgen container not found, skipping log collection" > "{{ rd }}/txgen.log"
+    fi
+  changed_when: true
+
 - name: Snapshot chain tips
   ansible.builtin.shell: |
     docker exec node01 bitcoin-cli -regtest getchaintips > "{{ rd }}/chaintips.json"
