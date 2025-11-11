@@ -1,496 +1,392 @@
-import argparse, time, json, base64, os, random
+import argparse
+import base64
+import json
+import os
+import sys
+import time
+from collections import deque
 from datetime import datetime, timezone
 from http.client import HTTPConnection
+from typing import Deque, Dict, Tuple, Callable, Optional
 
 
-def rpc_call(url, method, params=None, auth=None, wallet=None, timeout=10):
-    """
-    Make RPC call with adaptive timeout for large networks.
-    Default timeout is 10s (increased from 5s for large networks).
-    """
-    proto, rest = url.split("://")
-    host = rest
-    conn = HTTPConnection(host, timeout=timeout)
-    payload = json.dumps({"jsonrpc": "1.0", "id": "txgen", "method": method, "params": params or []})
-    headers = {"Content-Type": "application/json"}
-    if auth:
-        headers["Authorization"] = "Basic " + base64.b64encode(auth.encode()).decode()
-    path = f"/wallet/{wallet}" if wallet else "/"
-    conn.request("POST", path, payload, headers)
-    resp = conn.getresponse()
-    out = json.loads(resp.read())
-    conn.close()
-    if out.get("error"):
-        raise RuntimeError(out["error"])
-    return out["result"]
+JSONRPC_HEADERS = {"Content-Type": "application/json"}
 
 
-def wait_for_rpc(rpc_url: str, auth: str, timeout_s: int = 120, node_count: int = 32) -> None:
-    """
-    Wait for RPC to be ready, with adaptive timeout for large networks.
-    """
-    # Increase timeout for large networks (more nodes = more sync time)
-    if node_count >= 64:
-        timeout_s = max(timeout_s, 300)  # At least 5 minutes for 64+ nodes
+def rpc_timeout_for(node_count: int) -> int:
     if node_count >= 128:
-        timeout_s = max(timeout_s, 600)  # At least 10 minutes for 128 nodes
-    
-    deadline = time.time() + timeout_s
+        return 20
+    if node_count >= 64:
+        return 15
+    return 10
+
+
+def encode_basic_auth(credential: str) -> str:
+    return base64.b64encode(credential.encode("utf-8")).decode("ascii")
+
+
+def rpc_call(rpc_url: str, method: str, params=None, *, auth: Optional[str] = None,
+             wallet: Optional[str] = None, timeout: int = 10):
+    proto, rest = rpc_url.split("://", 1)
+    if proto != "http":
+        raise ValueError("Only http RPC endpoints are supported")
+    conn = HTTPConnection(rest, timeout=timeout)
+    payload = json.dumps({
+        "jsonrpc": "1.0",
+        "id": "txgen",
+        "method": method,
+        "params": params or []
+    })
+    headers = dict(JSONRPC_HEADERS)
+    if auth:
+        headers["Authorization"] = "Basic " + encode_basic_auth(auth)
+    path = f"/wallet/{wallet}" if wallet else "/"
+    try:
+        conn.request("POST", path, payload, headers)
+        resp = conn.getresponse()
+        body = resp.read()
+    finally:
+        conn.close()
+    data = json.loads(body)
+    if data.get("error"):
+        raise RuntimeError(data["error"])
+    return data["result"]
+
+
+def rpc_call_with_retry(rpc_url: str, method: str, params=None, *, auth: Optional[str],
+                        wallet: Optional[str], timeout: int, retries: int = 3,
+                        delay_s: float = 1.5):
     last_err = None
-    print(f"Waiting for RPC at {rpc_url}... (timeout: {timeout_s}s for {node_count} nodes)")
+    for attempt in range(1, retries + 1):
+        try:
+            return rpc_call(rpc_url, method, params, auth=auth, wallet=wallet, timeout=timeout)
+        except Exception as exc:  # noqa: BLE001 - want to capture RuntimeError payload
+            last_err = exc
+            if attempt == retries:
+                raise
+            time.sleep(delay_s)
+    raise last_err  # pragma: no cover
+
+
+def wait_for_rpc(rpc_url: str, auth: str, node_count: int) -> None:
+    base_timeout = 300 if node_count >= 128 else 180 if node_count >= 64 else 120
+    deadline = time.time() + base_timeout
+    print(f"⏳ Warte auf RPC-Endpunkt {rpc_url} (Timeout {base_timeout}s)...")
+    last_err = None
     while time.time() < deadline:
         try:
-            result = rpc_call(rpc_url, "getblockcount", auth=auth, timeout=10)
-            print(f"RPC ready! Block count: {result}")
+            rpc_call(rpc_url, "getblockchaininfo", auth=auth, timeout=5)
+            print("✅ RPC erreichbar")
             return
-        except Exception as e:
-            last_err = e
-            print(f"RPC not ready yet: {e}")
-            time.sleep(3)
-    raise RuntimeError(f"RPC not ready after {timeout_s}s: {last_err}")
+        except Exception as exc:  # noqa: BLE001
+            last_err = exc
+            time.sleep(2.0)
+    raise RuntimeError(f"RPC nicht erreichbar: {last_err}")
 
 
-def get_mining_nodes(node_count, mining_percentage=0.08):
-    """
-    Determine mining nodes based on total node count.
-    Uses first N core nodes as miners (8% of network, increased from 5% for better resilience).
-    Minimum 2 miners for resilience.
-    """
-    num_miners = max(2, int(node_count * mining_percentage))
-    miners = [f"node{i:02d}:18443" for i in range(1, num_miners + 1)]
-    print(f"📊 Mining Configuration:")
-    print(f"   Total nodes: {node_count}")
-    print(f"   Mining percentage: {mining_percentage * 100}%")
-    print(f"   Active miners: {num_miners}")
-    print(f"   Mining nodes: {', '.join(miners)}")
-    return miners
+def decode_rpc_error(err: RuntimeError) -> Tuple[Optional[int], str]:
+    if not err.args:
+        return None, ""
+    payload = err.args[0]
+    if isinstance(payload, dict):
+        return payload.get("code"), payload.get("message", "")
+    return None, str(payload)
 
 
-def get_healthy_miner(miners, auth):
-    """
-    Select a healthy mining node using round-robin with health checks.
-    Returns: miner_host (e.g., "node03:18443")
-    Raises: RuntimeError if no miners available
-    """
-    # Shuffle for randomness, but deterministic within mining cycle
-    candidates = miners.copy()
-    random.shuffle(candidates)
+def ensure_wallet_loaded(rpc_url: str, auth: str, wallet: str, timeout: int) -> None:
+    """Warte auf Wallet-Erstellung durch Funding-Setup mit Retry-Logik"""
+    max_wait = 600  # Maximal 10 Minuten warten
+    wait_start = time.time()
+    last_error = None
     
-    for miner_host in candidates:
+    while time.time() - wait_start < max_wait:
         try:
-            proto = "http"
-            # Quick health check: can we reach the node? (longer timeout for large networks)
-            rpc_call(f"{proto}://{miner_host}", "getblockcount", [], auth=auth, timeout=5)
-            return miner_host
-        except Exception as e:
-            print(f"⚠️  Miner {miner_host} unavailable: {e}")
-            continue
+            rpc_call(rpc_url, "loadwallet", [wallet], auth=auth, timeout=timeout)
+            print(f"🔐 Wallet '{wallet}' geladen")
+            return
+        except RuntimeError as err:
+            code, message = decode_rpc_error(err)
+            message_lower = message.lower()
+            if code in (-35, -4) or "already loaded" in message_lower:
+                print(f"ℹ️ Wallet '{wallet}' bereits geladen")
+                return
+            elif code == -18 or "not found" in message_lower or "path does not exist" in message_lower:
+                last_error = err
+                elapsed = int(time.time() - wait_start)
+                if elapsed % 30 == 0:  # Alle 30 Sekunden loggen
+                    print(f"⏳ Warte auf Wallet '{wallet}'... ({elapsed}s) – Funding-Setup läuft noch")
+                time.sleep(5)  # 5 Sekunden warten vor Retry
+                continue
+            else:
+                raise
     
-    # All miners failed
-    raise RuntimeError("❌ No mining nodes available! Network cannot produce blocks.")
+    # Wenn wir hier ankommen, hat das Warten nicht geholfen
+    raise RuntimeError(
+        f"Wallet '{wallet}' nicht gefunden nach {max_wait}s Wartezeit – "
+        f"Funding-Setup wurde vermutlich nicht ausgeführt oder fehlgeschlagen."
+    ) from last_error
 
 
-def consolidate_utxos(rpc_url, auth, wallet, addr, mining_nodes, proto, node_count, min_utxos=100, max_utxos_to_consolidate=50):
-    """
-    Consolidate many small UTXOs into fewer larger ones (realistic wallet behavior).
-    This improves wallet performance by reducing UTXO count.
+def fetch_wallet_utxos(rpc_url: str, auth: str, wallet: str, timeout: int,
+                       min_conf: int = 0) -> Dict[str, float]:
+    utxos = rpc_call_with_retry(
+        rpc_url, "listunspent", [min_conf, 9999999], auth=auth, wallet=wallet, timeout=timeout
+    )
+    total = len(utxos)
+    confirmed = sum(1 for u in utxos if u.get("confirmations", 0) >= 1)
+    unconfirmed = total - confirmed
+    balance = sum(u.get("amount", 0.0) for u in utxos)
+    return {
+        "total": total,
+        "confirmed": confirmed,
+        "unconfirmed": unconfirmed,
+        "balance": balance,
+    }
+
+
+class AddressPool:
+    def __init__(self, initial: Deque[str], fetcher: Callable[[], str], reuse_window: int):
+        if not initial:
+            raise ValueError("Adress-Pool darf nicht leer sein")
+        self._queue: Deque[str] = deque(initial)
+        self._fetcher = fetcher
+        self._reuse_window = max(1, reuse_window)
+        self._success_counter = 0
+
+    def current(self) -> str:
+        if not self._queue:
+            self._queue.append(self._fetcher())
+        return self._queue[0]
+
+    def mark_success(self) -> None:
+        addr = self._queue.popleft()
+        self._success_counter += 1
+        if self._reuse_window > 0 and self._success_counter >= self._reuse_window:
+            fresh = self._fetcher()
+            self._queue.append(fresh)
+            self._success_counter = 0
+        else:
+            self._queue.append(addr)
+
+    def mark_failure(self) -> None:
+        # Adresse verbleibt vorne in der Queue für den nächsten Versuch
+        pass
+
+    def __len__(self) -> int:
+        return len(self._queue)
+
+
+def prime_address_pool(size: int, fetcher: Callable[[], str]) -> Deque[str]:
+    addresses: Deque[str] = deque()
+    for idx in range(size):
+        if idx and idx % 200 == 0:
+            print(f"   … {idx} Adressen vorbereitet")
+        addr = fetcher()
+        addresses.append(addr)
+    return addresses
+
+
+def ensure_log_directory(path: str) -> None:
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
+
+def rolling_throughput(window: Deque[float], now: float, duration_s: int) -> float:
+    window.append(now)
+    while window and now - window[0] > duration_s:
+        window.popleft()
+    if len(window) <= 1:
+        return 0.0
+    span = window[-1] - window[0]
+    if span <= 0:
+        return 0.0
+    return (len(window) - 1) / span
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="FaultLab Tx Generator Shard")
+    parser.add_argument("--shard-id", required=True, help="Shard-Kennung (z.B. a, b)")
+    parser.add_argument("--rate", type=float, required=True, help="Transaktionen pro Sekunde")
+    parser.add_argument("--rpc", required=True, help="RPC URL inkl. Credentials (http://user:pass@host:port)")
+    parser.add_argument("--wallet", required=True, help="Wallet-Name innerhalb des RPC-Endpunkts")
+    parser.add_argument("--log", required=True, help="Pfad zur Transaktions-Logdatei (*.csv)")
+    parser.add_argument("--node-count", type=int, required=True, help="Gesamtzahl der Knoten im Netz")
+    parser.add_argument("--address-pool-size", type=int, default=1024, help="Anzahl vorbereiteter Adressen")
+    parser.add_argument("--address-reuse-window", type=int, default=100,
+                        help="Nach wie vielen TX eine Adresse durch eine neue ersetzt wird")
+    parser.add_argument("--amount-btc", type=float, default=0.0001, help="Betrag pro Transaktion in BTC")
+    parser.add_argument("--utxo-target", type=int, default=800,
+                        help="Erwartete Mindestanzahl bestätigter UTXOs vor Start")
+    parser.add_argument("--stats-interval", type=int, default=200,
+                        help="Alle X erfolgreichen TX werden UTXO-Statistiken erhoben")
+    parser.add_argument("--throughput-window", type=int, default=30,
+                        help="Fenstergröße für Rolling Throughput in Sekunden")
+    args = parser.parse_args()
+
+    if args.rate <= 0:
+        raise ValueError("Rate muss > 0 sein")
+    if args.address_pool_size <= 0:
+        raise ValueError("address-pool-size muss > 0 sein")
+
+    proto, rest = args.rpc.split("://", 1)
+    if proto != "http":
+        raise ValueError("Nur http:// Endpunkte werden unterstützt")
+    credential, host = rest.split("@", 1)
+    rpc_url = f"http://{host}"
+    auth = credential
+
+    ensure_log_directory(args.log)
+    performance_log = args.log.replace(".csv", "_performance.csv")
+    error_log = args.log.replace(".csv", "_errors.csv")
+
+    wait_for_rpc(rpc_url, auth, args.node_count)
+    timeout = rpc_timeout_for(args.node_count)
+    ensure_wallet_loaded(rpc_url, auth, args.wallet, timeout)
+
+    # Warte auf genug UTXOs (Funding-Setup läuft möglicherweise noch)
+    print(f"⏳ Warte auf {args.utxo_target} bestätigte UTXOs in Wallet '{args.wallet}'...")
+    max_utxo_wait = 600  # Maximal 10 Minuten warten
+    utxo_wait_start = time.time()
     
-    Uses sendmany which automatically selects UTXOs and handles fees.
-    
-    Args:
-        rpc_url: RPC URL for wallet node
-        auth: Authentication credentials
-        wallet: Wallet name
-        addr: Address to send consolidated funds to
-        mining_nodes: List of mining nodes
-        proto: Protocol (http/https)
-        node_count: Total node count (for adaptive timeouts)
-        min_utxos: Minimum UTXO count before consolidation triggers
-        max_utxos_to_consolidate: Maximum number of UTXOs to consolidate in one transaction
-    
-    Returns:
-        True if consolidation was performed, False otherwise
-    """
-    try:
-        rpc_timeout = 10 if node_count < 64 else 15 if node_count < 128 else 20
+    while time.time() - utxo_wait_start < max_utxo_wait:
+        utxo_stats = fetch_wallet_utxos(rpc_url, auth, args.wallet, timeout, min_conf=1)
+        print(f"💰 Wallet '{args.wallet}': {utxo_stats['confirmed']} bestätigte / "
+              f"{utxo_stats['total']} gesamt – Kontostand {utxo_stats['balance']:.8f} BTC")
         
-        # Get all confirmed UTXOs (min 1 confirmation)
-        utxos = rpc_call(rpc_url, "listunspent", [1, 9999999], auth=auth, wallet=wallet, timeout=rpc_timeout)
+        if utxo_stats["confirmed"] >= args.utxo_target:
+            print(f"✅ Genug UTXOs vorhanden ({utxo_stats['confirmed']} ≥ {args.utxo_target})")
+            break
         
-        if len(utxos) < min_utxos:
-            return False  # Not enough UTXOs to consolidate
-        
-        # Calculate total amount from confirmed UTXOs only
-        total_confirmed_amount = sum(u.get("amount", 0) for u in utxos)
-        
-        if total_confirmed_amount < 0.001:
-            return False  # Not enough confirmed balance
-        
-        # Use a conservative amount: send 80% of confirmed balance (reserve 20% for fees and safety)
-        # This ensures we have enough for fees and don't try to spend unconfirmed funds
-        send_amount = total_confirmed_amount * 0.8
-        send_amount = max(0.00001, send_amount)  # Minimum amount
-        
-        # Format amount as string with 8 decimal places (Bitcoin precision)
-        send_amount_str = f"{send_amount:.8f}"
-        
-        # Use sendmany - simpler and Bitcoin Core handles UTXO selection automatically
-        # This will consolidate many small UTXOs into one larger one
-        # sendmany "dummy" {"address":amount} minconf "comment" "subtractfeefrom" replaceable
-        # minconf=1 ensures we only use confirmed UTXOs
-        outputs = {addr: send_amount_str}
-        txid = rpc_call(rpc_url, "sendmany", ["", outputs, 1], auth=auth, wallet=wallet, timeout=rpc_timeout)
-        
-        print(f"🔗 UTXO consolidation: {len(utxos)} UTXOs → consolidating (txid: {txid[:16]}...)")
-        
-        # Trigger immediate mining to confirm consolidation quickly
-        try:
-            emergency_miner = get_healthy_miner(mining_nodes, auth)
-            emergency_timeout = 20 if node_count < 64 else 30 if node_count < 128 else 40
-            rpc_call(f"{proto}://{emergency_miner}", "generatetoaddress", [1, addr], auth=auth, timeout=emergency_timeout)
-            print(f"✅ Consolidation block mined")
-        except Exception as e:
-            print(f"⚠️  Could not mine consolidation block immediately: {e}")
-        
-        return True
-        
-    except Exception as e:
-        print(f"⚠️  UTXO consolidation failed: {e}")
-        return False
+        elapsed = int(time.time() - utxo_wait_start)
+        if elapsed % 30 == 0:  # Alle 30 Sekunden loggen
+            print(f"⏳ Warte auf UTXOs... ({elapsed}s) – Funding-Setup synchronisiert noch")
+        time.sleep(5)  # 5 Sekunden warten vor Retry
+    else:
+        # Timeout erreicht
+        raise RuntimeError(
+            f"Wallet '{args.wallet}' hat nur {utxo_stats['confirmed']} bestätigte UTXOs "
+            f"nach {max_utxo_wait}s Wartezeit (erwartet ≥ {args.utxo_target}). "
+            f"Funding-Setup prüfen."
+        )
+
+    print(f"🎯 Starte Adress-Pooling (Poolgröße {args.address_pool_size})…")
+
+    def fetch_address() -> str:
+        return rpc_call_with_retry(
+            rpc_url, "getnewaddress", [], auth=auth, wallet=args.wallet, timeout=timeout
+        )
+
+    initial_addresses = prime_address_pool(args.address_pool_size, fetch_address)
+    address_pool = AddressPool(initial_addresses, fetch_address, args.address_reuse_window)
+    print(f"✅ Adress-Pool initialisiert ({len(address_pool)} Einträge)")
+
+    interval = 1.0 / args.rate
+    txlog_header = "tx_index,shard_id,submit_ts_utc,txid\n"
+    perflog_header = (
+        "tx_index,timestamp_utc,latency_ms,rolling_throughput_tx_s,"
+        "utxos_confirmed,utxos_unconfirmed,utxos_total,balance_btc,status\n"
+    )
+    errorlog_header = "timestamp_utc,error_code,error_message,context\n"
+
+    throughput_window: Deque[float] = deque()
+    tx_index = 0
+    last_stats = utxo_stats
+
+    next_tick = time.perf_counter()
+    print(f"⚡ Shard {args.shard_id}: Zielrate {args.rate:.4f} tx/s, Betrag {args.amount_btc} BTC")
+
+    with open(args.log, "w", encoding="utf-8") as txlog, \
+            open(performance_log, "w", encoding="utf-8") as perflog, \
+            open(error_log, "w", encoding="utf-8") as errlog:
+        txlog.write(txlog_header)
+        perflog.write(perflog_header)
+        errlog.write(errorlog_header)
+
+        while True:
+            now = time.perf_counter()
+            sleep_for = next_tick - now
+            if sleep_for > 0:
+                time.sleep(min(sleep_for, 0.05))
+                continue
+            next_tick += interval
+
+            dest_address = address_pool.current()
+
+            start = time.perf_counter()
+            wall_clock = time.time()
+            try:
+                txid = rpc_call_with_retry(
+                    rpc_url,
+                    "sendtoaddress",
+                    [dest_address, args.amount_btc],
+                    auth=auth,
+                    wallet=args.wallet,
+                    timeout=timeout,
+                )
+                latency_ms = (time.perf_counter() - start) * 1000
+                tx_index += 1
+                address_pool.mark_success()
+
+                # Rolling throughput
+                rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
+
+                if args.stats_interval > 0 and tx_index % args.stats_interval == 0:
+                    last_stats = fetch_wallet_utxos(rpc_url, auth, args.wallet, timeout, min_conf=0)
+
+                timestamp = datetime.now(timezone.utc).isoformat()
+                txlog.write(f"{tx_index},{args.shard_id},{timestamp},{txid}\n")
+                txlog.flush()
+
+                perflog.write(
+                    f"{tx_index},{timestamp},{latency_ms:.2f},{rtps:.4f},"
+                    f"{last_stats['confirmed']},{last_stats['unconfirmed']},"
+                    f"{last_stats['total']},{last_stats['balance']:.8f},ok\n"
+                )
+                perflog.flush()
+
+                if tx_index % 200 == 0:
+                    print(f"📤 Shard {args.shard_id}: {tx_index} TX, Latenz {latency_ms:.1f} ms, "
+                          f"Rolling TPS {rtps:.2f}, UTXOs {last_stats['confirmed']}/{last_stats['total']}")
+
+            except RuntimeError as err:
+                address_pool.mark_failure()
+                code, message = decode_rpc_error(err)
+                timestamp = datetime.now(timezone.utc).isoformat()
+                safe_message = (message or "").replace('"', '""')
+                errlog.write(f"{timestamp},{code if code is not None else ''},\"{safe_message}\","
+                             f"tx_index={tx_index}\n")
+                errlog.flush()
+
+                rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
+                perflog.write(
+                    f"{tx_index},{timestamp},0.00,{rtps:.4f},"
+                    f"{last_stats['confirmed']},{last_stats['unconfirmed']},"
+                    f"{last_stats['total']},{last_stats['balance']:.8f},error\n"
+                )
+                perflog.flush()
+
+                msg_lower = message.lower() if message else ""
+                if code == -6 or "insufficient funds" in msg_lower:
+                    print(f"⚠️  Shard {args.shard_id}: unzureichende Mittel – warte auf nächste Blöcke")
+                    time.sleep(2.5)
+                    last_stats = fetch_wallet_utxos(rpc_url, auth, args.wallet, timeout, min_conf=0)
+                else:
+                    print(f"⚠️  Shard {args.shard_id}: RPC-Fehler ({code}): {message}")
+                    time.sleep(1.0)
+
+                # Reset Zeitplanung, damit keine Altlasten aufholen müssen
+                next_tick = max(next_tick, time.perf_counter() + interval)
+            except KeyboardInterrupt:
+                print("⏹️  Abbruchsignal erhalten – stoppe Shard sauber.")
+                break
+
+    return 0
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--rate", type=float, required=True, help="tx per second")
-    ap.add_argument("--rpc", type=str, required=True, help="e.g. http://user:pass@wallet:18443")
-    ap.add_argument("--log", type=str, required=True, help="path to txlog.csv")
-    ap.add_argument("--node-count", type=int, required=True, help="total number of nodes in network")
-    ap.add_argument("--mining-percentage", type=float, default=0.05, help="percentage of nodes that mine (default: 0.05 = 5%%)")
-    args = ap.parse_args()
-
-    proto, rest = args.rpc.split("://")
-    cred, host = rest.split("@")
-    auth = cred
-
-    # Ensure results dir exists and is writable
-    log_dir = os.path.dirname(args.log)
-    if log_dir:
-        os.makedirs(log_dir, exist_ok=True)
-
-    # Determine mining nodes based on network size
-    mining_nodes = get_mining_nodes(args.node_count, args.mining_percentage)
-
-    # Wait for initial RPC to be reachable (adaptive timeout for large networks)
-    wait_for_rpc(proto + "://" + host, auth=auth, timeout_s=600, node_count=args.node_count)
-
-    # Wallet setup on wallet node (separate from mining nodes)
     try:
-        rpc_call(proto + "://" + host, "createwallet", ["faultlab"], auth=auth)
-    except RuntimeError as e:
-        if "already exists" not in str(e):
-            raise
-
-    # Load the wallet
-    try:
-        rpc_call(proto + "://" + host, "loadwallet", ["faultlab"], auth=auth)
-    except RuntimeError as e:
-        if "already loaded" not in str(e):
-            raise
-
-    wallet = "faultlab"
-    addr = rpc_call(proto + "://" + host, "getnewaddress", auth=auth, wallet=wallet)
-    
-    # Generate initial blocks for funding using distributed miners
-    # We need 201 blocks initially, then 100 more to ensure coins are mature (100 confirmations required)
-    initial_blocks = 201
-    maturity_blocks = 100
-    total_blocks = initial_blocks + maturity_blocks
-    
-    print(f"🔨 Generating {initial_blocks} initial blocks for funding using {len(mining_nodes)} miners...")
-    blocks_per_miner = initial_blocks // len(mining_nodes)
-    remaining_blocks = initial_blocks % len(mining_nodes)
-    
-    for i, miner in enumerate(mining_nodes):
-        blocks_to_mine = blocks_per_miner + (1 if i < remaining_blocks else 0)
-        try:
-            print(f"   {miner}: generating {blocks_to_mine} blocks...")
-            # Use longer timeout for initial mining in large networks
-            initial_timeout = 30 if args.node_count < 64 else 60 if args.node_count < 128 else 90
-            rpc_call(f"{proto}://{miner}", "generatetoaddress", [blocks_to_mine, addr], auth=auth, timeout=initial_timeout)
-        except Exception as e:
-            print(f"   ⚠️  {miner} failed, using fallback: {e}")
-            # Fallback to any healthy miner
-            fallback = get_healthy_miner(mining_nodes, auth)
-            initial_timeout = 30 if args.node_count < 64 else 60 if args.node_count < 128 else 90
-            rpc_call(f"{proto}://{fallback}", "generatetoaddress", [blocks_to_mine, addr], auth=auth, timeout=initial_timeout)
-    
-    print(f"🔨 Generating {maturity_blocks} additional blocks to mature coins (100 confirmations required)...")
-    maturity_blocks_per_miner = maturity_blocks // len(mining_nodes)
-    remaining_maturity = maturity_blocks % len(mining_nodes)
-    
-    for i, miner in enumerate(mining_nodes):
-        blocks_to_mine = maturity_blocks_per_miner + (1 if i < remaining_maturity else 0)
-        try:
-            print(f"   {miner}: generating {blocks_to_mine} maturity blocks...")
-            maturity_timeout = 30 if args.node_count < 64 else 60 if args.node_count < 128 else 90
-            rpc_call(f"{proto}://{miner}", "generatetoaddress", [blocks_to_mine, addr], auth=auth, timeout=maturity_timeout)
-        except Exception as e:
-            print(f"   ⚠️  {miner} failed, using fallback: {e}")
-            fallback = get_healthy_miner(mining_nodes, auth)
-            maturity_timeout = 30 if args.node_count < 64 else 60 if args.node_count < 128 else 90
-            rpc_call(f"{proto}://{fallback}", "generatetoaddress", [blocks_to_mine, addr], auth=auth, timeout=maturity_timeout)
-    
-    # Wait for wallet to synchronize with network (critical for large networks)
-    print(f"⏳ Waiting for wallet to synchronize with network ({args.node_count} nodes)...")
-    rpc_url = proto + "://" + host
-    sync_timeout = 60 if args.node_count < 64 else 120 if args.node_count < 128 else 180  # More time for larger networks
-    sync_start = time.time()
-    
-    # Get expected block height from a mining node
-    try:
-        sample_miner = get_healthy_miner(mining_nodes, auth)
-        expected_height = rpc_call(f"{proto}://{sample_miner}", "getblockcount", auth=auth, timeout=10)
-        print(f"   Expected block height: {expected_height}")
-    except Exception as e:
-        print(f"   ⚠️  Could not get expected height from miner: {e}, using wallet height")
-        expected_height = None
-    
-    while time.time() - sync_start < sync_timeout:
-        try:
-            wallet_height = rpc_call(rpc_url, "getblockcount", auth=auth, timeout=10)
-            if expected_height is None:
-                expected_height = wallet_height
-            
-            # Check if wallet is synced (within 1 block tolerance)
-            if wallet_height >= expected_height - 1:
-                print(f"✅ Wallet synchronized: height {wallet_height} (expected: {expected_height})")
-                break
-            else:
-                print(f"⏳ Wallet syncing... height {wallet_height}/{expected_height}")
-                time.sleep(2)
-        except Exception as e:
-            print(f"⚠️  Sync check failed: {e}")
-            time.sleep(2)
-    
-    # Verify wallet has spendable balance before starting
-    print(f"🔍 Verifying wallet has spendable coins...")
-    max_wait = 60 if args.node_count < 64 else 120  # More time for large networks
-    wait_start = time.time()
-    while time.time() - wait_start < max_wait:
-        try:
-            balance_info = rpc_call(rpc_url, "getbalances", auth=auth, wallet=wallet, timeout=10)
-            confirmed_balance = balance_info.get("mine", {}).get("trusted", 0.0)
-            if confirmed_balance >= 0.001:  # At least 0.001 BTC spendable
-                print(f"✅ Wallet verified: {confirmed_balance:.6f} BTC spendable")
-                break
-            else:
-                print(f"⏳ Waiting for coins to mature... (current: {confirmed_balance:.6f} BTC)")
-                time.sleep(3)
-        except Exception as e:
-            print(f"⚠️  Balance check failed: {e}, continuing anyway...")
-            break
-    
-    print(f"✅ Initial funding complete, wallet has mature coins and is synchronized")
-
-    interval = 1.0 / args.rate if args.rate > 0 else 0.1
-    # Mine every 3s for standard rates (<=10 tx/s), more frequently for higher rates
-    if args.rate <= 10:
-        mine_interval = 3.0  # Fixed 3s for standard experiments
-    else:
-        mine_interval = max(1.0, 10.0 / args.rate)  # Dynamic for high rates
-    print(f"⚡ Starting transaction generation: rate={args.rate} tx/s, mining every {mine_interval:.1f}s")
-    print(f"💎 Mining will rotate between {len(mining_nodes)} distributed miners")
-    
-    # Prepare mining stats file and performance metrics file
-    mining_stats_file = args.log.replace('.csv', '_mining.csv')
-    performance_file = args.log.replace('.csv', '_performance.csv')
-    
-    with open(args.log, "w", encoding="utf-8") as txlog, \
-         open(mining_stats_file, "w", encoding="utf-8") as minelog, \
-         open(performance_file, "w", encoding="utf-8") as perflog:
-        
-        txlog.write("submit_ts_utc,txid\n")  # Transactions don't have miner info
-        minelog.write("timestamp_utc,block_number,miner,block_hash\n")  # Mining events
-        perflog.write("tx_count,timestamp_utc,getnewaddress_time_ms,sendtoaddress_time_ms,total_time_ms,utxo_count,confirmed_utxos,unconfirmed_utxos,rolling_throughput_tx_s,emergency_mining_triggered\n")
-        
-        next_mine = time.time() + mine_interval
-        blocks_mined = 0
-        mining_stats = {miner: 0 for miner in mining_nodes}
-        current_miner = None
-        
-        # Performance tracking
-        tx_count = 0
-        tx_timestamps = []  # For rolling throughput calculation
-        window_size = 30  # 30 second window for throughput
-        
-        # UTXO consolidation settings (realistic wallet behavior)
-        consolidation_interval = 500  # Consolidate every 500 transactions
-        min_utxos_for_consolidation = 100  # Only consolidate if we have at least 100 UTXOs
-        
-        while True:
-            emergency_triggered = False
-            try:
-                # Use longer timeout for large networks
-                rpc_timeout = 10 if args.node_count < 64 else 15 if args.node_count < 128 else 20
-                
-                # Time RPC calls for performance monitoring
-                start_time = time.time()
-                dst = rpc_call(proto + "://" + host, "getnewaddress", auth=auth, wallet=wallet, timeout=rpc_timeout)
-                getnewaddress_time = (time.time() - start_time) * 1000  # Convert to milliseconds
-                
-                start_time = time.time()
-                txid = rpc_call(proto + "://" + host, "sendtoaddress", [dst, 0.0001], auth=auth, wallet=wallet, timeout=rpc_timeout)
-                sendtoaddress_time = (time.time() - start_time) * 1000  # Convert to milliseconds
-                
-                total_time = getnewaddress_time + sendtoaddress_time
-                submit_ts = datetime.now(timezone.utc).isoformat()
-                tx_count += 1
-                
-                # Track timestamps for rolling throughput
-                tx_timestamps.append(time.time())
-                # Keep only timestamps from last 30 seconds
-                current_time = time.time()
-                tx_timestamps = [ts for ts in tx_timestamps if current_time - ts <= window_size]
-                
-                # Calculate rolling throughput (tx/s in last 30s)
-                if len(tx_timestamps) > 1:
-                    time_span = tx_timestamps[-1] - tx_timestamps[0]
-                    rolling_throughput = (len(tx_timestamps) - 1) / time_span if time_span > 0 else 0
-                else:
-                    rolling_throughput = 0
-                
-                # Get UTXO stats every 100 transactions or every transaction if count is low
-                utxo_count = 0
-                confirmed_utxos = 0
-                unconfirmed_utxos = 0
-                if tx_count % 100 == 0 or tx_count <= 10:
-                    try:
-                        utxos = rpc_call(rpc_url, "listunspent", [0, 9999999], auth=auth, wallet=wallet, timeout=rpc_timeout)
-                        utxo_count = len(utxos)
-                        confirmed_utxos = len([u for u in utxos if u.get("confirmations", 0) > 0])
-                        unconfirmed_utxos = len([u for u in utxos if u.get("confirmations", 0) == 0])
-                        if tx_count % 100 == 0:
-                            print(f"📊 Performance check (tx #{tx_count}): UTXOs={utxo_count} (confirmed={confirmed_utxos}, unconfirmed={unconfirmed_utxos}), throughput={rolling_throughput:.2f} tx/s")
-                    except Exception as e:
-                        print(f"⚠️  UTXO check failed: {e}")
-                
-                # UTXO consolidation (realistic wallet behavior - prevents performance degradation)
-                if tx_count > 0 and tx_count % consolidation_interval == 0:
-                    try:
-                        # Check current UTXO count before consolidating
-                        utxos_check = rpc_call(rpc_url, "listunspent", [1, 9999999], auth=auth, wallet=wallet, timeout=rpc_timeout)
-                        confirmed_count = len(utxos_check)
-                        
-                        if confirmed_count >= min_utxos_for_consolidation:
-                            print(f"🔗 Starting UTXO consolidation (tx #{tx_count}, {confirmed_count} confirmed UTXOs)...")
-                            consolidate_utxos(rpc_url, auth, wallet, addr, mining_nodes, proto, args.node_count, 
-                                             min_utxos=min_utxos_for_consolidation, max_utxos_to_consolidate=50)
-                            # Wait a moment for consolidation to propagate
-                            time.sleep(1.0)
-                    except Exception as e:
-                        print(f"⚠️  UTXO consolidation check failed: {e}")
-                
-                # Log transaction
-                txlog.write(f"{submit_ts},{txid}\n")
-                txlog.flush()
-                
-                # Log performance metrics
-                perflog.write(f"{tx_count},{submit_ts},{getnewaddress_time:.2f},{sendtoaddress_time:.2f},{total_time:.2f},{utxo_count},{confirmed_utxos},{unconfirmed_utxos},{rolling_throughput:.3f},{emergency_triggered}\n")
-                perflog.flush()
-                
-                print(f"📤 Submitted transaction {txid[:16]}... (RPC: {total_time:.1f}ms, throughput: {rolling_throughput:.2f} tx/s)")
-            except RuntimeError as e:
-                error_str = str(e)
-                # Handle insufficient funds and UTXO issues
-                is_insufficient_funds = (
-                    "insufficient funds" in error_str.lower() or 
-                    "-6" in error_str or 
-                    "Unconfirmed UTXOs" in error_str
-                )
-                
-                if is_insufficient_funds:
-                    emergency_triggered = True
-                    print(f"⚠️  Funds/UTXO issue detected: {error_str}")
-                    print(f"🚨 Triggering emergency mining to confirm transactions...")
-                    try:
-                        emergency_miner = get_healthy_miner(mining_nodes, auth)
-                        # Use longer timeout for emergency mining in large networks
-                        emergency_timeout = 20 if args.node_count < 64 else 30 if args.node_count < 128 else 40
-                        block_hashes = rpc_call(f"{proto}://{emergency_miner}", "generatetoaddress", [1, addr], auth=auth, timeout=emergency_timeout)
-                        mining_stats[emergency_miner] = mining_stats.get(emergency_miner, 0) + 1
-                        blocks_mined += 1
-                        
-                        # Log emergency mining event
-                        mine_ts = datetime.now(timezone.utc).isoformat()
-                        block_hash = block_hashes[0] if block_hashes else "unknown"
-                        minelog.write(f"{mine_ts},{blocks_mined},{emergency_miner},{block_hash}\n")
-                        minelog.flush()
-                        print(f"✅ Emergency block mined: {block_hash[:16]}...")
-                        
-                        # Log performance metrics for failed transaction
-                        submit_ts = datetime.now(timezone.utc).isoformat()
-                        rpc_timeout = 10 if args.node_count < 64 else 15 if args.node_count < 128 else 20
-                        try:
-                            utxos = rpc_call(rpc_url, "listunspent", [0, 9999999], auth=auth, wallet=wallet, timeout=rpc_timeout)
-                            utxo_count = len(utxos)
-                            confirmed_utxos = len([u for u in utxos if u.get("confirmations", 0) > 0])
-                            unconfirmed_utxos = len([u for u in utxos if u.get("confirmations", 0) == 0])
-                        except:
-                            utxo_count = confirmed_utxos = unconfirmed_utxos = 0
-                        
-                        # Calculate rolling throughput
-                        current_time = time.time()
-                        tx_timestamps = [ts for ts in tx_timestamps if current_time - ts <= window_size]
-                        if len(tx_timestamps) > 1:
-                            time_span = tx_timestamps[-1] - tx_timestamps[0]
-                            rolling_throughput = (len(tx_timestamps) - 1) / time_span if time_span > 0 else 0
-                        else:
-                            rolling_throughput = 0
-                        
-                        perflog.write(f"{tx_count},{submit_ts},0.00,0.00,0.00,{utxo_count},{confirmed_utxos},{unconfirmed_utxos},{rolling_throughput:.3f},{emergency_triggered}\n")
-                        perflog.flush()
-                        
-                        # Wait a bit after emergency mining to let transactions confirm
-                        time.sleep(2.0)
-                        next_mine = time.time() + mine_interval  # Reset regular mining timer
-                    except Exception as mine_err:
-                        print(f"❌ Emergency mining failed: {mine_err}")
-                        time.sleep(5.0)  # Wait longer if emergency mining failed
-                    continue
-                else:
-                    print(f"⚠️  Transaction failed: {e}")
-                    time.sleep(1)
-                    continue
-            
-            # Regular mining interval
-            if time.time() >= next_mine:
-                try:
-                    # Select healthy miner for this block
-                    selected_miner = get_healthy_miner(mining_nodes, auth)
-                    print(f"⛏️  Mining block #{blocks_mined + 1} on {selected_miner}...")
-                    # Use longer timeout for regular mining in large networks
-                    mining_timeout = 20 if args.node_count < 64 else 30 if args.node_count < 128 else 40
-                    block_hashes = rpc_call(f"{proto}://{selected_miner}", "generatetoaddress", [1, addr], auth=auth, timeout=mining_timeout)
-                    mining_stats[selected_miner] = mining_stats.get(selected_miner, 0) + 1
-                    blocks_mined += 1
-                    current_miner = selected_miner
-                    
-                    # Log mining event to CSV
-                    mine_ts = datetime.now(timezone.utc).isoformat()
-                    block_hash = block_hashes[0] if block_hashes else "unknown"
-                    minelog.write(f"{mine_ts},{blocks_mined},{selected_miner},{block_hash}\n")
-                    minelog.flush()
-                    
-                    # Log mining statistics every 10 blocks
-                    if blocks_mined % 10 == 0:
-                        print(f"📊 Mining stats after {blocks_mined} blocks:")
-                        for miner, count in sorted(mining_stats.items()):
-                            print(f"   {miner}: {count} blocks ({count/blocks_mined*100:.1f}%)")
-                    
-                except Exception as e:
-                    print(f"❌ Mining failed: {e}")
-                    print(f"   Will retry on next interval...")
-                
-                next_mine = time.time() + mine_interval
-            
-            time.sleep(max(0, interval))
+        sys.exit(main())
+    except KeyboardInterrupt:
+        print("⏹️  Txgen beendet (KeyboardInterrupt)")
+        sys.exit(0)

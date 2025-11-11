@@ -15,13 +15,18 @@
     group: "{{ file_group }}"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
-- name: Ensure wallet config dir exists
+- name: Build wallet service list
+  ansible.builtin.set_fact:
+    wallet_services: "{{ [wallet_funding_container] + (txgen_shards | map(attribute='wallet_container') | list) }}"
+
+- name: Ensure wallet config dirs exist
   ansible.builtin.file:
-    path: "{{ workdir }}/config/wallet"
+    path: "{{ workdir }}/config/{{ item }}"
     state: directory
     mode: "0755"
     owner: "{{ lookup('env','USER') }}"
     group: "{{ file_group }}"
+  loop: "{{ wallet_services }}"
 
 - name: Template docker-compose.yml
   ansible.builtin.template:
@@ -37,13 +42,14 @@
     group: "{{ file_group }}"
   loop: "{{ range(1, node_count + 1) | list }}"
 
-- name: Render wallet bitcoin.conf file
+- name: Render wallet bitcoin.conf files
   ansible.builtin.template:
     src: "bitcoin.conf.j2"
-    dest: "{{ workdir }}/config/wallet/bitcoin.conf"
+    dest: "{{ workdir }}/config/{{ item }}/bitcoin.conf"
     mode: "0644"
     owner: "{{ lookup('env','USER') }}"
     group: "{{ file_group }}"
+  loop: "{{ wallet_services }}"
 
 - name: Precreate named volumes for node data
   ansible.builtin.shell: |
@@ -57,14 +63,22 @@
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
   changed_when: true
 
-- name: Precreate named volume for wallet data
+- name: Precreate named volumes for wallet data
   ansible.builtin.shell: |
-    docker volume create {{ network_name }}_wallet_data
+    docker volume create {{ network_name }}_{{ item }}_data
+  loop: "{{ wallet_services }}"
   changed_when: true
 
-- name: Chown wallet volume to 101:101 (bitcoin user inside container)
+- name: Chown wallet volumes to 101:101 (bitcoin user inside container)
   ansible.builtin.shell: |
-    docker run --rm -u 0:0 -v {{ network_name }}_wallet_data:/data alpine:3.19 sh -lc "mkdir -p /data && chown -R 101:101 /data"
+    docker run --rm -u 0:0 -v {{ network_name }}_{{ item }}_data:/data alpine:3.19 sh -lc "mkdir -p /data && chown -R 101:101 /data"
+  loop: "{{ wallet_services }}"
+  changed_when: true
+
+- name: Precreate txgen log volumes
+  ansible.builtin.shell: |
+    docker volume create {{ network_name }}_txlogs_{{ item.log_suffix }}
+  loop: "{{ txgen_shards }}"
   changed_when: true
 
 ## Host data dirs no longer required (using named volumes)
@@ -72,6 +86,14 @@
 - name: Ensure results dir exists
   ansible.builtin.file:
     path: "{{ workdir }}/results"
+    state: directory
+    mode: "0755"
+    owner: "{{ lookup('env','USER') }}"
+    group: "{{ file_group }}"
+
+- name: Ensure state dir exists
+  ansible.builtin.file:
+    path: "{{ workdir }}/state"
     state: directory
     mode: "0755"
     owner: "{{ lookup('env','USER') }}"

@@ -84,6 +84,7 @@ def collect_confirmations(run_dir: Path, node: str) -> None:
                 block_cache[blockhash] = {
                     "height": str(block_data.get("height", "")),
                     "time_iso": isoformat(block_data.get("time", 0)),
+                    "hash": blockhash,
                 }
 
             block_meta = block_cache[blockhash]
@@ -93,6 +94,7 @@ def collect_confirmations(run_dir: Path, node: str) -> None:
                     "submit_ts_utc": submitted,
                     "confirm_ts_utc": block_meta["time_iso"],
                     "confirm_block_height": block_meta["height"],
+                    "confirm_block_hash": block_meta["hash"],
                 }
             )
 
@@ -102,6 +104,7 @@ def collect_confirmations(run_dir: Path, node: str) -> None:
             "submit_ts_utc",
             "confirm_ts_utc",
             "confirm_block_height",
+            "confirm_block_hash",
         ]
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()

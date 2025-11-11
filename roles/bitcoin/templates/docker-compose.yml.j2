@@ -105,9 +105,14 @@ services:
       start_period: 40s
 {% endfor %}
 
-  wallet:
+{% set wallet_base_rpc = 21043 %}
+{% set wallet_base_p2p = 21044 %}
+{% set wallet_base_zmq_block = 31032 %}
+{% set wallet_base_zmq_tx = 31033 %}
+
+  {{ wallet_funding_container }}:
     image: "{{ image }}"
-    container_name: "wallet"
+    container_name: "{{ wallet_funding_container }}"
     restart: unless-stopped
     user: "101:101"
     entrypoint: ["bitcoind"]
@@ -136,14 +141,14 @@ services:
 {% endfor %}
 {% endif %}
     volumes:
-      - "wallet_data:/home/bitcoin/.bitcoin"
-      - "{{ workdir }}/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+      - "{{ wallet_funding_container }}_data:/home/bitcoin/.bitcoin"
+      - "{{ workdir }}/config/{{ wallet_funding_container }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "{{ network_name }}" ]
     ports:
-      - "21043:18443"
-      - "21044:18444"
-      - "31032:28332"
-      - "31033:28333"
+      - "{{ wallet_base_rpc }}:18443"
+      - "{{ wallet_base_p2p }}:18444"
+      - "{{ wallet_base_zmq_block }}:28332"
+      - "{{ wallet_base_zmq_tx }}:28333"
     healthcheck:
       test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
       interval: 30s
@@ -151,31 +156,128 @@ services:
       retries: 3
       start_period: 40s
 
-  txgen:
+{% for shard in txgen_shards %}
+{% set offset = (loop.index) * 10 %}
+  {{ shard.wallet_container }}:
+    image: "{{ image }}"
+    container_name: "{{ shard.wallet_container }}"
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command:
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser={{ rpc_user }}"
+      - "-rpcpassword={{ rpc_pass }}"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=32"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+{% if core_size > 0 %}
+      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
+{% for peer in range(1, ([core_size, 3] | min) + 1) %}
+      - "-connect=node{{ '%02d'|format(peer) }}:18444"
+{% endfor %}
+{% endif %}
+    volumes:
+      - "{{ shard.wallet_container }}_data:/home/bitcoin/.bitcoin"
+      - "{{ workdir }}/config/{{ shard.wallet_container }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "{{ network_name }}" ]
+    ports:
+      - "{{ wallet_base_rpc + offset }}:18443"
+      - "{{ wallet_base_p2p + offset }}:18444"
+      - "{{ wallet_base_zmq_block + offset }}:28332"
+      - "{{ wallet_base_zmq_tx + offset }}:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+{% endfor %}
+
+{% set shard_count = txgen_shards | length %}
+{% if shard_count > 0 %}
+{% set shard_rate = (tx_rate | float) / shard_count %}
+{% for shard in txgen_shards %}
+  txgen_{{ shard.id }}:
     image: "python:3.12-slim"
-    container_name: "txgen"
+    container_name: "txgen_{{ shard.id }}"
     restart: unless-stopped
     user: "0:0"
     working_dir: /app
     volumes:
       - "{{ workdir }}/files:/app:ro"
-      - "txlogs:/results"
-    command: >
-      bash -lc "pip install requests && python -u /app/txgen.py --rate {{ tx_rate }}
-      --rpc http://{{ rpc_user }}:{{ rpc_pass }}@wallet:18443
-      --log /results/txlog.csv
-      --node-count {{ node_count }}
-      --mining-percentage 0.08"
+      - "txlogs_{{ shard.log_suffix }}:/results"
+    command:
+      - python
+      - -u
+      - /app/txgen.py
+      - --shard-id
+      - "{{ shard.id }}"
+      - --rate
+      - "{{ '%.4f'|format(shard_rate) }}"
+      - --rpc
+      - "http://{{ rpc_user }}:{{ rpc_pass }}@{{ shard.wallet_container }}:18443"
+      - --wallet
+      - "{{ shard.wallet_name }}"
+      - --log
+      - "/results/txlog_{{ shard.log_suffix }}.csv"
+      - --node-count
+      - "{{ node_count }}"
+      - --address-pool-size
+      - "{{ txgen_address_pool_size }}"
+      - --address-reuse-window
+      - "{{ txgen_address_reuse_window }}"
+      - --amount-btc
+      - "{{ txgen_send_amount_btc }}"
+      - --utxo-target
+      - "{{ wallet_descriptor_pool_size }}"
     depends_on:
-      wallet:
+      {{ shard.wallet_container }}:
         condition: service_healthy
     networks: [ "{{ network_name }}" ]
-    healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://{{ rpc_user }}:{{ rpc_pass }}@wallet:18443', timeout=5)"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+{% endfor %}
+{% endif %}
+
+  block_scheduler:
+    image: "python:3.12-slim"
+    container_name: "block_scheduler"
+    restart: unless-stopped
+    user: "0:0"
+    working_dir: /app
+    volumes:
+      - "{{ workdir }}/files:/app:ro"
+      - "{{ workdir }}/state:/state:ro"
+    command:
+      - python
+      - -u
+      - /app/block_scheduler.py
+      - --interval
+      - "{{ block_scheduler_interval_s }}"
+      - --node-count
+      - "{{ node_count }}"
+      - --mining-percentage
+      - "{{ mining_percentage }}"
+      - --rpc-user
+      - "{{ rpc_user }}"
+      - --rpc-pass
+      - "{{ rpc_pass }}"
+      - --seed
+      - "{{ block_scheduler_seed }}"
+      - --config
+      - /state/mining_targets.json
+    depends_on:
+      {{ wallet_funding_container }}:
+        condition: service_healthy
+    networks: [ "{{ network_name }}" ]
 
 networks:
   {{ network_name }}:
@@ -184,5 +286,8 @@ volumes:
 {% for i in range(1, n + 1) %}
   node{{ '%02d'|format(i) }}_data: {}
 {% endfor %}
-  wallet_data: {}
-  txlogs: {}
+  {{ wallet_funding_container }}_data: {}
+{% for shard in txgen_shards %}
+  {{ shard.wallet_container }}_data: {}
+  txlogs_{{ shard.log_suffix }}: {}
+{% endfor %}

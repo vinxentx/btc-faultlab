@@ -120,8 +120,17 @@ class ExperimentRunner:
                 else:
                     print("⚠️  Deploy completed with warnings (continuing...)")
             
-            # Step 3: Run Experiment
-            print("Step 3: Run Experiment...")
+            # Step 3: Prepare Wallets / Funding
+            print("Step 3: Prepare wallets and funding...")
+            result = self.run_playbook("02_prepare_wallets.yml", config_params)
+            if result.returncode != 0:
+                if "FAILED" in result.stdout or "fatal:" in result.stdout:
+                    raise Exception("Wallet preparation failed critically - check output above")
+                else:
+                    print("⚠️  Wallet preparation completed with warnings (continuing...)")
+            
+            # Step 4: Run Experiment
+            print("Step 4: Run Experiment...")
             result = self.run_playbook("03_run_experiment.yml", config_params)
             if result.returncode != 0:
                 # Experiment failures are critical
@@ -130,8 +139,8 @@ class ExperimentRunner:
                 else:
                     print("⚠️  Experiment completed with warnings (continuing...)")
             
-            # Step 4: Collect Data
-            print("Step 4: Collect Data...")
+            # Step 5: Collect Data
+            print("Step 5: Collect Data...")
             result = self.run_playbook("04_collect.yml", config_params)
             if result.returncode != 0:
                 # Collection failures are less critical - we may still have partial data

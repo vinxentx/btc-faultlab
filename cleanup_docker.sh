@@ -59,10 +59,30 @@ else
     echo "  ✓ Removed $(echo "$NODE_CONTAINERS" | wc -l | tr -d ' ') containers"
 fi
 
-# Also remove txgen
-if docker ps -a --format "{{.Names}}" | grep -q "txgen"; then
-    docker rm -f txgen 2>/dev/null || true
-    echo "  ✓ Removed txgen container"
+# Also remove txgen shards
+TXGEN_CONTAINERS=$(docker ps -a --format "{{.Names}}" | grep '^txgen_' || true)
+if [ -n "$TXGEN_CONTAINERS" ]; then
+    echo "$TXGEN_CONTAINERS" | while read container; do
+        docker rm -f "$container" 2>/dev/null || true
+    done
+    COUNT=$(echo "$TXGEN_CONTAINERS" | wc -l | tr -d ' ')
+    echo "  ✓ Removed $COUNT txgen shard container(s)"
+fi
+
+# Remove block scheduler container
+if docker ps -a --format "{{.Names}}" | grep -q "^block_scheduler$"; then
+    docker rm -f block_scheduler 2>/dev/null || true
+    echo "  ✓ Removed block_scheduler container"
+fi
+
+# Remove wallet containers (funding + shards)
+WALLET_CONTAINERS=$(docker ps -a --format "{{.Names}}" | grep '^wallet_' || true)
+if [ -n "$WALLET_CONTAINERS" ]; then
+    echo "$WALLET_CONTAINERS" | while read container; do
+        docker rm -f "$container" 2>/dev/null || true
+    done
+    COUNT=$(echo "$WALLET_CONTAINERS" | wc -l | tr -d ' ')
+    echo "  ✓ Removed $COUNT wallet container(s)"
 fi
 
 echo ""

@@ -122,11 +122,11 @@ class TierExperimentRunner:
             if result.returncode != 0:
                 print(f"   ⚠️  Warning: docker compose down had issues: {result.stderr}")
             
-            # Step 2: Force remove any lingering containers (nodes, wallet, txgen)
+            # Step 2: Force remove any lingering containers (nodes, wallet, txgen shards, scheduler)
             containers = []
             
             # Collect all Bitcoin-related containers
-            for name_filter in ["node", "wallet", "txgen"]:
+            for name_filter in ["node", "wallet", "txgen", "block_scheduler"]:
                 result = subprocess.run(
                     ["docker", "ps", "-a", "--filter", f"name={name_filter}", "--format", "{{.Names}}"],
                     capture_output=True, text=True

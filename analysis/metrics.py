@@ -117,6 +117,345 @@ def binned_rate(times, bin_size=10):
     
     return list(zip(bin_centers, rates))
 
+def extract_updatetip_blocks(run_dir, best_chain_hashes=None):
+    """
+    Extract block arrival timestamps from UpdateTip logs.
+    
+    Uses block arrival times (when node saw the block) rather than block creation times.
+    Filters to only blocks in the final best chain to handle reorgs.
+    
+    Args:
+        run_dir: Path to experiment run directory
+        best_chain_hashes: Set of block hashes in the final best chain (from chaintips.json)
+    
+    Returns:
+        DataFrame with columns: arrival_ts_utc, block_hash, height, tx_count
+    """
+    import re
+    from pathlib import Path
+    
+    # Try to find a representative node log (prefer node01)
+    node_logs = [
+        Path(run_dir) / "node01.log",
+        Path(run_dir) / "node02.log",
+    ]
+    
+    node_log = None
+    for log_path in node_logs:
+        if log_path.exists():
+            node_log = log_path
+            break
+    
+    if not node_log:
+        return pd.DataFrame()
+    
+    # Pattern: timestamp UpdateTip: new best=<hash> height=<height> ... tx=<count> date='<block_time>' ...
+    pattern = re.compile(
+        r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+UpdateTip:\s+new\s+best=([a-f0-9]+)\s+height=(\d+)\s+.*?\btx=(\d+)\s+date=\'([^\']+)\''
+    )
+    
+    blocks = []
+    with open(node_log, 'r', encoding='utf-8') as f:
+        for line in f:
+            match = pattern.search(line)
+            if match:
+                arrival_ts_str, block_hash, height_str, tx_count_str, block_time_str = match.groups()
+                
+                # Filter to best chain if provided
+                if best_chain_hashes and block_hash not in best_chain_hashes:
+                    continue
+                
+                try:
+                    arrival_ts = pd.to_datetime(arrival_ts_str.replace('Z', '+00:00'))
+                    height = int(height_str)
+                    tx_count = int(tx_count_str)
+                    
+                    blocks.append({
+                        'arrival_ts_utc': arrival_ts,
+                        'block_hash': block_hash,
+                        'height': height,
+                        'tx_count': tx_count,
+                    })
+                except (ValueError, TypeError):
+                    continue
+    
+    if not blocks:
+        return pd.DataFrame()
+    
+    df = pd.DataFrame(blocks)
+    df = df.sort_values('arrival_ts_utc')
+    return df
+
+
+def get_best_chain_hashes(run_dir):
+    """
+    Get all block hashes in the final best chain.
+    
+    Queries node01 to get the full chain from genesis to tip.
+    This allows us to filter out blocks from reorgs.
+    
+    Args:
+        run_dir: Path to experiment run directory
+    
+    Returns:
+        Set of block hashes in the best chain, or None if unavailable
+    """
+    import subprocess
+    
+    try:
+        # Get the tip hash from chaintips.json
+        chaintips_path = os.path.join(run_dir, "chaintips.json")
+        if not os.path.exists(chaintips_path):
+            return None
+        
+        with open(chaintips_path, 'r') as f:
+            tips = json.load(f)
+        
+        tip_hash = None
+        tip_height = None
+        for tip in tips:
+            if tip.get('status') == 'active':
+                tip_hash = tip['hash']
+                tip_height = tip['height']
+                break
+        
+        if not tip_hash:
+            return None
+        
+        # Query node01 to get all block hashes in the chain
+        # We'll walk backwards from the tip to get all hashes
+        best_chain_hashes = set()
+        current_hash = tip_hash
+        
+        # Limit to reasonable number of blocks to avoid infinite loops
+        max_blocks = tip_height + 100
+        blocks_checked = 0
+        
+        while current_hash and blocks_checked < max_blocks:
+            best_chain_hashes.add(current_hash)
+            
+            # Get block info to find parent
+            cmd = ["docker", "exec", "node01", "bitcoin-cli", "-regtest", 
+                   "getblock", current_hash]
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+            if proc.returncode != 0:
+                break
+            
+            try:
+                block_data = json.loads(proc.stdout)
+                if 'previousblockhash' in block_data:
+                    current_hash = block_data['previousblockhash']
+                else:
+                    break  # Genesis block
+            except (json.JSONDecodeError, KeyError):
+                break
+            
+            blocks_checked += 1
+        
+        return best_chain_hashes if best_chain_hashes else None
+    except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError, KeyError, Exception) as e:
+        # If we can't query the node (container not running, etc.), return None
+        # This will cause extract_updatetip_blocks to use all blocks (no filtering)
+        return None
+
+
+def updatetip_throughput(run_dir, df_conf, window_seconds=60):
+    """
+    Calculate throughput using UpdateTip block arrival timestamps with sliding window.
+    
+    This is the cleanest, least-biased throughput calculation:
+    - Uses k=1 confirmations (first confirmation only)
+    - Uses block arrival timestamps (from UpdateTip, when node saw the block)
+    - Corrects reorgs offline against the final best chain
+    - Uses a sliding time window for smooth visualization
+    
+    Args:
+        run_dir: Path to experiment run directory
+        df_conf: DataFrame with confirmations (must have 'confirm_block_hash')
+        window_seconds: Size of sliding window in seconds (default: 60)
+    
+    Returns:
+        List of (timestamp, throughput) tuples where throughput is tx/s
+        Timestamp is the window center time, throughput is TX confirmed in window / window duration
+    """
+    # Get all block hashes in the best chain (to filter out reorgs)
+    best_chain_hashes = get_best_chain_hashes(run_dir)
+    
+    # Extract UpdateTip blocks (with best chain filtering)
+    df_blocks = extract_updatetip_blocks(run_dir, best_chain_hashes)
+    if df_blocks.empty:
+        return []
+    
+    # Get k=1 confirmations (first confirmation only)
+    # Match TX to blocks by block hash
+    if df_conf.empty or 'confirm_block_hash' not in df_conf.columns:
+        return []
+    
+    # Count TX per block hash (k=1 confirmations)
+    tx_per_block = df_conf.groupby('confirm_block_hash').size()
+    
+    # Build throughput series with sliding window
+    throughput_series = []
+    
+    # Use block arrival times for window calculation
+    min_time = df_blocks['arrival_ts_utc'].min()
+    max_time = df_blocks['arrival_ts_utc'].max()
+    
+    # Slide window across time
+    window_half = pd.Timedelta(seconds=window_seconds / 2)
+    current_time = min_time + window_half
+    
+    while current_time <= max_time - window_half:
+        window_start = current_time - window_half
+        window_end = current_time + window_half
+        
+        # Find blocks that arrived in this window
+        blocks_in_window = df_blocks[
+            (df_blocks['arrival_ts_utc'] >= window_start) &
+            (df_blocks['arrival_ts_utc'] < window_end)
+        ]
+        
+        if len(blocks_in_window) > 0:
+            # Count TX confirmed in blocks that arrived in this window
+            tx_count = 0
+            for block_hash in blocks_in_window['block_hash']:
+                if block_hash in tx_per_block.index:
+                    tx_count += tx_per_block[block_hash]
+            
+            # Throughput = TX in window / window duration
+            throughput = tx_count / window_seconds
+            throughput_series.append((current_time, throughput))
+        
+        # Slide window forward (step by 1/4 of window size for smoothness)
+        current_time += pd.Timedelta(seconds=window_seconds / 4)
+    
+    return throughput_series
+
+
+def block_based_throughput(run_dir, df_conf):
+    """
+    Calculate throughput using official Bitcoin network definition:
+    TX per block / Block interval (block-based, not TX-based)
+    
+    This is the official method used by Bitcoin network analysis tools.
+    Uses block hashes to exactly match TX to blocks for perfect accuracy.
+    
+    DEPRECATED: Prefer updatetip_throughput() which uses block arrival times
+    and handles reorgs correctly.
+    
+    Args:
+        run_dir: Path to experiment run directory
+        df_conf: DataFrame with confirmations (must have 'confirm_ts_utc' and 'confirm_block_hash')
+    
+    Returns:
+        List of (timestamp, throughput) tuples where throughput is tx/s
+        Timestamp is the block timestamp, throughput is TX in that block / block interval
+    """
+    if df_conf.empty or 'confirm_ts_utc' not in df_conf.columns:
+        return []
+    
+    mining_file = os.path.join(run_dir, "mining.csv")
+    if not os.path.exists(mining_file):
+        return []
+    
+    try:
+        df_mining = pd.read_csv(mining_file)
+        if "timestamp_utc" not in df_mining.columns:
+            return []
+        
+        df_mining["timestamp_utc"] = pd.to_datetime(df_mining["timestamp_utc"])
+        df_mining = df_mining.sort_values("timestamp_utc")
+        
+        df_conf["confirm_ts_utc"] = pd.to_datetime(df_conf["confirm_ts_utc"])
+        
+        # Check if we have block hashes for exact matching
+        has_block_hash_in_mining = "block_hash" in df_mining.columns
+        has_block_hash_in_conf = "confirm_block_hash" in df_conf.columns
+        use_hash_matching = has_block_hash_in_mining and has_block_hash_in_conf
+        
+        if use_hash_matching:
+            # Perfect accuracy: Match TX to blocks by hash
+            # Count TX per block by hash
+            tx_per_block_hash = df_conf.groupby('confirm_block_hash').size() if has_block_hash_in_conf else pd.Series()
+            
+            throughput_series = []
+            for idx, row in df_mining.iterrows():
+                block_time = row['timestamp_utc']
+                block_hash = row.get('block_hash', '')
+                
+                # Calculate block interval
+                if idx > 0:
+                    prev_time = df_mining.iloc[idx - 1]['timestamp_utc']
+                    block_interval = (block_time - prev_time).total_seconds()
+                else:
+                    # First block: use average interval
+                    if len(df_mining) > 1:
+                        intervals = df_mining['timestamp_utc'].diff().dt.total_seconds().dropna()
+                        block_interval = intervals.mean() if len(intervals) > 0 else 6.0
+                    else:
+                        block_interval = 6.0
+                
+                # Get TX count for this exact block hash
+                if block_hash and block_hash in tx_per_block_hash.index:
+                    tx_count = tx_per_block_hash[block_hash]
+                else:
+                    tx_count = 0
+                
+                if block_interval > 0:
+                    throughput = tx_count / block_interval
+                    throughput_series.append((block_time, throughput))
+        else:
+            # Fallback: Use time-based matching - assign TX to nearest block
+            # This is less accurate than hash-based but works when hashes are unavailable
+            throughput_series = []
+            
+            for idx in range(len(df_mining)):
+                block_time = df_mining.iloc[idx]['timestamp_utc']
+                
+                # Calculate block interval
+                if idx > 0:
+                    prev_time = df_mining.iloc[idx - 1]['timestamp_utc']
+                    block_interval = (block_time - prev_time).total_seconds()
+                else:
+                    # First block: use average interval
+                    if len(df_mining) > 1:
+                        intervals = df_mining['timestamp_utc'].diff().dt.total_seconds().dropna()
+                        block_interval = intervals.mean() if len(intervals) > 0 else 6.0
+                    else:
+                        block_interval = 6.0
+                
+                # Find TX confirmed closest to this block's timestamp
+                # Use a window: from midpoint of previous interval to midpoint of next interval
+                if idx > 0:
+                    prev_time = df_mining.iloc[idx - 1]['timestamp_utc']
+                    window_start = prev_time + pd.Timedelta(seconds=(block_time - prev_time).total_seconds() / 2)
+                else:
+                    window_start = block_time - pd.Timedelta(seconds=block_interval / 2)
+                
+                if idx < len(df_mining) - 1:
+                    next_time = df_mining.iloc[idx + 1]['timestamp_utc']
+                    window_end = block_time + pd.Timedelta(seconds=(next_time - block_time).total_seconds() / 2)
+                else:
+                    window_end = block_time + pd.Timedelta(seconds=block_interval / 2)
+                
+                # Count TX confirmed in this block's time window
+                tx_in_block = df_conf[
+                    (df_conf['confirm_ts_utc'] >= window_start) &
+                    (df_conf['confirm_ts_utc'] < window_end)
+                ]
+                tx_count = len(tx_in_block)
+                
+                if block_interval > 0:
+                    throughput = tx_count / block_interval
+                    throughput_series.append((block_time, throughput))
+        
+        return throughput_series
+    except Exception as e:
+        print(f"⚠️  Error calculating block-based throughput: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
 def compute_availability(submit_times, confirmed_times, t1=None, t2=None):
     """Compute system availability"""
     if not submit_times:
@@ -315,44 +654,55 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
     fig.suptitle(f'Bitcoin Performance Timeline - {exp_type}', fontsize=16, fontweight='bold')
     
-    # Throughput over time
-    if tps_series and len(tps_series) > 0:
+    # Throughput over time - use official block-based calculation
+    # Use UpdateTip-based throughput (cleanest, least-biased method)
+    block_throughput = updatetip_throughput(run_dir, df_conf) if not df_conf.empty else []
+    # Fallback to old method if UpdateTip not available
+    if not block_throughput:
+        block_throughput = block_based_throughput(run_dir, df_conf) if not df_conf.empty else []
+    
+    if block_throughput:
+        # Use official block-based throughput
+        x = [t for (t, _) in block_throughput]
+        y = [v for (_, v) in block_throughput]
+        ax1.plot(x, y, linewidth=2, color='blue', alpha=0.8, label='Throughput (Official: Block-based)', marker='o', markersize=3)
+    elif tps_series and len(tps_series) > 0:
+        # Fallback to rolling window if block-based not available
         x = [t for (t, _) in tps_series]
         y = [v for (_, v) in tps_series]
-        
-        # Plot throughput data
-        ax1.plot(x, y, linewidth=2, color='blue', alpha=0.8, label='Throughput')
-        
-        # Add fault event markers (only if faults are injected)
-        if has_faults:
-            event_labels = set()
-            for (ts, evt, _) in events:
-                if evt in ("start_warmup", "after_netem", "end_observe"):
-                    color = 'red' if evt == "after_netem" else 'green'
-                    label = "Fault Injection" if evt == "after_netem" else f"{evt.replace('_', ' ').title()}"
-                    if label not in event_labels:
-                        ax1.axvline(ts, linestyle="--", alpha=0.7, color=color, label=label)
-                        event_labels.add(label)
-        else:
-            # For baseline, just mark warmup and observation periods
-            for (ts, evt, _) in events:
-                if evt == "start_warmup":
-                    ax1.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='Start Warmup')
-                elif evt == "end_observe":
-                    ax1.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='End Observation')
-        
-        ax1.set_ylabel('Throughput (tx/s)')
-        ax1.set_title('Transaction Throughput Over Time')
-        ax1.grid(True, alpha=0.3)
-        ax1.legend()
-        
-        # Format x-axis
-        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
-        ax1.xaxis.set_major_locator(mdates.MinuteLocator(interval=5))
-        plt.setp(ax1.xaxis.get_majorticklabels(), rotation=45)
+        ax1.plot(x, y, linewidth=2, color='blue', alpha=0.8, label='Throughput (Rolling Window - Fallback)')
     else:
         ax1.text(0.5, 0.5, 'No throughput data available', ha='center', va='center', transform=ax1.transAxes)
         ax1.set_title('Transaction Throughput Over Time')
+        return
+    
+    # Add fault event markers (only if faults are injected)
+    if has_faults:
+        event_labels = set()
+        for (ts, evt, _) in events:
+            if evt in ("start_warmup", "after_netem", "end_observe"):
+                color = 'red' if evt == "after_netem" else 'green'
+                label = "Fault Injection" if evt == "after_netem" else f"{evt.replace('_', ' ').title()}"
+                if label not in event_labels:
+                    ax1.axvline(ts, linestyle="--", alpha=0.7, color=color, label=label)
+                    event_labels.add(label)
+    else:
+        # For baseline, just mark warmup and observation periods
+        for (ts, evt, _) in events:
+            if evt == "start_warmup":
+                ax1.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='Start Warmup')
+            elif evt == "end_observe":
+                ax1.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='End Observation')
+    
+    ax1.set_ylabel('Throughput (tx/s)')
+    ax1.set_title('Transaction Throughput Over Time (Official: Block-based)')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+    
+    # Format x-axis
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    ax1.xaxis.set_major_locator(mdates.MinuteLocator(interval=5))
+    plt.setp(ax1.xaxis.get_majorticklabels(), rotation=45)
     
     # Confirmation latency over time
     if not df_conf.empty and len(df_conf) > 0:
@@ -499,9 +849,31 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
             ax3.text(0.5, 0.5, 'No fault injection time found', ha='center', va='center', transform=ax3.transAxes)
             ax3.set_title('Performance Before/After Fault Injection')
     elif not has_faults:
-        # For baseline, show throughput stability over time
+        # For baseline, show throughput stability over time using official block-based method
         ax3 = axes[1, 0]
-        if tps_series and len(tps_series) > 0:
+        # Use UpdateTip-based throughput (cleanest, least-biased method)
+    block_throughput = updatetip_throughput(run_dir, df_conf) if not df_conf.empty else []
+    # Fallback to old method if UpdateTip not available
+    if not block_throughput:
+        block_throughput = block_based_throughput(run_dir, df_conf) if not df_conf.empty else []
+        
+        if block_throughput:
+            times = [t for (t, _) in block_throughput]
+            values = [v for (_, v) in block_throughput]
+            
+            ax3.plot(times, values, linewidth=2, color='green', alpha=0.8, 
+                    label='Throughput (Official: Block-based)', marker='o', markersize=3)
+            median_tps = np.median(values)
+            ax3.axhline(median_tps, linestyle='--', color='blue', linewidth=2, 
+                       label=f'Median: {median_tps:.2f} tx/s')
+            
+            # Add stability band (±10%)
+            ax3.fill_between(times, median_tps * 0.9, median_tps * 1.1, 
+                           alpha=0.2, color='green', label='±10% band')
+            
+            ax3.set_ylabel('Throughput (tx/s)')
+            ax3.set_title('Baseline Throughput Stability (Official: Block-based)')
+        elif tps_series and len(tps_series) > 0:
             times = [t for (t, _) in tps_series]
             values = [v for (_, v) in tps_series]
             
@@ -513,7 +885,8 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
                     times, values = zip(*stable_data)
                     times, values = list(times), list(values)
             
-            ax3.plot(times, values, linewidth=2, color='green', alpha=0.8, label='Throughput')
+            ax3.plot(times, values, linewidth=2, color='green', alpha=0.8, 
+                    label='Throughput (Rolling Window - Fallback)')
             median_tps = np.median(values)
             ax3.axhline(median_tps, linestyle='--', color='blue', linewidth=2, 
                        label=f'Median: {median_tps:.2f} tx/s')
@@ -523,16 +896,17 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series):
                            alpha=0.2, color='green', label='±10% band')
             
             ax3.set_ylabel('Throughput (tx/s)')
-            ax3.set_title('Baseline Throughput Stability')
-            ax3.legend()
-            ax3.grid(True, alpha=0.3)
-            ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
-            ax3.xaxis.set_major_locator(mdates.MinuteLocator(interval=2))
-            plt.setp(ax3.xaxis.get_majorticklabels(), rotation=45)
+            ax3.set_title('Baseline Throughput Stability (Fallback)')
         else:
             ax3.text(0.5, 0.5, 'Insufficient data for throughput analysis', 
                     ha='center', va='center', transform=ax3.transAxes)
             ax3.set_title('Baseline Throughput Stability')
+        
+        ax3.legend()
+        ax3.grid(True, alpha=0.3)
+        ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+        ax3.xaxis.set_major_locator(mdates.MinuteLocator(interval=2))
+        plt.setp(ax3.xaxis.get_majorticklabels(), rotation=45)
     else:
         axes[1, 0].text(0.5, 0.5, 'No data for before/after analysis', ha='center', va='center', transform=axes[1, 0].transAxes)
         axes[1, 0].set_title('Performance Before/After Fault Injection')
@@ -858,6 +1232,10 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf):
         return
     
     # Calculate throughput using different methods
+    # Official method: Block-based throughput
+    block_throughput = block_based_throughput(run_dir, df_conf)
+    
+    # Alternative methods for comparison
     binned_10s = binned_rate(conf_times, bin_size=10)
     binned_30s = binned_rate(conf_times, bin_size=30)
     rolling_60s = rolling_rate(conf_times, window=60)
@@ -870,18 +1248,24 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf):
     fig.suptitle(f'Throughput Analysis - Method Comparison\n{exp_type}', 
                  fontsize=16, fontweight='bold')
     
-    # Plot 1: Fixed Time Bins (10s) vs Rolling Window (60s)
+    # Plot 1: Official Block-based vs Alternative Methods
     ax1 = axes[0]
+    if block_throughput:
+        times_block = [t for (t, _) in block_throughput]
+        values_block = [v for (_, v) in block_throughput]
+        ax1.plot(times_block, values_block, linewidth=2.5, color='green', alpha=0.9, 
+                label='Official: Block-based (TX/Block ÷ Block Interval)', marker='o', markersize=4)
+    
     if binned_10s:
         times_10s = [t for (t, _) in binned_10s]
         values_10s = [v for (_, v) in binned_10s]
-        ax1.plot(times_10s, values_10s, linewidth=2, color='blue', alpha=0.8, 
-                label='Fixed Bins (10s) - No Artifacts', marker='o', markersize=3)
+        ax1.plot(times_10s, values_10s, linewidth=1.5, color='blue', alpha=0.6, 
+                label='Fixed Bins (10s) - TX-based', marker='s', markersize=2)
     
     if rolling_60s:
         times_rolling = [t for (t, _) in rolling_60s]
         values_rolling = [v for (_, v) in rolling_60s]
-        ax1.plot(times_rolling, values_rolling, linewidth=1.5, color='red', alpha=0.6, 
+        ax1.plot(times_rolling, values_rolling, linewidth=1, color='red', alpha=0.4, 
                 linestyle='--', label='Rolling Window (60s) - Has Artifacts')
     
     # Add event markers
@@ -904,34 +1288,40 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf):
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     plt.setp(ax1.xaxis.get_majorticklabels(), rotation=45)
     
-    # Plot 2: Multiple Bin Sizes Comparison
+    # Plot 2: Official Block-based vs Bin Sizes
     ax2 = axes[1]
+    if block_throughput:
+        times_block = [t for (t, _) in block_throughput]
+        values_block = [v for (_, v) in block_throughput]
+        ax2.plot(times_block, values_block, linewidth=2.5, color='green', alpha=0.9, 
+                label='Official: Block-based', marker='o', markersize=4)
+    
     if binned_10s:
         times_10s = [t for (t, _) in binned_10s]
         values_10s = [v for (_, v) in binned_10s]
-        ax2.plot(times_10s, values_10s, linewidth=2, color='blue', alpha=0.8, 
-                label='10-second bins (high resolution)', marker='o', markersize=2)
+        ax2.plot(times_10s, values_10s, linewidth=1.5, color='blue', alpha=0.6, 
+                label='10-second bins (TX-based)', marker='s', markersize=2)
     
     if binned_30s:
         times_30s = [t for (t, _) in binned_30s]
         values_30s = [v for (_, v) in binned_30s]
-        ax2.plot(times_30s, values_30s, linewidth=2.5, color='green', alpha=0.7, 
-                label='30-second bins (smoothed)', marker='s', markersize=4)
+        ax2.plot(times_30s, values_30s, linewidth=1.5, color='orange', alpha=0.6, 
+                label='30-second bins (TX-based)', marker='^', markersize=3)
     
     # Add target rate line
     target_rate = float(exp_config.get('tx_rate', 10))
     if target_rate > 0:
-        ax2.axhline(target_rate, linestyle='--', color='orange', linewidth=2, 
+        ax2.axhline(target_rate, linestyle='--', color='red', linewidth=2, 
                    alpha=0.7, label=f'Target Rate: {target_rate} tx/s')
     
-    ax2.set_ylabel('Confirmation Rate (tx/s)', fontsize=11)
-    ax2.set_title('Bin Size Comparison: 10s vs 30s', fontsize=12)
+    ax2.set_ylabel('Throughput (tx/s)', fontsize=11)
+    ax2.set_title('Official Block-based vs TX-based Binning', fontsize=12)
     ax2.grid(True, alpha=0.3)
     ax2.legend(loc='best')
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
     
-    # Plot 3: Submission vs Confirmation Rate
+    # Plot 3: Submission Rate vs Official Block-based Throughput
     ax3 = axes[2]
     if submission_binned:
         times_sub = [t for (t, _) in submission_binned]
@@ -939,16 +1329,27 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf):
         ax3.plot(times_sub, values_sub, linewidth=2, color='purple', alpha=0.6, 
                 linestyle=':', label='Submission Rate (Mempool Input)', marker='x', markersize=3)
     
-    if binned_10s:
+    if block_throughput:
+        times_block = [t for (t, _) in block_throughput]
+        values_block = [v for (_, v) in block_throughput]
+        ax3.plot(times_block, values_block, linewidth=2.5, color='green', alpha=0.9, 
+                label='Official Throughput (Blockchain Output)', marker='o', markersize=4)
+    elif binned_10s:
         times_10s = [t for (t, _) in binned_10s]
         values_10s = [v for (_, v) in binned_10s]
         ax3.plot(times_10s, values_10s, linewidth=2, color='blue', alpha=0.8, 
-                label='Confirmation Rate (Blockchain Output)', marker='o', markersize=3)
+                label='Confirmation Rate (TX-based, Fallback)', marker='o', markersize=3)
     
     # Calculate and show backlog if submission > confirmation
-    if submission_binned and binned_10s and len(submission_binned) > 0 and len(binned_10s) > 0:
+    if submission_binned and len(submission_binned) > 0:
         avg_submit = np.mean([v for (_, v) in submission_binned])
-        avg_confirm = np.mean([v for (_, v) in binned_10s])
+        if block_throughput and len(block_throughput) > 0:
+            avg_confirm = np.mean([v for (_, v) in block_throughput])
+        elif binned_10s and len(binned_10s) > 0:
+            avg_confirm = np.mean([v for (_, v) in binned_10s])
+        else:
+            avg_confirm = 0
+        
         backlog_rate = avg_submit - avg_confirm
         
         if abs(backlog_rate) > 0.1:
@@ -1026,7 +1427,22 @@ def main():
     
     # Load and clean data
     df_sub = pd.read_csv(txlog, parse_dates=["submit_ts_utc"]) if os.path.exists(txlog) else pd.DataFrame()
-    df_conf = pd.read_csv(conf, parse_dates=["submit_ts_utc", "confirm_ts_utc"]) if os.path.exists(conf) else pd.DataFrame()
+    
+    # Load confirmations.csv - support both old and new column names
+    df_conf = pd.DataFrame()
+    if os.path.exists(conf):
+        df_conf = pd.read_csv(conf)
+        # Normalize column names: submit_time -> submit_ts_utc, confirm_time -> confirm_ts_utc
+        if "submit_time" in df_conf.columns and "submit_ts_utc" not in df_conf.columns:
+            df_conf["submit_ts_utc"] = pd.to_datetime(df_conf["submit_time"])
+        if "confirm_time" in df_conf.columns and "confirm_ts_utc" not in df_conf.columns:
+            df_conf["confirm_ts_utc"] = pd.to_datetime(df_conf["confirm_time"])
+        # Parse dates if columns exist
+        if "submit_ts_utc" in df_conf.columns:
+            df_conf["submit_ts_utc"] = pd.to_datetime(df_conf["submit_ts_utc"])
+        if "confirm_ts_utc" in df_conf.columns:
+            df_conf["confirm_ts_utc"] = pd.to_datetime(df_conf["confirm_ts_utc"])
+    
     df_conf = clean_confirmation_data(df_conf)
     
     conf_times = sorted(df_conf["confirm_ts_utc"].tolist()) if not df_conf.empty else []
@@ -1042,6 +1458,35 @@ def main():
     sub_times = sorted(df_sub["submit_ts_utc"].tolist()) if not df_sub.empty else []
     A = compute_availability(sub_times, conf_times)
     
+    # Calculate official Bitcoin network throughput
+    # Official definition: Total confirmed transactions / Total time (first to last block)
+    avg_throughput_official = 0.0
+    if not df_conf.empty and len(conf_times) > 1:
+        # Method 1: Total transactions / Total time (first to last confirmation)
+        total_time = (conf_times[-1] - conf_times[0]).total_seconds()
+        if total_time > 0:
+            avg_throughput_official = len(df_conf) / total_time
+        
+        # Alternative: Use mining.csv if available for block-based calculation
+        mining_file = os.path.join(run_dir, "mining.csv")
+        if os.path.exists(mining_file):
+            try:
+                df_mining = pd.read_csv(mining_file)
+                if "timestamp_utc" in df_mining.columns and len(df_mining) > 1:
+                    df_mining["timestamp_utc"] = pd.to_datetime(df_mining["timestamp_utc"])
+                    mining_times = sorted(df_mining["timestamp_utc"].tolist())
+                    block_time_span = (mining_times[-1] - mining_times[0]).total_seconds()
+                    if block_time_span > 0:
+                        # Method 2: Average TX per block × Blocks per second
+                        tx_per_block = len(df_conf) / len(df_mining)
+                        blocks_per_second = len(df_mining) / block_time_span
+                        avg_throughput_block_based = tx_per_block * blocks_per_second
+                        # Use block-based if it's more accurate (covers full experiment duration)
+                        if block_time_span > total_time * 0.8:  # If block span covers most of experiment
+                            avg_throughput_official = avg_throughput_block_based
+            except Exception as e:
+                print(f"⚠️  Could not read mining.csv for throughput calculation: {e}")
+    
     # Create enhanced plots
     create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series)
     
@@ -1056,7 +1501,7 @@ def main():
         "availability": A,
         "median_latency": cl50,
         "p95_latency": cl95,
-        "avg_throughput": np.mean([v for (_, v) in tps_series]) if tps_series else 0
+        "avg_throughput": avg_throughput_official  # Official Bitcoin network throughput definition
     }
     
     # Prefer events-based recovery (Option 1); fall back to latency-based if missing

@@ -2558,12 +2558,10 @@ services:
       retries: 3
       start_period: 40s
 
-
-  wallet_funding:
+  wallet01:
     image: "bitcoin/bitcoin:27.0"
-    container_name: "wallet_funding"
+    container_name: "wallet01"
     restart: unless-stopped
-    user: "101:101"
     entrypoint: ["bitcoind"]
     command: 
       - "-regtest=1"
@@ -2581,8 +2579,7 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect to multiple core nodes for redundancy (backup peers)
-      # Connect to first 10 core nodes (or all if fewer than 10)
+      # Connect to multiple core nodes for redundancy
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
@@ -2592,8 +2589,8 @@ services:
       - "-connect=node07:18444"
       - "-connect=node08:18444"
     volumes:
-      - "wallet_funding_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/wallet_funding/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+      - "wallet01_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
     ports:
       - "21043:18443"
@@ -2607,13 +2604,12 @@ services:
       retries: 3
       start_period: 40s
 
-  wallet_shard_a:
+  wallet02:
     image: "bitcoin/bitcoin:27.0"
-    container_name: "wallet_shard_a"
+    container_name: "wallet02"
     restart: unless-stopped
-    user: "101:101"
     entrypoint: ["bitcoind"]
-    command:
+    command: 
       - "-regtest=1"
       - "-printtoconsole=1"
       - "-datadir=/home/bitcoin/.bitcoin"
@@ -2625,146 +2621,27 @@ services:
       - "-rpcallowip=0.0.0.0/0"
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-maxconnections=32"
+      - "-maxconnections=64"
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "wallet_shard_a_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_a/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+      - "wallet02_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
     ports:
-      - "21053:18443"
-      - "21054:18444"
-      - "31042:28332"
-      - "31043:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  wallet_shard_b:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "wallet_shard_b"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command:
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-maxconnections=32"
-      - "-discover=1"
-      - "-dnsseed=0"
-      - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-    volumes:
-      - "wallet_shard_b_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_b/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "21063:18443"
-      - "21064:18444"
-      - "31052:28332"
-      - "31053:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  wallet_shard_c:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "wallet_shard_c"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command:
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-maxconnections=32"
-      - "-discover=1"
-      - "-dnsseed=0"
-      - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-    volumes:
-      - "wallet_shard_c_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_c/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "21073:18443"
-      - "21074:18444"
-      - "31062:28332"
-      - "31063:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-  wallet_shard_d:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "wallet_shard_d"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command:
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-maxconnections=32"
-      - "-discover=1"
-      - "-dnsseed=0"
-      - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-    volumes:
-      - "wallet_shard_d_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_d/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "21083:18443"
-      - "21084:18444"
-      - "31072:28332"
-      - "31073:28333"
+      - "21047:18443"
+      - "21048:18444"
+      - "31036:28332"
+      - "31037:28333"
     healthcheck:
       test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
       interval: 30s
@@ -2772,185 +2649,156 @@ services:
       retries: 3
       start_period: 40s
 
-  txgen_a:
-    image: "python:3.12-slim"
-    container_name: "txgen_a"
+  wallet03:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet03"
     restart: unless-stopped
-    user: "0:0"
-    working_dir: /app
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
-      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
-      - "txlogs_a:/results"
-    command:
-      - python
-      - -u
-      - /app/txgen.py
-      - --shard-id
-      - "a"
-      - --rate
-      - "1.2500"
-      - --rpc
-      - "http://user:pass@wallet_shard_a:18443"
-      - --wallet
-      - "txshard_a"
-      - --log
-      - "/results/txlog_a.csv"
-      - --node-count
-      - "64"
-      - --address-pool-size
-      - "2048"
-      - --address-reuse-window
-      - "100"
-      - --amount-btc
-      - "0.0001"
-      - --utxo-target
-      - "800"
-    depends_on:
-      wallet_shard_a:
-        condition: service_healthy
+      - "wallet03_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
     networks: [ "btcnet" ]
-  txgen_b:
-    image: "python:3.12-slim"
-    container_name: "txgen_b"
-    restart: unless-stopped
-    user: "0:0"
-    working_dir: /app
-    volumes:
-      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
-      - "txlogs_b:/results"
-    command:
-      - python
-      - -u
-      - /app/txgen.py
-      - --shard-id
-      - "b"
-      - --rate
-      - "1.2500"
-      - --rpc
-      - "http://user:pass@wallet_shard_b:18443"
-      - --wallet
-      - "txshard_b"
-      - --log
-      - "/results/txlog_b.csv"
-      - --node-count
-      - "64"
-      - --address-pool-size
-      - "2048"
-      - --address-reuse-window
-      - "100"
-      - --amount-btc
-      - "0.0001"
-      - --utxo-target
-      - "800"
-    depends_on:
-      wallet_shard_b:
-        condition: service_healthy
-    networks: [ "btcnet" ]
-  txgen_c:
-    image: "python:3.12-slim"
-    container_name: "txgen_c"
-    restart: unless-stopped
-    user: "0:0"
-    working_dir: /app
-    volumes:
-      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
-      - "txlogs_c:/results"
-    command:
-      - python
-      - -u
-      - /app/txgen.py
-      - --shard-id
-      - "c"
-      - --rate
-      - "1.2500"
-      - --rpc
-      - "http://user:pass@wallet_shard_c:18443"
-      - --wallet
-      - "txshard_c"
-      - --log
-      - "/results/txlog_c.csv"
-      - --node-count
-      - "64"
-      - --address-pool-size
-      - "2048"
-      - --address-reuse-window
-      - "100"
-      - --amount-btc
-      - "0.0001"
-      - --utxo-target
-      - "800"
-    depends_on:
-      wallet_shard_c:
-        condition: service_healthy
-    networks: [ "btcnet" ]
-  txgen_d:
-    image: "python:3.12-slim"
-    container_name: "txgen_d"
-    restart: unless-stopped
-    user: "0:0"
-    working_dir: /app
-    volumes:
-      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
-      - "txlogs_d:/results"
-    command:
-      - python
-      - -u
-      - /app/txgen.py
-      - --shard-id
-      - "d"
-      - --rate
-      - "1.2500"
-      - --rpc
-      - "http://user:pass@wallet_shard_d:18443"
-      - --wallet
-      - "txshard_d"
-      - --log
-      - "/results/txlog_d.csv"
-      - --node-count
-      - "64"
-      - --address-pool-size
-      - "2048"
-      - --address-reuse-window
-      - "100"
-      - --amount-btc
-      - "0.0001"
-      - --utxo-target
-      - "800"
-    depends_on:
-      wallet_shard_d:
-        condition: service_healthy
-    networks: [ "btcnet" ]
+    ports:
+      - "21051:18443"
+      - "21052:18444"
+      - "31040:28332"
+      - "31041:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  block_scheduler:
+  wallet04:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet04"
+    restart: unless-stopped
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+    volumes:
+      - "wallet04_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "btcnet" ]
+    ports:
+      - "21055:18443"
+      - "21056:18444"
+      - "31044:28332"
+      - "31045:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  wallet05:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet05"
+    restart: unless-stopped
+    entrypoint: ["bitcoind"]
+    command: 
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=64"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+    volumes:
+      - "wallet05_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "btcnet" ]
+    ports:
+      - "21059:18443"
+      - "21060:18444"
+      - "31048:28332"
+      - "31049:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  txgen:
     image: "python:3.12-slim"
-    container_name: "block_scheduler"
+    container_name: "txgen"
     restart: unless-stopped
     user: "0:0"
     working_dir: /app
     volumes:
       - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
-      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
-    command:
-      - python
-      - -u
-      - /app/block_scheduler.py
-      - --interval
-      - "6"
-      - --node-count
-      - "64"
-      - --mining-percentage
-      - "0.08"
-      - --rpc-user
-      - "user"
-      - --rpc-pass
-      - "pass"
-      - --seed
-      - "1337"
-      - --config
-      - /state/mining_targets.json
-    depends_on:
-      wallet_funding:
-        condition: service_healthy
+      - "txlogs:/results"
+    command: >
+      bash -lc "pip install requests && python -u /app/txgen_multiwallets.py --rate 5
+      --wallets http://user:pass@wallet01:18443,http://user:pass@wallet02:18443,http://user:pass@wallet03:18443,http://user:pass@wallet04:18443,http://user:pass@wallet05:18443
+      --log /results/txlog.csv
+      --node-count 64
+      --mining-percentage 0.08"
     networks: [ "btcnet" ]
 
 networks:
@@ -3021,12 +2869,9 @@ volumes:
   node62_data: {}
   node63_data: {}
   node64_data: {}
-  wallet_funding_data: {}
-  wallet_shard_a_data: {}
-  txlogs_a: {}
-  wallet_shard_b_data: {}
-  txlogs_b: {}
-  wallet_shard_c_data: {}
-  txlogs_c: {}
-  wallet_shard_d_data: {}
-  txlogs_d: {}
+  wallet01_data: {}
+  wallet02_data: {}
+  wallet03_data: {}
+  wallet04_data: {}
+  wallet05_data: {}
+  txlogs: {}

@@ -17,12 +17,24 @@
     docker logs node{{ '%02d'|format(i) }} > "{{ rd }}/node{{ '%02d'|format(i) }}.log" 2>&1
   changed_when: true
 
-- name: Dump txgen docker logs
+- name: Dump txgen shard logs
   ansible.builtin.shell: |
-    if docker ps -a --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^txgen$"; then
-      docker logs txgen > "{{ rd }}/txgen.log" 2>&1
+    container="txgen_{{ item.id }}"
+    logfile="{{ rd }}/txgen_{{ item.id }}.log"
+    if docker ps -a --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^${container}$"; then
+      docker logs "${container}" > "${logfile}" 2>&1
     else
-      echo "txgen container not found, skipping log collection" > "{{ rd }}/txgen.log"
+      echo "${container} container not found, skipping log collection" > "${logfile}"
+    fi
+  changed_when: true
+  loop: "{{ txgen_shards }}"
+
+- name: Dump block scheduler logs
+  ansible.builtin.shell: |
+    if docker ps -a --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^block_scheduler$"; then
+      docker logs block_scheduler > "{{ rd }}/block_scheduler.log" 2>&1
+    else
+      echo "block_scheduler container not found" > "{{ rd }}/block_scheduler.log"
     fi
   changed_when: true
 
@@ -37,17 +49,133 @@
   changed_when: true
 
 # Falls txlog im allgemeinen results liegt, verlinke ihn in diesen Run
-- name: Copy txlog, mining log, and performance metrics from Docker volume to run directory
+- name: Copy txgen shard artefacts from volumes
   ansible.builtin.shell: |
-    # Copy txlog.csv, txlog_mining.csv, and txlog_performance.csv from btcnet_txlogs named volume if present
-    if docker volume inspect btcnet_txlogs >/dev/null 2>&1; then \
-      docker run --rm -v btcnet_txlogs:/v -v {{ rd }}:/out alpine:3.19 sh -lc "
-        if [ -f /v/txlog.csv ]; then cp -f /v/txlog.csv /out/txlog.csv; fi; \
-        if [ -f /v/txlog_mining.csv ]; then cp -f /v/txlog_mining.csv /out/mining.csv; fi; \
-        if [ -f /v/txlog_performance.csv ]; then cp -f /v/txlog_performance.csv /out/txlog_performance.csv; fi
-      "; \
+    volume="{{ network_name }}_txlogs_{{ item.log_suffix }}"
+    if docker volume inspect "${volume}" >/dev/null 2>&1; then
+      docker run --rm -v "${volume}":/v -v "{{ rd }}":/out alpine:3.19 sh -lc '
+        set -e
+        # Suche nach Dateien mit Shard-Suffix (txlog_a.csv) oder ohne (txlog.csv)
+        suffix="{{ item.log_suffix }}"
+        if [ -f "/v/txlog_${suffix}.csv" ]; then
+          cp -f "/v/txlog_${suffix}.csv" "/out/txgen_{{ item.id }}_txlog.csv"
+        elif [ -f "/v/txlog.csv" ]; then
+          cp -f "/v/txlog.csv" "/out/txgen_{{ item.id }}_txlog.csv"
+        fi
+        if [ -f "/v/txlog_${suffix}_performance.csv" ]; then
+          cp -f "/v/txlog_${suffix}_performance.csv" "/out/txgen_{{ item.id }}_txlog_performance.csv"
+        elif [ -f "/v/txlog_performance.csv" ]; then
+          cp -f "/v/txlog_performance.csv" "/out/txgen_{{ item.id }}_txlog_performance.csv"
+        fi
+        if [ -f "/v/txlog_${suffix}_errors.csv" ]; then
+          cp -f "/v/txlog_${suffix}_errors.csv" "/out/txgen_{{ item.id }}_txlog_errors.csv"
+        elif [ -f "/v/txlog_errors.csv" ]; then
+          cp -f "/v/txlog_errors.csv" "/out/txgen_{{ item.id }}_txlog_errors.csv"
+        fi
+      '
     fi
   changed_when: false
+  loop: "{{ txgen_shards }}"
+
+- name: Copy funding state artefacts
+  ansible.builtin.copy:
+    src: "{{ workdir }}/state/{{ item.src }}"
+    dest: "{{ rd }}/{{ item.dest }}"
+    remote_src: true
+  loop:
+    - { src: "funding_snapshot.json", dest: "funding_snapshot.json" }
+    - { src: "mining_targets.json", dest: "mining_targets.json" }
+  ignore_errors: true
+
+- name: Erzeuge mining.csv aus Scheduler-Log
+  ansible.builtin.shell: |
+    python3 - <<'PY'
+    import csv
+    from pathlib import Path
+
+    log_path = Path("{{ rd }}/block_scheduler.log")
+    if not log_path.exists():
+        raise SystemExit(0)
+
+    events = []
+    with log_path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if not line.startswith("BLOCK_EVENT,"):
+                continue
+            parts = line.strip().split(",", 4)
+            if len(parts) != 5:
+                continue
+            _, ts, number, miner, block_hash = parts
+            try:
+                number_int = int(number)
+            except ValueError:
+                continue
+            events.append({
+                "timestamp_utc": ts,
+                "block_number": number_int,
+                "miner": miner,
+                "block_hash": block_hash,
+            })
+
+    if not events:
+        raise SystemExit(0)
+
+    events.sort(key=lambda e: e["block_number"])
+    out_path = Path("{{ rd }}/mining.csv")
+    with out_path.open("w", encoding="utf-8", newline="") as out:
+        writer = csv.DictWriter(out, fieldnames=["timestamp_utc", "block_number", "miner", "block_hash"])
+        writer.writeheader()
+        writer.writerows(events)
+    PY
+  changed_when: true
+
+- name: Merge shard CSV artefacts into aggregated files
+  ansible.builtin.shell: |
+    python3 - <<'PY'
+    import csv
+    import glob
+    import os
+
+    run_dir = "{{ rd }}"
+    patterns = {
+        "txlog.csv": "txgen_*_txlog.csv",
+        "txlog_performance.csv": "txgen_*_txlog_performance.csv",
+        "txlog_errors.csv": "txgen_*_txlog_errors.csv",
+    }
+
+    for target, pattern in patterns.items():
+        files = sorted(glob.glob(os.path.join(run_dir, pattern)))
+        if not files:
+            continue
+
+        rows = []
+        fieldnames = None
+        for path in files:
+            with open(path, "r", encoding="utf-8", newline="") as handle:
+                reader = csv.DictReader(handle)
+                if fieldnames is None:
+                    fieldnames = reader.fieldnames
+                for row in reader:
+                    rows.append(row)
+
+        if not fieldnames:
+            continue
+
+        key = None
+        for candidate in ("submit_ts_utc", "timestamp_utc"):
+            if candidate in fieldnames:
+                key = candidate
+                break
+        if key:
+            rows.sort(key=lambda r: r.get(key, ""))
+
+        out_path = os.path.join(run_dir, target)
+        with open(out_path, "w", encoding="utf-8", newline="") as out:
+            writer = csv.DictWriter(out, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+    PY
+  changed_when: true
 
 - name: Extract transaction confirmations (if txlog exists)
   ansible.builtin.shell: |

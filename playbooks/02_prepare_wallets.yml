@@ -1,0 +1,69 @@
+- hosts: controller
+  gather_facts: false
+  vars:
+    funding_host_port: "127.0.0.1:{{ wallet_rpc_base }}"
+  tasks:
+    - name: Build base argv for funding setup
+      ansible.builtin.set_fact:
+        funding_setup_argv:
+          - python3
+          - "{{ workdir }}/files/funding_setup.py"
+          - "--rpc-user"
+          - "{{ rpc_user }}"
+          - "--rpc-pass"
+          - "{{ rpc_pass }}"
+          - "--funding-host"
+          - "{{ funding_host_port }}"
+          - "--funding-wallet"
+          - "{{ wallet_funding_name }}"
+          - "--node-count"
+          - "{{ node_count | string }}"
+          - "--mining-percentage"
+          - "{{ mining_percentage | string }}"
+          - "--utxo-per-shard"
+          - "{{ wallet_descriptor_pool_size | string }}"
+          - "--utxo-amount"
+          - "{{ '%0.8f' | format(wallet_descriptor_amount_btc) }}"
+          - "--address-batch"
+          - "50"
+          - "--confirmation-blocks"
+          - "{{ funding_confirmation_blocks | string }}"
+          - "--state-dir"
+          - "{{ workdir }}/state"
+          - "--scheduler-config"
+          - "{{ workdir }}/state/mining_targets.json"
+          - "--summary-file"
+          - "{{ workdir }}/state/funding_snapshot.json"
+          - "--scheduler-interval"
+          - "{{ block_scheduler_interval_s | string }}"
+          - "--scheduler-seed"
+          - "{{ block_scheduler_seed | string }}"
+          - "--miner-host-override"
+          - "127.0.0.1"
+          - "--miner-port-base"
+          - "{{ node_rpc_base | string }}"
+          - "--miner-port-step"
+          - "{{ node_rpc_step | string }}"
+
+    - name: Append shard-specific arguments
+      ansible.builtin.set_fact:
+        funding_setup_argv: "{{ funding_setup_argv + ['--shard', shard_spec] }}"
+      vars:
+        shard_spec: "id={{ item.id }},host=127.0.0.1:{{ wallet_rpc_base + (wallet_rpc_step * (loop_index + 1)) }},wallet={{ item.wallet_name }}"
+      loop: "{{ txgen_shards }}"
+      loop_control:
+        index_var: loop_index
+
+    - name: Execute funding setup
+      ansible.builtin.command:
+        argv: "{{ funding_setup_argv }}"
+        chdir: "{{ workdir }}"
+      environment:
+        PYTHONUNBUFFERED: "1"
+      register: funding_setup
+      changed_when: true
+
+    - name: Debug funding setup output
+      ansible.builtin.debug:
+        msg: "{{ funding_setup.stdout_lines }}"
+

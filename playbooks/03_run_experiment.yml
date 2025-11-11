@@ -69,6 +69,29 @@
           cooldown_s: {{ cooldown_s }}
           seed: {{ seed }}
 
+    - name: Validiere Funding-Snapshot vor Start
+      ansible.builtin.shell: |
+        python3 - <<'PY'
+        import json
+        import sys
+        from pathlib import Path
+
+        snapshot = Path("{{ workdir }}/state/funding_snapshot.json")
+        if not snapshot.exists():
+            sys.stderr.write("Funding-Snapshot fehlt: " + str(snapshot) + "\n")
+            sys.exit(1)
+
+        data = json.loads(snapshot.read_text())
+        expected = {{ wallet_descriptor_pool_size }}
+        for shard in data.get("shards", []):
+            confirmed = shard.get("confirmed", 0)
+            shard_id = shard.get("id", "unknown")
+            if confirmed < expected:
+                sys.stderr.write(f"Shard {shard_id} hat nur {confirmed} bestätigte UTXOs (erwartet ≥ {expected})\n")
+                sys.exit(1)
+        PY
+      changed_when: false
+
     - name:  Log_event - start_warmup
       ansible.builtin.shell: |
         echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_warmup" >> "{{ run_dir }}/events.log"
