@@ -87,6 +87,13 @@
     - { src: "mining_targets.json", dest: "mining_targets.json" }
   ignore_errors: true
 
+- name: Copy mempool timeseries data
+  ansible.builtin.copy:
+    src: "{{ workdir }}/state/mempool_timeseries.csv"
+    dest: "{{ rd }}/mempool_timeseries.csv"
+    remote_src: true
+  ignore_errors: true
+
 - name: Erzeuge mining.csv aus Scheduler-Log
   ansible.builtin.shell: |
     python3 - <<'PY'

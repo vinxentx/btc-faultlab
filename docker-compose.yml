@@ -2781,6 +2781,7 @@ services:
     volumes:
       - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
       - "txlogs_a:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
     command:
       - python
       - -u
@@ -2788,7 +2789,7 @@ services:
       - --shard-id
       - "a"
       - --rate
-      - "1.2500"
+      - "15.0000"
       - --rpc
       - "http://user:pass@wallet_shard_a:18443"
       - --wallet
@@ -2804,11 +2805,13 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "800"
+      - "5000"
     depends_on:
       wallet_shard_a:
         condition: service_healthy
     networks: [ "btcnet" ]
+    profiles:
+      - txgen
   txgen_b:
     image: "python:3.12-slim"
     container_name: "txgen_b"
@@ -2818,6 +2821,7 @@ services:
     volumes:
       - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
       - "txlogs_b:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
     command:
       - python
       - -u
@@ -2825,7 +2829,7 @@ services:
       - --shard-id
       - "b"
       - --rate
-      - "1.2500"
+      - "15.0000"
       - --rpc
       - "http://user:pass@wallet_shard_b:18443"
       - --wallet
@@ -2841,11 +2845,13 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "800"
+      - "5000"
     depends_on:
       wallet_shard_b:
         condition: service_healthy
     networks: [ "btcnet" ]
+    profiles:
+      - txgen
   txgen_c:
     image: "python:3.12-slim"
     container_name: "txgen_c"
@@ -2855,6 +2861,7 @@ services:
     volumes:
       - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
       - "txlogs_c:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
     command:
       - python
       - -u
@@ -2862,7 +2869,7 @@ services:
       - --shard-id
       - "c"
       - --rate
-      - "1.2500"
+      - "15.0000"
       - --rpc
       - "http://user:pass@wallet_shard_c:18443"
       - --wallet
@@ -2878,11 +2885,13 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "800"
+      - "5000"
     depends_on:
       wallet_shard_c:
         condition: service_healthy
     networks: [ "btcnet" ]
+    profiles:
+      - txgen
   txgen_d:
     image: "python:3.12-slim"
     container_name: "txgen_d"
@@ -2892,6 +2901,7 @@ services:
     volumes:
       - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
       - "txlogs_d:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
     command:
       - python
       - -u
@@ -2899,7 +2909,7 @@ services:
       - --shard-id
       - "d"
       - --rate
-      - "1.2500"
+      - "15.0000"
       - --rpc
       - "http://user:pass@wallet_shard_d:18443"
       - --wallet
@@ -2915,11 +2925,13 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "800"
+      - "5000"
     depends_on:
       wallet_shard_d:
         condition: service_healthy
     networks: [ "btcnet" ]
+    profiles:
+      - txgen
 
   block_scheduler:
     image: "python:3.12-slim"

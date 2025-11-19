@@ -96,39 +96,19 @@
       ansible.builtin.shell: |
         echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_warmup" >> "{{ run_dir }}/events.log"
 
+    - name: Start mempool monitoring in background
+      ansible.builtin.shell: |
+        python3 files/mempool_monitor.py \
+          --node-count {{ node_count }} \
+          --interval 5 \
+          --output "{{ workdir }}/state/mempool_timeseries.csv" > "{{ workdir }}/state/mempool_monitor.log" 2>&1 &
+        echo $! > "{{ workdir }}/state/mempool_monitor.pid"
+      args:
+        chdir: "{{ workdir }}"
+      changed_when: true
+
     - name: Warm-up
       ansible.builtin.pause: { seconds: "{{ warmup_s }}" }
-
-    - name: Wait for all node containers to be running and healthy
-      loop: "{{ range(1, node_count + 1) | list }}"
-      loop_control: { loop_var: i }
-      ansible.builtin.shell: |
-        # Check container status
-        status=$(docker inspect -f '{{"{{"}} .State.Status {{"}}"}}' node{{ '%02d'|format(i) }})
-        if [ "$status" != "running" ]; then
-          echo "Container not running: $status"
-          exit 1
-        fi
-        
-        # Check health status
-        health=$(docker inspect -f '{{"{{"}} .State.Health.Status {{"}}"}}' node{{ '%02d'|format(i) }} 2>/dev/null || echo "no-healthcheck")
-        if [ "$health" = "unhealthy" ]; then
-          echo "Container unhealthy: $health"
-          exit 1
-        fi
-        
-        # Check RPC connectivity
-        if ! docker exec node{{ '%02d'|format(i) }} bitcoin-cli -regtest getblockchaininfo >/dev/null 2>&1; then
-          echo "RPC not ready"
-          exit 1
-        fi
-        
-        echo "Container healthy and RPC ready"
-      register: container_health
-      retries: 60
-      delay: 2
-      until: container_health.rc == 0
-      changed_when: false
 
     - name: Apply net impairments (loss/latency/bandwidth)
       include_role: { name: netem }
@@ -155,3 +135,12 @@
 
     - name: Cool-down
       ansible.builtin.pause: { seconds: "{{ cooldown_s }}" }
+
+    - name: Stop mempool monitoring
+      ansible.builtin.shell: |
+        if [ -f "{{ workdir }}/state/mempool_monitor.pid" ]; then
+          kill $(cat "{{ workdir }}/state/mempool_monitor.pid") 2>/dev/null || true
+          rm "{{ workdir }}/state/mempool_monitor.pid"
+        fi
+      changed_when: false
+      failed_when: false

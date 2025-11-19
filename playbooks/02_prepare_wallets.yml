@@ -67,3 +67,36 @@
       ansible.builtin.debug:
         msg: "{{ funding_setup.stdout_lines }}"
 
+    - name: Verify funding snapshot exists
+      ansible.builtin.stat:
+        path: "{{ workdir }}/state/funding_snapshot.json"
+      register: funding_snapshot
+      failed_when: not funding_snapshot.stat.exists
+
+    - name: Start TxGen containers after successful funding setup
+      ansible.builtin.shell: |
+        docker compose -f {{ workdir }}/docker-compose.yml --profile txgen up -d txgen_{{ item.id }}
+      args:
+        chdir: "{{ workdir }}"
+      loop: "{{ txgen_shards }}"
+      changed_when: true
+      register: txgen_start
+
+    - name: Wait for TxGen containers to be running
+      ansible.builtin.shell: |
+        timeout=30
+        elapsed=0
+        while [ $elapsed -lt $timeout ]; do
+          if docker ps --filter "name=txgen_{{ item.id }}" --format "{{ '{{.Names}}' }}" | grep -q "^txgen_{{ item.id }}$"; then
+            echo "Container txgen_{{ item.id }} is running"
+            exit 0
+          fi
+          sleep 1
+          elapsed=$((elapsed + 1))
+        done
+        echo "Timeout waiting for txgen_{{ item.id }}"
+        exit 1
+      loop: "{{ txgen_shards }}"
+      register: txgen_status
+      changed_when: false
+

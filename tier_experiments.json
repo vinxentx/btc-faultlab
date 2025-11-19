@@ -12,6 +12,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.0,
         "crash_duration_s": 0,
         "crash_mode": "burst",
@@ -19,14 +21,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 42,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -39,6 +40,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 20,
         "crash_mode": "burst",
@@ -46,14 +49,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 43,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -66,6 +68,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 20,
         "crash_mode": "burst",
@@ -73,14 +77,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 44,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -93,6 +96,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -100,14 +105,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 45,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -120,6 +124,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -127,14 +133,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 46,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -147,6 +152,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 20,
         "crash_mode": "staggered",
@@ -154,14 +161,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 47,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -174,6 +180,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 20,
         "crash_mode": "staggered",
@@ -181,14 +189,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 48,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -201,6 +208,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 60,
         "crash_mode": "staggered",
@@ -208,14 +217,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 49,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -228,6 +236,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.1,
         "crash_duration_s": 60,
         "crash_mode": "staggered",
@@ -235,14 +245,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 50,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -255,6 +264,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 20,
         "crash_mode": "burst",
@@ -262,14 +273,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 51,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -282,6 +292,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 20,
         "crash_mode": "burst",
@@ -289,14 +301,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 52,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -309,6 +320,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -316,14 +329,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 53,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -336,6 +348,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -343,14 +357,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 54,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -363,6 +376,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 20,
         "crash_mode": "staggered",
@@ -370,14 +385,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 55,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -390,6 +404,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 20,
         "crash_mode": "staggered",
@@ -397,14 +413,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 56,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -417,6 +432,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "staggered",
@@ -424,14 +441,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 57,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -444,6 +460,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "staggered",
@@ -451,14 +469,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 58,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -471,6 +488,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 20,
         "crash_mode": "burst",
@@ -478,14 +497,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 59,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -498,6 +516,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 20,
         "crash_mode": "burst",
@@ -505,14 +525,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 60,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -525,6 +544,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -532,14 +553,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 61,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -552,6 +572,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -559,14 +581,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 62,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -579,6 +600,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 20,
         "crash_mode": "staggered",
@@ -586,14 +609,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 63,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -606,6 +628,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 20,
         "crash_mode": "staggered",
@@ -613,14 +637,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 64,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -633,6 +656,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 60,
         "crash_mode": "staggered",
@@ -640,14 +665,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 65,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -660,6 +684,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.5,
         "crash_duration_s": 60,
         "crash_mode": "staggered",
@@ -667,14 +693,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 66,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -687,6 +712,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 30,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -694,14 +721,13 @@
         "loss_pct": 10,
         "latency_ms": 200,
         "bandwidth_mbit": 10,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 67,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 30
@@ -714,6 +740,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 30,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -721,14 +749,13 @@
         "loss_pct": 10,
         "latency_ms": 200,
         "bandwidth_mbit": 10,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 68,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 30
@@ -741,6 +768,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 30,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -748,14 +777,13 @@
         "loss_pct": 10,
         "latency_ms": 200,
         "bandwidth_mbit": 10,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 69,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "2MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 30
@@ -768,6 +796,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 30,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -775,14 +805,13 @@
         "loss_pct": 10,
         "latency_ms": 200,
         "bandwidth_mbit": 10,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 70,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "2MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 30
@@ -795,6 +824,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -802,14 +833,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 71,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -822,6 +852,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -829,14 +861,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 72,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "10s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -849,6 +880,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 12,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -856,14 +889,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 73,
         "reindex_on_restart": true
       },
       "experimental_params": {
-        "block_interval_target": "60s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5
@@ -876,6 +908,8 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 12,
         "crash_fraction": 0.25,
         "crash_duration_s": 60,
         "crash_mode": "burst",
@@ -883,14 +917,13 @@
         "loss_pct": 0,
         "latency_ms": 50,
         "bandwidth_mbit": 100,
-        "warmup_s": 300,
+        "warmup_s": 60,
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 74,
         "reindex_on_restart": false
       },
       "experimental_params": {
-        "block_interval_target": "60s",
         "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6,
         "jitter_ms": 5

@@ -11,58 +11,39 @@ The experiment framework automatically collects comprehensive data about Bitcoin
 ### Core Transaction Data
 
 #### `txlog.csv`
-**Description**: Transaction submission log  
-**Source**: txgen container  
+**Description**: Aggregierter Transaktions-Überblick über alle Generator-Shards  
+**Source**: Aggregiert aus `txgen_<id>_txlog.csv`  
 **Format**:
 ```csv
-submit_ts_utc,txid
-2025-10-30T12:00:24.717910+00:00,6f3185c6fdc39b354de48aea45c092df28b1084503bebab22fe7b4930ae1f386
+tx_index,shard_id,submit_ts_utc,txid
+42,a,2025-11-08T12:00:24.717910+00:00,6f3185c6fdc39b354de48aea45c092df28b1084503bebab22fe7b4930ae1f386
 ```
 
 **Columns**:
+- `tx_index`: Laufende Nummer (pro Shard) der übertragenen Transaktion
+- `shard_id`: Kennung des Tx-Generator-Shards (`a` … `d`)
 - `submit_ts_utc`: ISO 8601 timestamp when transaction was submitted
 - `txid`: Transaction ID (hash)
 
-**Usage**: Analyze transaction submission patterns, rates, and timing
+**Usage**: Analyse von Submission-Patterns, Raten, Shard-Vergleichen und Timing
+
+> 💡 Die Rohdaten pro Shard liegen weiterhin unter `txgen_<id>_txlog.csv` im Run-Verzeichnis.
 
 ---
 
-#### `mining.csv` ✨ NEW
-**Description**: Block mining events with distributed miner tracking  
-**Source**: txgen container (generated from distributed mining)  
-**Format**:
-```csv
-timestamp_utc,block_number,miner,block_hash
-2025-10-30T12:00:29.123456+00:00,1,node01:18443,00000000abc123...
-2025-10-30T12:00:34.234567+00:00,2,node03:18443,00000000def456...
+#### `block_scheduler.log` ✨ NEW
+**Description**: Deterministische Blockproduktion des Schedulers  
+**Source**: `block_scheduler` Container  
+**Format**: Plaintext Log mit Zeilen wie  
 ```
-
-**Columns**:
-- `timestamp_utc`: ISO 8601 timestamp when block was mined
-- `block_number`: Sequential block number (starting from 1 for this experiment)
-- `miner`: Which mining node produced this block (host:port format)
-- `block_hash`: Full block hash
+2025-11-08T12:00:30.012345+00:00 ⛏️  Block #42 auf node03:18443 (hash 0000000abc...)
+2025-11-08T12:00:36.998000+00:00 ❌ Miner node05:18443 Fehler (code=-28): Loading block index...
+```
 
 **Usage**: 
-- Analyze mining distribution across nodes
-- Detect mining failures during crashes
-- Measure mining resilience
-- Identify mining concentration
-
-**Analysis Examples**:
-```python
-import pandas as pd
-
-# Load mining data
-mining = pd.read_csv('mining.csv')
-
-# Mining distribution
-print(mining['miner'].value_counts())
-
-# Blocks per minute
-mining['timestamp'] = pd.to_datetime(mining['timestamp_utc'])
-mining_rate = mining.resample('1T', on='timestamp').count()
-```
+- Überwachen des Blocktakts (Intervall, Failover)
+- Identifizieren ausgefallener Miner oder RPC-Probleme
+- Nachvollziehen der deterministischen Rotation
 
 ---
 
@@ -209,7 +190,7 @@ seed: 42
 
 #### `mining_summary.json`
 **Description**: Mining statistics summary  
-**Source**: Generated from mining.csv  
+**Source**: Generiert aus `block_scheduler.log` (über das Hilfsfile `mining.csv`)  
 **Format**: JSON
 ```json
 {
@@ -272,13 +253,15 @@ seed: 42
 ```
 Experiment Run
     │
-    ├─> txgen writes txlog.csv + mining.csv to Docker volume
+    ├─> Txgen-Shards schreiben individuelle Logs in eigene Volumes
+    ├─> Block-Scheduler protokolliert Mining-Events (STDOUT)
     │
     ├─> Nodes run and generate logs
     │
     └─> At experiment end (playbooks/04_collect.yml):
         │
-        ├─> Copy txlog.csv and mining.csv from Docker volume
+        ├─> Kopiere txgen_*-Artefakte & aggregiere zu txlog*.csv
+        ├─> Wandle block_scheduler.log → mining.csv
         ├─> Dump all node logs (nodeXX.log)
         ├─> Query chain tips and mempool (JSON)
         ├─> Collect node health status (node_health.csv)

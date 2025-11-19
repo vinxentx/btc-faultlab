@@ -331,8 +331,10 @@ def main() -> int:
                 # Rolling throughput
                 rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
 
-                if args.stats_interval > 0 and tx_index % args.stats_interval == 0:
-                    last_stats = fetch_wallet_utxos(rpc_url, auth, args.wallet, timeout, min_conf=0)
+                # NOTE: expensive wallet stats collection disabled.
+                # Left in place for the old insufficient-funds debugging but skipped by default.
+                # if args.stats_interval > 0 and tx_index % args.stats_interval == 0:
+                #     last_stats = fetch_wallet_utxos(rpc_url, auth, args.wallet, timeout, min_conf=0)
 
                 timestamp = datetime.now(timezone.utc).isoformat()
                 txlog.write(f"{tx_index},{args.shard_id},{timestamp},{txid}\n")

@@ -298,10 +298,12 @@ def main() -> int:
         print(f"{format_ts()} ✅ Shard {shard.shard_id}: {len(addr_list)} Outputs queued")
 
     # Berechne benötigte Blöcke: mindestens so viele wie Batches, plus großzügigen Puffer
-    # Für 64 Batches (4 Shards * 16 Batches) brauchen wir mindestens 64 Blöcke + Puffer
-    blocks_needed = max(args.confirmation_blocks, total_batches + 20)
+    # Für größere UTXO-Zahlen (z.B. 2400) brauchen wir mehr Blöcke
+    # Formel: Batches + Puffer, wobei Puffer proportional zur UTXO-Anzahl ist
+    utxo_buffer = max(20, args.utxo_per_shard // 50)  # Mindestens 20, mehr bei vielen UTXOs
+    blocks_needed = max(args.confirmation_blocks, total_batches + utxo_buffer)
     print(f"{format_ts()} 🪙 Mine {blocks_needed} Blöcke zur finalen Bestätigung der Transfers "
-          f"({total_batches} Batches + 20 Puffer)")
+          f"({total_batches} Batches + {utxo_buffer} Puffer)")
     mine_blocks(miners_rpc, blocks_needed, auth, mining_address, timeout)
 
     funding_stats = fetch_wallet_utxos(funding_rpc, auth, args.funding_wallet, timeout, min_conf=1)
@@ -310,7 +312,16 @@ def main() -> int:
 
     # Warte auf Synchronisation der Shard-Wallets
     print(f"{format_ts()} ⏳ Warte auf Synchronisation der Shard-Wallets...")
-    max_wait = 300  # Maximal 5 Minuten warten (für große Netzwerke)
+    # Timeout proportional zur UTXO-Anzahl UND Block-Intervall: mehr UTXOs = mehr Zeit
+    # Bei 12s Block-Intervall dauert alles doppelt so lange wie bei 6s
+    base_timeout = 300
+    extra_utxos = max(0, args.utxo_per_shard - 800)
+    extra_timeout = (extra_utxos // 400) * 60
+    # Skaliere Timeout basierend auf Block-Intervall (6s = 1.0x, 12s = 2.0x, etc.)
+    interval_multiplier = args.scheduler_interval / 6.0
+    max_wait = int((base_timeout + extra_timeout) * interval_multiplier)
+    print(f"{format_ts()}   Timeout: {max_wait}s (Basis: {base_timeout}s + {extra_timeout}s für {args.utxo_per_shard} UTXOs, "
+          f"Block-Intervall: {args.scheduler_interval}s → {interval_multiplier:.1f}x Multiplikator)")
     wait_start = time.time()
     all_synced = False
     last_status = {}
@@ -339,7 +350,8 @@ def main() -> int:
             # Wenn nach 30 Sekunden noch nicht alle UTXOs da sind, minen wir mehr Blöcke
             if elapsed >= 30 and min_utxos < args.utxo_per_shard and elapsed - last_mined >= 30:
                 missing = args.utxo_per_shard - min_utxos
-                extra_blocks = max(5, missing // 50)  # Mindestens 5 Blöcke, mehr wenn viele fehlen
+                # Bei vielen fehlenden UTXOs mehr Blöcke minen
+                extra_blocks = max(5, missing // 30)  # Mindestens 5 Blöcke, mehr wenn viele fehlen
                 print(f"{format_ts()}   ⛏️  Minen {extra_blocks} zusätzliche Blöcke zur Synchronisation...")
                 mine_blocks(miners_rpc, extra_blocks, auth, mining_address, timeout)
                 last_mined = elapsed
