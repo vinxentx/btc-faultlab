@@ -277,6 +277,14 @@ services:
       - "{{ block_scheduler_seed }}"
       - --config
       - /state/mining_targets.json
+{% if block_scheduler_use_variance | default(false) %}
+      - --use-variance
+{% endif %}
+{% if block_scheduler_adaptive_interval | default(true) %}
+      - --adaptive-interval
+{% endif %}
+      - --health-check-interval
+      - "{{ block_scheduler_health_check_interval | default(10.0) }}"
     depends_on:
       {{ wallet_funding_container }}:
         condition: service_healthy

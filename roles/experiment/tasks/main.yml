@@ -1,3 +1,26 @@
+# =============================================================================
+# Experiment Role: Crash Injection and Recovery
+# =============================================================================
+# This role handles:
+# - Deterministic node selection for crashes (seeded)
+# - Burst mode: All nodes crash simultaneously
+# - Staggered mode: Nodes crash with time delays (rolling wave)
+# - Recovery with configurable sync modes
+# - Precise event logging for scientific analysis
+#
+# Event Timeline (scientific):
+#   crash_start     → Beginning of crash injection
+#   crash_complete  → All nodes are stopped (container status verified)
+#   [pause]         → Downtime period (crash_duration_s)
+#   recovery_start  → First container successfully started (process running)
+#   recovery_complete → All nodes synchronized (height >= network, peers > 0)
+#
+# Key Metrics:
+#   Downtime = crash_complete - crash_start + pause duration
+#   Technical Recovery Time = recovery_complete - recovery_start
+#   Total Recovery Time = recovery_complete - crash_start
+# =============================================================================
+
 - name: Compute crash set (deterministic)
   ansible.builtin.set_fact:
     all_nodes: "{{ query('sequence','start=1 end=' ~ node_count) | map('int') | list }}"
@@ -20,15 +43,25 @@
   ansible.builtin.set_fact:
     crash_nodes: "{{ (crash_nodes | default([])) + ['node' ~ ('%02d'|format(idx))] }}"
 
-- name: Log crash plan (workdir-global)
+# =============================================================================
+# EVENT: crash_start - Marks the beginning of crash injection
+# Scientific: Logged BEFORE first docker stop
+# =============================================================================
+- name: Log crash_start event
   when: (crash_count | int) > 0
+  environment:
+    RUN_DIR: "{{ run_dir }}"
+    CRASH_NODES: "{{ crash_nodes | default([]) | join(',') }}"
+    CRASH_MODE: "{{ crash_mode }}"
+    CRASH_DURATION: "{{ crash_duration_s }}"
   ansible.builtin.shell: |
-    mkdir -p "{{ workdir }}/results"
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_plan nodes={{ crash_nodes | default([]) | join(',') }} mode={{ crash_mode }} duration={{ crash_duration_s }}s" >> "{{ workdir }}/results/events.log"
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_start mode=${CRASH_MODE} duration=${CRASH_DURATION}s nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
   changed_when: true
 
-
-- name: Burst crash
+# =============================================================================
+# BURST MODE: All nodes crash simultaneously
+# =============================================================================
+- name: Burst crash - stop all nodes simultaneously
   when:
     - (crash_count | int) > 0
     - crash_mode == "burst"
@@ -36,26 +69,85 @@
   loop_control: { loop_var: c }
   ansible.builtin.shell: "docker stop {{ c }}"
 
-- name: Staggered crash
+# EVENT: crash_complete - All containers are stopped (Burst mode)
+- name: Log crash_complete event (burst)
+  when:
+    - (crash_count | int) > 0
+    - crash_mode == "burst"
+  environment:
+    RUN_DIR: "{{ run_dir }}"
+  ansible.builtin.shell: |
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_complete" >> "${RUN_DIR}/events.log"
+  changed_when: true
+
+- name: Burst mode - pause while nodes are crashed
+  when:
+    - (crash_count | int) > 0
+    - crash_mode == "burst"
+  ansible.builtin.pause: { seconds: "{{ crash_duration_s }}" }
+
+# =============================================================================
+# STAGGERED MODE: Nodes crash with time delays (rolling wave)
+# Each node is stopped with a delay, creating a cascading failure pattern.
+# The interval between crashes is: crash_duration_s / number_of_crash_nodes
+# This ensures the total crash injection period equals crash_duration_s.
+# =============================================================================
+- name: Calculate staggered interval
+  when:
+    - (crash_count | int) > 0
+    - crash_mode == "staggered"
+  ansible.builtin.set_fact:
+    stagger_interval_s: "{{ (crash_duration_s | float) / (crash_nodes | length | default(1)) }}"
+
+- name: Staggered crash - stop nodes with time delays
   when:
     - (crash_count | int) > 0
     - crash_mode == "staggered"
   loop: "{{ crash_nodes }}"
-  loop_control: { loop_var: c }
-  ansible.builtin.shell: "docker stop {{ c }} && sleep {{ (crash_duration_s / (crash_nodes|length|default(1))) | int }}"
+  loop_control: 
+    loop_var: c
+    index_var: i
+  ansible.builtin.shell: |
+    # Log individual node crash event
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) node_crash node={{ c }} index={{ i }}" >> "{{ run_dir }}/events.log"
+    docker stop {{ c }}
+    # Sleep before next node (except for last node)
+    {% if not loop.last %}
+    sleep {{ stagger_interval_s }}
+    {% endif %}
 
-- name: Pause while crashed
-  when: (crash_count | int) > 0
-  ansible.builtin.pause: { seconds: "{{ crash_duration_s }}" }
+# EVENT: crash_complete - All containers are stopped (Staggered mode)
+- name: Log crash_complete event (staggered)
+  when:
+    - (crash_count | int) > 0
+    - crash_mode == "staggered"
+  environment:
+    RUN_DIR: "{{ run_dir }}"
+  ansible.builtin.shell: |
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_complete" >> "${RUN_DIR}/events.log"
+  changed_when: true
 
-# Recovery start
+- name: Staggered mode - additional pause to ensure minimum downtime
+  when:
+    - (crash_count | int) > 0
+    - crash_mode == "staggered"
+  ansible.builtin.pause: 
+    # Ensure the last crashed node has at least stagger_interval_s of downtime
+    seconds: "{{ stagger_interval_s | float | round(0, 'ceil') | int }}"
+
+# =============================================================================
+# RECOVERY: Full resync mode (reindex blockchain)
+# Scientific: recovery_start is logged AFTER first successful container start
+# =============================================================================
 - name: Recovery with full resync (reindex blockchain)
   when:
     - (crash_count | int) > 0
     - recovery_mode == "full_resync"
     - reindex_on_restart | default(false) | bool
   loop: "{{ crash_nodes }}"
-  loop_control: { loop_var: c }
+  loop_control: 
+    loop_var: c
+    index_var: node_idx
   ignore_errors: yes
   ansible.builtin.shell: |
     # Restart container to ensure clean state (no lock issues)
@@ -63,6 +155,11 @@
     
     # Wait for container to be fully up
     sleep 3
+    
+    # Log recovery_start after FIRST successful container restart
+    {% if node_idx == 0 %}
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | join(',') }}" >> "{{ run_dir }}/events.log"
+    {% endif %}
     
     # Stop bitcoind gracefully
     docker exec {{ c }} bitcoin-cli -regtest stop 2>/dev/null || true
@@ -89,30 +186,31 @@
     
     echo "✓ Reindex started for {{ c }}"
 
+# =============================================================================
+# RECOVERY: Fast resync mode (no reindex)
+# Scientific: recovery_start is logged AFTER first successful container start
+# =============================================================================
 - name: Recovery with fast resync (no reindex)
   when:
     - (crash_count | int) > 0
     - recovery_mode == "fast_resync" or (reindex_on_restart | default(false) | bool == false)
   loop: "{{ crash_nodes }}"
-  loop_control: { loop_var: c }
+  loop_control: 
+    loop_var: c
+    index_var: node_idx
   ansible.builtin.shell: |
     docker start {{ c }}
+    # Log recovery_start after FIRST successful container start
+    {% if node_idx == 0 %}
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | join(',') }}" >> "{{ run_dir }}/events.log"
+    {% endif %}
 
-# Log recovery start
-- name: Log recovery start timestamp
-  when: (crash_count | int) > 0
-  environment:
-    RUN_DIR: "{{ run_dir }}"
-    CRASH_NODES: "{{ crash_nodes | default([]) | join(',') }}"
-  ansible.builtin.shell: |
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
-  changed_when: true
-
-# Wait for recovered nodes to finish syncing
+# =============================================================================
+# SYNC WAIT: Wait for recovered nodes to finish syncing
 # Robust criteria for Regtest:
 # 1) Node has at least one peer
-# 2) Node's block height >= current network max height (at check time)
-#    (initialblockdownload flag is unreliable in small Regtest chains)
+# 2) Node's block height >= current network max height
+# =============================================================================
 - name: Wait for recovered nodes to complete blockchain sync
   when: (crash_count | int) > 0
   loop: "{{ crash_nodes }}"
@@ -148,8 +246,11 @@
   delay: 2
   failed_when: false
 
-# Log recovery completion
-- name: Log recovery completion timestamp
+# =============================================================================
+# EVENT: recovery_complete - All nodes synchronized
+# Scientific: Node height >= network height AND peers > 0
+# =============================================================================
+- name: Log recovery_complete event
   when: (crash_count | int) > 0
   environment:
     RUN_DIR: "{{ run_dir }}"

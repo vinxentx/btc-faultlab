@@ -468,13 +468,16 @@ def block_based_throughput(run_dir, df_conf):
         traceback.print_exc()
         return []
 
-def compute_block_propagation_metrics(run_dir, best_chain_hashes=None):
+def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=None):
     """
     Measure block propagation delay across all node logs.
     
     Uses mining timestamps (when the block was created) and UpdateTip timestamps
     (when each node accepted the block) to derive per-node, per-block, and global
     propagation statistics. Results are persisted to CSV files for further analysis.
+    
+    Only considers blocks mined within the experiment window (after_netem to end_observe)
+    to exclude funding/warmup phase blocks that would skew the metrics.
     """
     mining_file = os.path.join(run_dir, "mining.csv")
     if not os.path.exists(mining_file):
@@ -495,6 +498,42 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None):
         return None
     
     df_mining["timestamp_utc"] = pd.to_datetime(df_mining["timestamp_utc"])
+    
+    # Filter to experiment window (after_netem to end_observe) if events are provided
+    # This excludes funding/warmup phase blocks that would skew metrics
+    if events:
+        after_netem_ts = None
+        end_observe_ts = None
+        for (ts, evt, _) in events:
+            if evt == "after_netem" and after_netem_ts is None:
+                after_netem_ts = ts
+            elif evt == "end_observe" and end_observe_ts is None:
+                end_observe_ts = ts
+        
+        if after_netem_ts and end_observe_ts:
+            # Make timestamps timezone-aware if needed
+            if after_netem_ts.tzinfo is None:
+                after_netem_ts = after_netem_ts.replace(tzinfo=pd.Timestamp.now(tz='UTC').tzinfo)
+            if end_observe_ts.tzinfo is None:
+                end_observe_ts = end_observe_ts.replace(tzinfo=pd.Timestamp.now(tz='UTC').tzinfo)
+            
+            # Ensure mining timestamps are timezone-aware
+            if df_mining["timestamp_utc"].dt.tz is None:
+                df_mining["timestamp_utc"] = df_mining["timestamp_utc"].dt.tz_localize('UTC')
+            
+            original_count = len(df_mining)
+            df_mining = df_mining[
+                (df_mining["timestamp_utc"] >= after_netem_ts) &
+                (df_mining["timestamp_utc"] <= end_observe_ts)
+            ]
+            filtered_count = len(df_mining)
+            if filtered_count < original_count:
+                print(f"   📊 Block propagation: Filtered to experiment window ({filtered_count}/{original_count} blocks)")
+            
+            if df_mining.empty:
+                print("   ⚠️  No blocks in experiment window for propagation metrics")
+                return None
+    
     block_times = {
         row["block_hash"]: row["timestamp_utc"]
         for _, row in df_mining.iterrows()
@@ -852,6 +891,12 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
                     if label not in event_labels:
                         ax1.axvline(ts, linestyle="--", alpha=0.7, color=color, label=label)
                         event_labels.add(label)
+                elif evt in ("recovery_start", "recovery_complete"):
+                    color = 'purple' if evt == "recovery_start" else 'blue'
+                    label = "Recovery Start" if evt == "recovery_start" else "Recovery Complete"
+                    if label not in event_labels:
+                        ax1.axvline(ts, linestyle=":", alpha=0.8, color=color, linewidth=2, label=label)
+                        event_labels.add(label)
         else:
             # For baseline, just mark warmup and observation periods
             for (ts, evt, _) in events:
@@ -886,6 +931,9 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
                 if evt in ("start_warmup", "after_netem", "end_observe"):
                     color = 'red' if evt == "after_netem" else 'green'
                     ax2.axvline(ts, linestyle="--", alpha=0.7, color=color)
+                elif evt in ("recovery_start", "recovery_complete"):
+                    color = 'purple' if evt == "recovery_start" else 'blue'
+                    ax2.axvline(ts, linestyle=":", alpha=0.8, color=color, linewidth=2)
         else:
             # For baseline, just mark warmup and observation periods
             for (ts, evt, _) in events:
@@ -1104,6 +1152,19 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
                     ax4.plot(recovery_data['time_since_fault'], recovery_data['latency_seconds'], 
                            linewidth=1, color='red', alpha=0.6, label='Recovery Latency')
                 
+                # Add recovery event markers
+                recovery_start_time = None
+                recovery_complete_time = None
+                for (ts, evt, _) in events:
+                    if evt == "recovery_start":
+                        recovery_start_time = (ts - fault_time).total_seconds()
+                        ax4.axvline(recovery_start_time, linestyle=":", alpha=0.8, color='purple', 
+                                  linewidth=2, label='Recovery Start')
+                    elif evt == "recovery_complete":
+                        recovery_complete_time = (ts - fault_time).total_seconds()
+                        ax4.axvline(recovery_complete_time, linestyle=":", alpha=0.8, color='blue', 
+                                  linewidth=2, label='Recovery Complete')
+                
                 ax4.set_xlabel('Time Since Fault Injection (s)')
                 ax4.set_ylabel('Confirmation Latency (s)')
                 ax4.set_title('System Recovery Analysis')
@@ -1310,17 +1371,25 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
         event_colors = []
         
         for (ts, evt, _) in events:
-            if evt in ("start_warmup", "after_netem", "end_observe"):
+            if evt in ("start_warmup", "after_netem", "end_observe", "recovery_start", "recovery_complete"):
                 event_times.append(ts)
                 # Adjust labels based on experiment type
                 if not has_faults and evt == "after_netem":
                     label = "Start Observation"
+                elif evt == "recovery_start":
+                    label = "Recovery Start"
+                elif evt == "recovery_complete":
+                    label = "Recovery Complete"
                 else:
                     label = evt.replace('_', ' ').title()
                 event_labels.append(label)
-                # Color coding: green=start, red=fault, blue=end, yellow=baseline observation
+                # Color coding: green=start, red=fault, blue=end, purple=recovery_start, cyan=recovery_complete
                 if not has_faults and evt == "after_netem":
                     event_colors.append('orange')
+                elif evt == "recovery_start":
+                    event_colors.append('purple')
+                elif evt == "recovery_complete":
+                    event_colors.append('cyan')
                 else:
                     event_colors.append('green' if evt == "start_warmup" else 'red' if evt == "after_netem" else 'blue')
 
@@ -1442,6 +1511,12 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf, avg_thro
             if evt == "after_netem":
                 ax1.axvline(ts, linestyle=":", alpha=0.7, color='red', 
                           linewidth=2, label='Fault Injection')
+            elif evt == "recovery_start":
+                ax1.axvline(ts, linestyle=":", alpha=0.8, color='purple', 
+                          linewidth=2, label='Recovery Start')
+            elif evt == "recovery_complete":
+                ax1.axvline(ts, linestyle=":", alpha=0.8, color='blue', 
+                          linewidth=2, label='Recovery Complete')
     elif events:
         for (ts, evt, _) in events:
             if evt == "start_warmup":
@@ -1529,6 +1604,25 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf, avg_thro
             ax3.text(0.02, 0.98, backlog_text, transform=ax3.transAxes, 
                     fontsize=10, verticalalignment='top',
                     bbox=dict(boxstyle="round,pad=0.5", facecolor="yellow", alpha=0.7))
+    
+    # Add event markers to Plot 3
+    if has_faults and events:
+        for (ts, evt, _) in events:
+            if evt == "after_netem":
+                ax3.axvline(ts, linestyle=":", alpha=0.7, color='red', 
+                          linewidth=2, label='Fault Injection')
+            elif evt == "recovery_start":
+                ax3.axvline(ts, linestyle=":", alpha=0.8, color='purple', 
+                          linewidth=2, label='Recovery Start')
+            elif evt == "recovery_complete":
+                ax3.axvline(ts, linestyle=":", alpha=0.8, color='blue', 
+                          linewidth=2, label='Recovery Complete')
+    elif events:
+        for (ts, evt, _) in events:
+            if evt == "start_warmup":
+                ax3.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='Start')
+            elif evt == "end_observe":
+                ax3.axvline(ts, linestyle=":", alpha=0.5, color='gray', label='End')
     
     ax3.set_ylabel('Transaction Rate (tx/s)', fontsize=11)
     ax3.set_xlabel('Time (UTC)', fontsize=11)
@@ -1638,6 +1732,10 @@ def create_mempool_plot(run_dir, events):
                 color = 'red' if evt == "after_netem" else 'green'
                 label = "Fault Injection" if evt == "after_netem" else f"{evt.replace('_', ' ').title()}"
                 ax1.axvline(ts, linestyle="--", alpha=0.7, color=color, label=label)
+            elif evt in ("recovery_start", "recovery_complete"):
+                color = 'purple' if evt == "recovery_start" else 'blue'
+                label = "Recovery Start" if evt == "recovery_start" else "Recovery Complete"
+                ax1.axvline(ts, linestyle=":", alpha=0.8, color=color, linewidth=2, label=label)
     else:
         for (ts, evt, _) in events:
             if evt == "start_warmup":
@@ -1670,6 +1768,9 @@ def create_mempool_plot(run_dir, events):
             if evt in ("start_warmup", "after_netem", "end_observe"):
                 color = 'red' if evt == "after_netem" else 'green'
                 ax2.axvline(ts, linestyle="--", alpha=0.7, color=color)
+            elif evt in ("recovery_start", "recovery_complete"):
+                color = 'purple' if evt == "recovery_start" else 'blue'
+                ax2.axvline(ts, linestyle=":", alpha=0.8, color=color, linewidth=2)
     else:
         for (ts, evt, _) in events:
             if evt == "start_warmup":
@@ -1868,7 +1969,7 @@ def main():
         "avg_throughput": avg_throughput_official  # Official Bitcoin network throughput definition
     }
     
-    block_propagation_metrics = compute_block_propagation_metrics(run_dir)
+    block_propagation_metrics = compute_block_propagation_metrics(run_dir, events=events)
     if block_propagation_metrics:
         metrics["block_propagation"] = block_propagation_metrics
     

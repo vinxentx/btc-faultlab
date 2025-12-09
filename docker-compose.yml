@@ -2789,7 +2789,7 @@ services:
       - --shard-id
       - "a"
       - --rate
-      - "15.0000"
+      - "2.5000"
       - --rpc
       - "http://user:pass@wallet_shard_a:18443"
       - --wallet
@@ -2805,7 +2805,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "5000"
+      - "2400"
     depends_on:
       wallet_shard_a:
         condition: service_healthy
@@ -2829,7 +2829,7 @@ services:
       - --shard-id
       - "b"
       - --rate
-      - "15.0000"
+      - "2.5000"
       - --rpc
       - "http://user:pass@wallet_shard_b:18443"
       - --wallet
@@ -2845,7 +2845,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "5000"
+      - "2400"
     depends_on:
       wallet_shard_b:
         condition: service_healthy
@@ -2869,7 +2869,7 @@ services:
       - --shard-id
       - "c"
       - --rate
-      - "15.0000"
+      - "2.5000"
       - --rpc
       - "http://user:pass@wallet_shard_c:18443"
       - --wallet
@@ -2885,7 +2885,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "5000"
+      - "2400"
     depends_on:
       wallet_shard_c:
         condition: service_healthy
@@ -2909,7 +2909,7 @@ services:
       - --shard-id
       - "d"
       - --rate
-      - "15.0000"
+      - "2.5000"
       - --rpc
       - "http://user:pass@wallet_shard_d:18443"
       - --wallet
@@ -2925,7 +2925,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "5000"
+      - "2400"
     depends_on:
       wallet_shard_d:
         condition: service_healthy
@@ -2951,7 +2951,7 @@ services:
       - --node-count
       - "64"
       - --mining-percentage
-      - "0.08"
+      - "1.0"
       - --rpc-user
       - "user"
       - --rpc-pass
@@ -2960,6 +2960,8 @@ services:
       - "1337"
       - --config
       - /state/mining_targets.json
+      - --health-check-interval
+      - "5.0"
     depends_on:
       wallet_funding:
         condition: service_healthy

@@ -80,7 +80,7 @@ Die neue Architektur besteht aus 5 Hauptkomponenten, die in einer definierten Re
 - Regtest: Unsere 64 Nodes simulieren ein kleines Netzwerk
 
 ### Interaktionen
-- **Empfängt**: Transaktionen von TXGen Shards (via RPC `sendtoaddress`)
+- **Empfängt**: Transaktionen via P2P-Netzwerk (Wallet-Container broadcasten TXs, die von TXGen Shards erstellt wurden)
 - **Empfängt**: Mining-Befehle von Block Scheduler (via RPC `generatetoaddress`)
 - **Sendet**: Bestätigte Transaktionen zurück (via RPC `getrawtransaction`)
 - **Kommuniziert**: Mit anderen Nodes via P2P (Block- und TX-Broadcast)
@@ -178,19 +178,23 @@ funding_setup.py
 
 ### Interaktionen
 - **Verbindet**: Mit eigener Shard Wallet (via RPC)
-- **Sendet**: Transaktionen an Bitcoin Nodes (via RPC `sendtoaddress`)
+- **Sendet**: Transaktionen via RPC `sendtoaddress` an Wallet-Container
+  - Wallet erstellt TX (UTXO-Auswahl, Signierung, Fees)
+  - Wallet broadcastet TX ins P2P-Netzwerk zu allen Bitcoin Nodes
 - **Liest**: Wallet-Status (UTXO-Count, Balance)
 - **Loggt**: Alle Transaktionen in `txlog_<suffix>.csv`
 
 ### Datenfluss
 ```
 txgen_a (Shard A)
-  → Verbinde mit wallet_shard_a:18443
+  → Verbinde mit wallet_shard_a:18443 (Wallet-RPC)
   → Validiere: ≥ 800 bestätigte UTXOs vorhanden
   → Lade Address Pool (2048 Adressen)
   → Loop:
       → Wähle zufällige Zieladresse aus Pool
-      → Sende 0.0001 BTC (via sendtoaddress)
+      → RPC: sendtoaddress(dest, 0.0001) → wallet_shard_a
+      → Wallet: Erstellt TX, signiert, broadcastet ins P2P-Netzwerk
+      → Bitcoin Nodes: Empfangen TX via P2P, validieren, fügen zu Mempool hinzu
       → Logge TX (txid, submit_ts_utc)
       → Warte 1 / (tx_rate / 4) Sekunden
 ```

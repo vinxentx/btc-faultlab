@@ -1,13 +1,14 @@
 import argparse
 import base64
 import json
+import math
 import os
 import random
 import sys
 import time
 from datetime import datetime, timezone
 from http.client import HTTPConnection
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List, Optional, Set, Tuple
 
 
 JSONRPC_HEADERS = {"Content-Type": "application/json"}
@@ -74,8 +75,40 @@ def wait_for_rpc(rpc_url: str, auth: str, timeout_s: int = 120) -> None:
 
 
 def compute_miners(node_count: int, percentage: float) -> List[str]:
-    miner_count = max(2, int(node_count * percentage))
+    """
+    Berechnet die Liste der Mining-Nodes.
+    
+    Wenn percentage >= 1.0, werden alle Nodes als Miner verwendet.
+    Bei percentage < 1.0 wird der Anteil berechnet, mit einer Mindestanzahl von 2.
+    """
+    if percentage >= 1.0:
+        miner_count = node_count
+    else:
+        miner_count = max(2, int(node_count * percentage))
     return [f"node{i:02d}:18443" for i in range(1, miner_count + 1)]
+
+
+def check_miners_health(miners: List[str], auth: str, timeout: int = 2) -> Set[str]:
+    """
+    Prüft alle konfigurierten Miner via RPC-Ping und gibt die erreichbaren zurück.
+    
+    Args:
+        miners: Liste aller Miner-Hosts (z.B. ["node01:18443", "node02:18443"])
+        auth: RPC-Authentifizierung (user:pass)
+        timeout: Timeout pro Miner in Sekunden
+    
+    Returns:
+        Set der erreichbaren Miner-Hosts
+    """
+    active: Set[str] = set()
+    for miner in miners:
+        try:
+            rpc_call(f"http://{miner}", "getblockcount", auth=auth, timeout=timeout)
+            active.add(miner)
+        except Exception:  # noqa: BLE001
+            # Miner nicht erreichbar - ignorieren
+            pass
+    return active
 
 
 def miner_cycle(miners: List[str], seed: int) -> Iterable[str]:
@@ -86,6 +119,27 @@ def miner_cycle(miners: List[str], seed: int) -> Iterable[str]:
     while True:
         yield order[index % len(order)]
         index += 1
+
+
+def exponential_interval(target_avg: float, rng: random.Random) -> float:
+    """
+    Generiert eine exponentiell verteilte Wartezeit (wie im echten Bitcoin-Netzwerk).
+    
+    Im echten Bitcoin-Netzwerk folgt die Zeit zwischen Blöcken einer
+    Exponentialverteilung (Poisson-Prozess) mit E[X] = target_avg.
+    
+    Parameter λ = 1/target_avg, damit E[X] = target_avg
+    
+    Beispiel: Bei target_avg=6s werden Intervalle wie 0.5s, 3.2s, 8.1s, 12.3s
+    generiert, mit einem langfristigen Durchschnitt von ~6s.
+    """
+    # Exponentialverteilung: X = -ln(1-U) / λ = -ln(1-U) * target_avg
+    # wobei U ~ Uniform(0,1)
+    u = rng.random()
+    # Verhindere log(0) bei u=1
+    if u >= 1.0:
+        u = 1.0 - 1e-10
+    return -math.log(1.0 - u) * target_avg
 
 
 def load_config(path: str, default_interval: float, miners: List[str], seed: int) -> dict:
@@ -120,6 +174,12 @@ def main() -> int:
                         help="Pfad zur Scheduler-Konfigurationsdatei")
     parser.add_argument("--grace-period", type=float, default=600.0,
                         help="Wartezeit (Sekunden) auf Konfigurationsdatei; <=0 bedeutet unendlich warten")
+    parser.add_argument("--use-variance", action="store_true", default=False,
+                        help="Exponentialverteilung für Block-Intervalle (wie im echten Netzwerk)")
+    parser.add_argument("--adaptive-interval", action="store_true", default=False,
+                        help="Dynamische Blockzeit-Anpassung basierend auf verfügbaren Minern")
+    parser.add_argument("--health-check-interval", type=float, default=30.0,
+                        help="Intervall für Health-Checks der Miner (Sekunden)")
     args = parser.parse_args()
 
     if args.interval <= 0:
@@ -143,9 +203,25 @@ def main() -> int:
     miner_hosts: List[str] = config["miner_hosts"]
     interval_s = float(config.get("interval_s", args.interval))
     seed = int(config.get("seed", args.seed))
-
-    print(f"{format_ts()} ✅ Config geladen: {len(miner_hosts)} Miner, "
-          f"Intervall {interval_s}s, Mining-Adresse {mining_address}")
+    # use_variance kann via CLI oder Config gesetzt werden (CLI hat Vorrang wenn True)
+    use_variance = args.use_variance or config.get("use_variance", False)
+    # adaptive_interval kann via CLI oder Config gesetzt werden
+    adaptive_interval = args.adaptive_interval or config.get("adaptive_interval", False)
+    health_check_interval = args.health_check_interval
+    
+    # Separater RNG für Varianz (deterministisch, aber unabhängig von Miner-Rotation)
+    variance_rng = random.Random(seed + 999)
+    
+    # Status für dynamische Blockzeit
+    total_miners = len(miner_hosts)
+    active_miners: Set[str] = set(miner_hosts)  # Initial alle als aktiv annehmen
+    last_health_check = 0.0  # Erzwingt initialen Health-Check
+    last_active_count = total_miners
+    
+    variance_mode = "(mit Exponentialverteilung)" if use_variance else "(festes Intervall)"
+    adaptive_mode = ", adaptives Intervall aktiv" if adaptive_interval else ""
+    print(f"{format_ts()} ✅ Config geladen: {total_miners} Miner, "
+          f"Ziel-Intervall {interval_s}s {variance_mode}{adaptive_mode}, Mining-Adresse {mining_address}")
 
     rpc_timeout = rpc_timeout_for(args.node_count)
 
@@ -160,45 +236,195 @@ def main() -> int:
     next_tick = time.perf_counter()
     produced_blocks = 0
     fail_counts = {miner: 0 for miner in miner_hosts}
+    
+    def perform_health_check() -> None:
+        """Führt Health-Check durch und aktualisiert active_miners."""
+        nonlocal active_miners, last_health_check, last_active_count
+        
+        new_active = check_miners_health(miner_hosts, auth, timeout=2)
+        now = time.time()
+        last_health_check = now
+        
+        # Nur loggen wenn sich die Anzahl geändert hat
+        if len(new_active) != last_active_count:
+            ratio = len(new_active) / total_miners if total_miners > 0 else 0.0
+            ts = format_ts()
+            print(f"{ts} 🔍 Health-Check: {len(new_active)}/{total_miners} Miner aktiv "
+                  f"(Ratio: {ratio:.2f})")
+            print(f"HASHPOWER_EVENT,{ts},{len(new_active)},{total_miners},{ratio:.4f}")
+            last_active_count = len(new_active)
+        
+        active_miners = new_active
+    
+    def get_effective_interval() -> float:
+        """
+        Berechnet das effektive Block-Intervall.
+        
+        Bei aktiviertem adaptive_interval:
+        effective_interval = base_interval × (total_miners / active_miners)
+        
+        Dies simuliert den Effekt von Miner-Crashes auf die Blockzeit wie im echten
+        Bitcoin-Netzwerk, wo weniger Hash-Power zu längeren Block-Intervallen führt.
+        """
+        base = interval_s
+        
+        if adaptive_interval and len(active_miners) > 0:
+            # Skaliere Intervall basierend auf verfügbarer Hash-Power
+            hash_power_ratio = len(active_miners) / total_miners
+            # effective_interval = base / ratio = base * (total / active)
+            base = interval_s / hash_power_ratio
+        
+        if use_variance:
+            return exponential_interval(base, variance_rng)
+        return base
+
+    # Initialer Health-Check
+    if adaptive_interval:
+        perform_health_check()
+        ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+        print(f"{format_ts()} 🔍 Initialer Health-Check: {len(active_miners)}/{total_miners} Miner "
+              f"(Ratio: {ratio:.2f})")
 
     while True:
-        now = time.perf_counter()
-        sleep_for = next_tick - now
+        now_perf = time.perf_counter()
+        now_time = time.time()
+        
+        # Periodischer Health-Check
+        if adaptive_interval and (now_time - last_health_check) >= health_check_interval:
+            perform_health_check()
+        
+        sleep_for = next_tick - now_perf
         if sleep_for > 0:
             time.sleep(min(sleep_for, 0.1))
             continue
-        next_tick += interval_s
+        
+        # Berechne nächstes Intervall (vor Block-Produktion für korrektes Timing)
+        current_interval = get_effective_interval()
+        next_tick += current_interval
 
-        miner = next(rotation)
+        # Versuche einen aktiven Miner zu finden
+        attempts = 0
+        max_attempts = len(miner_hosts)  # Verhindere Endlosschleife
+        miner = None
+        
+        while attempts < max_attempts:
+            candidate = next(rotation)
+            # Wenn adaptive_interval aktiv ist, prüfe ob Miner aktiv ist
+            if adaptive_interval:
+                if candidate in active_miners:
+                    miner = candidate
+                    break
+            else:
+                # Ohne adaptive_interval: verwende jeden Miner
+                miner = candidate
+                break
+            attempts += 1
+        
+        # Falls kein aktiver Miner gefunden wurde, verwende den nächsten aus der Rotation
+        if miner is None:
+            miner = next(rotation)
+            if adaptive_interval:
+                # Logge Warnung wenn kein aktiver Miner verfügbar ist
+                print(f"{format_ts()} ⚠️ Kein aktiver Miner verfügbar, versuche {miner} trotzdem")
+        
         rpc_url = f"http://{miner}"
 
         try:
+            # Verwende kürzeren Timeout für schnelleres Failover bei nicht erreichbaren Nodes
+            call_timeout = min(rpc_timeout, 5)  # Maximal 5 Sekunden pro Versuch
             result = rpc_call(
                 rpc_url,
                 "generatetoaddress",
                 [1, mining_address],
                 auth=auth,
-                timeout=rpc_timeout,
+                timeout=call_timeout,
             )
             block_hash = result[0] if result else "unknown"
             produced_blocks += 1
             fail_counts[miner] = 0
             ts = format_ts()
+            
+            # Erweiterte Intervall-Info mit Hash-Power-Ratio
+            if adaptive_interval:
+                ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+                interval_info = f" (effektives Intervall: {current_interval:.2f}s, Ratio: {ratio:.2f})"
+            elif use_variance:
+                interval_info = f" (nächstes Intervall: {current_interval:.2f}s)"
+            else:
+                interval_info = ""
+            
             print(f"{ts} ⛏️  Block #{produced_blocks} auf {miner} "
-                  f"(hash {block_hash[:16]}...)")
+                  f"(hash {block_hash[:16]}...){interval_info}")
             print(f"BLOCK_EVENT,{ts},{produced_blocks},{miner},{block_hash}")
+            
+            # Miner war erfolgreich - als aktiv markieren
+            if adaptive_interval and miner not in active_miners:
+                active_miners.add(miner)
+                # Logge Hash-Power-Änderung wenn Miner wieder online kommt
+                if len(active_miners) != last_active_count:
+                    ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+                    print(f"{ts} 🔍 Miner {miner} wieder online - {len(active_miners)}/{total_miners} "
+                          f"Miner aktiv (Ratio: {ratio:.2f})")
+                    print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
+                    last_active_count = len(active_miners)
+                
         except RuntimeError as err:
             code, message = decode_rpc_error(err)
             fail_counts[miner] = fail_counts.get(miner, 0) + 1
             print(f"{format_ts()} ❌ Miner {miner} Fehler (code={code}): {message}")
+            
+            # Bei Fehler: Miner als inaktiv markieren und sofortigen Health-Check auslösen
+            if adaptive_interval:
+                if miner in active_miners:
+                    active_miners.discard(miner)
+                    ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+                    ts = format_ts()
+                    print(f"{ts} 🔍 Miner {miner} inaktiv - {len(active_miners)}/{total_miners} "
+                          f"Miner aktiv (Ratio: {ratio:.2f})")
+                    print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
+                    last_active_count = len(active_miners)
+            
             if fail_counts[miner] >= 3:
                 print(f"{format_ts()} 🔁 Warte zusätzliche 3s wegen wiederholter Fehler")
                 time.sleep(3.0)
-                next_tick = max(next_tick, time.perf_counter() + interval_s)
+                next_tick = max(next_tick, time.perf_counter() + get_effective_interval())
         except Exception as err:  # noqa: BLE001
             print(f"{format_ts()} ❌ Unerwarteter Fehler bei Miner {miner}: {err}")
-            time.sleep(2.0)
-            next_tick = max(next_tick, time.perf_counter() + interval_s / 2)
+            
+            # Bei Verbindungsfehlern: Miner sofort als inaktiv markieren
+            if adaptive_interval:
+                if miner in active_miners:
+                    active_miners.discard(miner)
+                    ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+                    ts = format_ts()
+                    print(f"{ts} 🔍 Miner {miner} inaktiv (Verbindungsfehler) - "
+                          f"{len(active_miners)}/{total_miners} Miner aktiv (Ratio: {ratio:.2f})")
+                    print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
+                    last_active_count = len(active_miners)
+            
+            # Bei Verbindungsfehlern: kürzere Wartezeit, dann sofort nächsten Miner versuchen
+            # Prüfe ob es ein Verbindungsfehler ist (Name or service not known, Connection refused, etc.)
+            err_str = str(err).lower()
+            is_connection_error = any(keyword in err_str for keyword in [
+                "name or service not known",
+                "connection refused",
+                "connection reset",
+                "timeout",
+                "timed out",
+                "errno -2",
+                "errno 111",
+                "errno 110"
+            ])
+            
+            if is_connection_error:
+                # Bei Verbindungsfehlern: nur sehr kurz warten, dann sofort nächsten Miner versuchen
+                time.sleep(0.5)
+                # Setze next_tick nicht zu weit in die Zukunft, damit schnell der nächste Versuch kommt
+                next_tick = max(next_tick, time.perf_counter() + 0.5)
+            else:
+                # Bei anderen Fehlern: normale Behandlung
+                time.sleep(2.0)
+                next_tick = max(next_tick, time.perf_counter() + get_effective_interval() / 2)
 
 
 if __name__ == "__main__":
@@ -207,4 +433,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print(f"{format_ts()} ⏹️ Scheduler beendet (KeyboardInterrupt)")
         sys.exit(0)
-

@@ -64,6 +64,8 @@
           loss_pct: {{ loss_pct }}
           latency_ms: {{ latency_ms }}
           bandwidth_mbit: {{ bandwidth_mbit }}
+          jitter_ms: {{ jitter_ms | default(0) }}
+          network_fault_fraction: {{ network_fault_fraction | default(1.0) }}
           warmup_s: {{ warmup_s }}
           observe_s: {{ observe_s }}
           cooldown_s: {{ cooldown_s }}

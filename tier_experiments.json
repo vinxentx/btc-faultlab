@@ -2,8 +2,8 @@
   "description": "Tier-based fault tolerance experiments for Bitcoin network resilience analysis",
   "purpose": "Systematic analysis of crash impacts, stress conditions, and block interval effects",
   "node_count": 128,
-  "total_experiments": 33,
-  "total_duration_estimate": "~45 hours for full suite (3 runs each = 99 total runs, with observe_s=600)",
+  "total_experiments": 47,
+  "total_duration_estimate": "~67 hours for full suite (3 runs each = 141 total runs, with observe_s=600)",
   "experiments": {
     "baseline": {
       "name": "Baseline (No Faults)",
@@ -25,12 +25,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 42,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_001": {
@@ -53,12 +54,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 43,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_002": {
@@ -81,12 +83,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 44,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_003": {
@@ -109,12 +112,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 45,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_004": {
@@ -137,12 +141,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 46,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_005": {
@@ -165,12 +170,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 47,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_006": {
@@ -193,12 +199,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 48,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_007": {
@@ -221,12 +228,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 49,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_008": {
@@ -249,12 +257,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 50,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_009": {
@@ -277,12 +286,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 51,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_010": {
@@ -305,12 +315,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 52,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_011": {
@@ -333,12 +344,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 53,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_012": {
@@ -361,12 +373,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 54,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_013": {
@@ -389,12 +402,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 55,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_014": {
@@ -417,12 +431,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 56,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_015": {
@@ -445,12 +460,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 57,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_016": {
@@ -473,12 +489,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 58,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_017": {
@@ -501,12 +518,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 59,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_018": {
@@ -529,12 +547,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 60,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_019": {
@@ -557,12 +576,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 61,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_020": {
@@ -585,12 +605,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 62,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_021": {
@@ -613,12 +634,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 63,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_022": {
@@ -641,12 +663,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 64,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_023": {
@@ -669,12 +692,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 65,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_a_024": {
@@ -697,12 +721,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 66,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_b_001": {
@@ -725,12 +750,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 67,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 30
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_b_002": {
@@ -753,12 +779,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 68,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 30
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_b_003": {
@@ -781,12 +808,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 69,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "2MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 30
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_b_004": {
@@ -809,12 +837,427 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 70,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "2MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 30
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_005": {
+      "name": "Tier B: Omission Faults Only, Moderate Network Degradation",
+      "description": "Isolated network conditions - moderate packet loss and latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 5,
+        "latency_ms": 100,
+        "bandwidth_mbit": 50,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 71,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_006": {
+      "name": "Tier B: Omission Faults Only, Severe Network Degradation",
+      "description": "Isolated network conditions - severe packet loss and latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 72,
+        "reindex_on_restart": false,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_007": {
+      "name": "Tier B: Omission Faults Only, High Latency Only",
+      "description": "Isolated high latency, no packet loss, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 0,
+        "latency_ms": 200,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 73,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_008": {
+      "name": "Tier B: Omission Faults Only, Packet Loss Only",
+      "description": "Isolated packet loss, normal latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 10,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 74,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_009": {
+      "name": "Tier B: Omission Faults Only, Low Bandwidth Only",
+      "description": "Isolated bandwidth limitation, no packet loss, normal latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 1,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 75,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_010": {
+      "name": "Tier B: Omission Faults Only, High Jitter",
+      "description": "Isolated high jitter variability, no packet loss, normal latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 76,
+        "reindex_on_restart": false,
+        "jitter_ms": 25,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_011": {
+      "name": "Tier B: Partial Omission Faults (25%), Moderate Network Degradation",
+      "description": "Network conditions applied to 25% of nodes - moderate packet loss and latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.25,
+        "loss_pct": 5,
+        "latency_ms": 100,
+        "bandwidth_mbit": 50,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 77,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_012": {
+      "name": "Tier B: Partial Omission Faults (25%), Severe Network Degradation",
+      "description": "Network conditions applied to 25% of nodes - severe packet loss and latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.25,
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 78,
+        "reindex_on_restart": false,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_013": {
+      "name": "Tier B: Partial Omission Faults (25%), High Latency Only",
+      "description": "Network conditions applied to 25% of nodes - isolated high latency, no packet loss, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.25,
+        "loss_pct": 0,
+        "latency_ms": 200,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 79,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_013a": {
+      "name": "Tier B: Partial Omission Faults (25%), Packet Loss Only",
+      "description": "Network conditions applied to 25% of nodes - isolated packet loss, normal latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.25,
+        "loss_pct": 10,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 83,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_014": {
+      "name": "Tier B: Partial Omission Faults (50%), Moderate Network Degradation",
+      "description": "Network conditions applied to 50% of nodes - moderate packet loss and latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.5,
+        "loss_pct": 5,
+        "latency_ms": 100,
+        "bandwidth_mbit": 50,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 80,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_015": {
+      "name": "Tier B: Partial Omission Faults (50%), Severe Network Degradation",
+      "description": "Network conditions applied to 50% of nodes - severe packet loss and latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.5,
+        "loss_pct": 10,
+        "latency_ms": 200,
+        "bandwidth_mbit": 10,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 81,
+        "reindex_on_restart": false,
+        "jitter_ms": 30,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_016": {
+      "name": "Tier B: Partial Omission Faults (50%), Packet Loss Only",
+      "description": "Network conditions applied to 50% of nodes - isolated packet loss, normal latency, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.5,
+        "loss_pct": 10,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 82,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
+      }
+    },
+    "tier_b_016a": {
+      "name": "Tier B: Partial Omission Faults (50%), High Latency Only",
+      "description": "Network conditions applied to 50% of nodes - isolated high latency, no packet loss, no crashes, normal load",
+      "tier": "B",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 2400,
+        "block_scheduler_interval_s": 6,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "network_fault_fraction": 0.5,
+        "loss_pct": 0,
+        "latency_ms": 200,
+        "bandwidth_mbit": 100,
+        "warmup_s": 60,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 84,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
+      },
+      "experimental_params": {
+        "block_size_limit": "1MB",
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_c_001": {
@@ -837,12 +1280,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 71,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_c_002": {
@@ -865,12 +1309,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 72,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_c_003": {
@@ -893,12 +1338,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 73,
-        "reindex_on_restart": true
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     },
     "tier_c_004": {
@@ -921,12 +1367,13 @@
         "observe_s": 600,
         "cooldown_s": 60,
         "seed": 74,
-        "reindex_on_restart": false
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": false
       },
       "experimental_params": {
         "block_size_limit": "1MB",
-        "confirmations_for_latency_metric": 6,
-        "jitter_ms": 5
+        "confirmations_for_latency_metric": 6
       }
     }
   },
@@ -983,7 +1430,21 @@
         "tier_b_001",
         "tier_b_002",
         "tier_b_003",
-        "tier_b_004"
+        "tier_b_004",
+        "tier_b_005",
+        "tier_b_006",
+        "tier_b_007",
+        "tier_b_008",
+        "tier_b_009",
+        "tier_b_010",
+        "tier_b_011",
+        "tier_b_012",
+        "tier_b_013",
+        "tier_b_014",
+        "tier_b_015",
+        "tier_b_016",
+        "tier_b_013a",
+        "tier_b_016a"
       ],
       "metrics": [
         "confirmation_latency",
@@ -996,7 +1457,15 @@
         "Poor network conditions amplify crash impact on recovery",
         "High transaction load increases mempool congestion during recovery",
         "Larger blocks (2MB) exacerbate network stress",
-        "Fast resync provides greater benefits under stress conditions"
+        "Fast resync provides greater benefits under stress conditions",
+        "Omission faults alone (without crashes) cause measurable performance degradation",
+        "Packet loss has different impact than high latency on confirmation times",
+        "Combined omission faults (loss + latency) have synergistic effects",
+        "Bandwidth limitation significantly impacts block propagation and confirmation times",
+        "High jitter variability affects timing-sensitive operations in block propagation",
+        "Partial network faults (affecting subset of nodes) cause different degradation patterns than global faults",
+        "Regional network problems (25-50% nodes) are more realistic than global network failures",
+        "Network partition effects differ from uniform network degradation across all nodes"
       ]
     },
     {
@@ -1045,13 +1514,13 @@
   ],
   "execution_recommendations": {
     "replications_per_experiment": 3,
-    "total_runs": 99,
-    "estimated_duration_hours": 45,
+    "total_runs": 141,
+    "estimated_duration_hours": 67,
     "suggested_batch_order": [
       "baseline",
       "tier_a (all 24)",
       "tier_c (all 4)",
-      "tier_b (all 4, most resource intensive)"
+      "tier_b (all 18, most resource intensive)"
     ],
     "resource_requirements": {
       "minimum_ram_gb": 32,

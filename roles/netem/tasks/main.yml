@@ -1,7 +1,34 @@
 # Achtung: kein Zugriff auf run_dir, damit keine Rekursion getriggert wird.
 
-- name: Apply netem
+- name: Compute network fault set (deterministic)
   when: clear | default(false) | bool == false
+  ansible.builtin.set_fact:
+    all_nodes: "{{ query('sequence','start=1 end=' ~ node_count) | map('int') | list }}"
+    network_fault_fraction_val: "{{ network_fault_fraction | default(1.0) | float }}"
+
+- name: Compute network fault count
+  when: clear | default(false) | bool == false
+  ansible.builtin.set_fact:
+    network_fault_count: "{{ (node_count * network_fault_fraction_val) | round(0,'floor') | int }}"
+
+- name: Pick nodes for network faults (seeded shuffle, take first k)
+  when: 
+    - clear | default(false) | bool == false
+    - network_fault_fraction_val < 1.0
+  ansible.builtin.set_fact:
+    network_fault_nodes_idx: "{{ (all_nodes | shuffle(seed=seed) | list)[: (network_fault_count | int)] | default([]) }}"
+
+- name: Use all nodes for network faults (when fraction = 1.0 or not specified)
+  when: 
+    - clear | default(false) | bool == false
+    - network_fault_fraction_val >= 1.0
+  ansible.builtin.set_fact:
+    network_fault_nodes_idx: "{{ all_nodes }}"
+
+- name: Apply netem
+  when: 
+    - clear | default(false) | bool == false
+    - i | int in (network_fault_nodes_idx | default(all_nodes))
   loop: "{{ range(1, node_count + 1) | list }}"
   loop_control:
     loop_var: i
@@ -17,8 +44,35 @@
       {% endif %}"
   changed_when: true
 
-- name: Clear netem
+- name: Compute network fault set for clearing (deterministic)
   when: clear | default(false) | bool
+  ansible.builtin.set_fact:
+    all_nodes_clear: "{{ query('sequence','start=1 end=' ~ node_count) | map('int') | list }}"
+    network_fault_fraction_clear: "{{ network_fault_fraction | default(1.0) | float }}"
+
+- name: Compute network fault count for clearing
+  when: clear | default(false) | bool
+  ansible.builtin.set_fact:
+    network_fault_count_clear: "{{ (node_count * network_fault_fraction_clear) | round(0,'floor') | int }}"
+
+- name: Pick nodes for clearing network faults (seeded shuffle, take first k)
+  when: 
+    - clear | default(false) | bool
+    - network_fault_fraction_clear < 1.0
+  ansible.builtin.set_fact:
+    network_fault_nodes_idx_clear: "{{ (all_nodes_clear | shuffle(seed=seed) | list)[: (network_fault_count_clear | int)] | default([]) }}"
+
+- name: Use all nodes for clearing (when fraction = 1.0 or not specified)
+  when: 
+    - clear | default(false) | bool
+    - network_fault_fraction_clear >= 1.0
+  ansible.builtin.set_fact:
+    network_fault_nodes_idx_clear: "{{ all_nodes_clear }}"
+
+- name: Clear netem
+  when: 
+    - clear | default(false) | bool
+    - i | int in (network_fault_nodes_idx_clear | default(all_nodes_clear))
   loop: "{{ range(1, node_count + 1) | list }}"
   loop_control:
     loop_var: i

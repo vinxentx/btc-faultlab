@@ -95,7 +95,16 @@ def format_ts() -> str:
 
 
 def compute_miners(node_count: int, percentage: float) -> List[str]:
-    count = max(2, int(node_count * percentage))
+    """
+    Berechnet die Liste der Mining-Nodes.
+    
+    Wenn percentage >= 1.0, werden alle Nodes als Miner verwendet.
+    Bei percentage < 1.0 wird der Anteil berechnet, mit einer Mindestanzahl von 2.
+    """
+    if percentage >= 1.0:
+        count = node_count
+    else:
+        count = max(2, int(node_count * percentage))
     return [f"node{i:02d}:18443" for i in range(1, count + 1)]
 
 
