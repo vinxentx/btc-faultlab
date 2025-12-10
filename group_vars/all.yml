@@ -60,7 +60,7 @@ txgen_address_pool_size: 2048           # Anzahl vorbereiteter Zieladressen pro 
 txgen_address_reuse_window: 100         # Nur jede 100. TX ruft getnewaddress auf
 txgen_send_amount_btc: 0.0001           # Zielbetrag pro Transaktion
 
-block_scheduler_interval_s: 6           # Blocktakt in Sekunden
+block_scheduler_interval_s: 16           # Blocktakt in Sekunden
 block_scheduler_seed: 1337              # Deterministischer Seed für Miner-Rotation
 block_scheduler_use_variance: false     # true = Exponentialverteilung (wie echtes BTC-Netzwerk)
 block_scheduler_adaptive_interval: true # Dynamische Blockzeit-Anpassung bei Crashes (simuliert Hash-Power-Verlust)

@@ -1,5 +1,5 @@
 bandwidth_mbit: 100
-block_scheduler_interval_s: 6
+block_scheduler_interval_s: 16
 block_scheduler_use_variance: false
 cooldown_s: 60
 crash_duration_s: 0
@@ -9,8 +9,8 @@ experiment_name: baseline
 jitter_ms: 5
 latency_ms: 50
 loss_pct: 0
-node_count: 32
-observe_s: 100
+node_count: 64
+observe_s: 300
 recovery_mode: cold
 reindex_on_restart: false
 seed: 42
