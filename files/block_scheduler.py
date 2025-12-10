@@ -186,7 +186,8 @@ def main() -> int:
         raise ValueError("Interval muss > 0 sein")
 
     auth = f"{args.rpc_user}:{args.rpc_pass}"
-    miners = compute_miners(args.node_count, args.mining_percentage)
+    # Berechne Miner-Liste als Fallback (wird überschrieben, wenn Config existiert)
+    fallback_miners = compute_miners(args.node_count, args.mining_percentage)
 
     if args.grace_period <= 0:
         while not os.path.exists(args.config):
@@ -198,9 +199,30 @@ def main() -> int:
             print(f"{format_ts()} ⏳ warte auf Konfigurationsdatei {args.config} …")
             time.sleep(2.0)
 
-    config = load_config(args.config, args.interval, miners, args.seed)
+    # Lade Config - miner_hosts aus Config hat Vorrang (wird von funding_setup.py mit korrekter node_count erstellt)
+    config = load_config(args.config, args.interval, fallback_miners, args.seed)
     mining_address = config["mining_address"]
-    miner_hosts: List[str] = config["miner_hosts"]
+    miner_hosts_from_config: List[str] = config["miner_hosts"]
+    
+    # WICHTIG: Begrenze Miner-Liste auf tatsächlich existierende Nodes
+    # Dies verhindert Probleme bei node_count_override, wo die Config-Datei möglicherweise
+    # von einem vorherigen Run mit mehr Nodes stammt
+    # Berechne maximale Node-Nummer basierend auf args.node_count
+    max_node_num = args.node_count
+    miner_hosts = [m for m in miner_hosts_from_config if int(m.split(":")[0].replace("node", "")) <= max_node_num]
+    
+    # Falls gefilterte Liste leer ist (z.B. Config-Datei hatte falsche Formatierung), verwende Fallback
+    if not miner_hosts:
+        print(f"{format_ts()} ⚠️  Gefilterte Miner-Liste ist leer, verwende Fallback-Liste basierend auf args.node_count")
+        miner_hosts = fallback_miners
+    
+    # Warnung wenn Miner-Liste gekürzt wurde
+    if len(miner_hosts) < len(miner_hosts_from_config):
+        print(f"{format_ts()} ⚠️  Miner-Liste gekürzt: Config hatte {len(miner_hosts_from_config)} Miner, "
+              f"aber nur {args.node_count} Nodes laufen. Verwende {len(miner_hosts)} Miner.")
+    
+    # Verwende tatsächliche Anzahl der Miner für node_count-abhängige Berechnungen
+    effective_node_count = len(miner_hosts)
     interval_s = float(config.get("interval_s", args.interval))
     seed = int(config.get("seed", args.seed))
     # use_variance kann via CLI oder Config gesetzt werden (CLI hat Vorrang wenn True)
@@ -222,8 +244,14 @@ def main() -> int:
     adaptive_mode = ", adaptives Intervall aktiv" if adaptive_interval else ""
     print(f"{format_ts()} ✅ Config geladen: {total_miners} Miner, "
           f"Ziel-Intervall {interval_s}s {variance_mode}{adaptive_mode}, Mining-Adresse {mining_address}")
+    
+    # Warnung wenn node_count nicht mit tatsächlicher Miner-Anzahl übereinstimmt
+    # (kann bei node_count_override oder wenn Config-Datei von vorherigem Run stammt)
+    if effective_node_count != args.node_count:
+        print(f"{format_ts()} ⚠️  Node count mismatch: CLI arg={args.node_count}, actual miners={effective_node_count} "
+              f"(using actual count for RPC timeout)")
 
-    rpc_timeout = rpc_timeout_for(args.node_count)
+    rpc_timeout = rpc_timeout_for(effective_node_count)
 
     for miner in miner_hosts:
         try:

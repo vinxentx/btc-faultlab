@@ -22,7 +22,7 @@
         "latency_ms": 50,
         "bandwidth_mbit": 100,
         "warmup_s": 60,
-        "observe_s": 600,
+        "observe_s": 100,
         "cooldown_s": 60,
         "seed": 42,
         "reindex_on_restart": false,
