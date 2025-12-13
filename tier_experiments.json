@@ -7,7 +7,7 @@
   "experiments": {
     "baseline": {
       "name": "Baseline (No Faults)",
-      "description": "Perfect conditions - establish performance baseline with 128 nodes",
+      "description": "Perfect conditions - establish performance baseline with 128 nodes. Uses Shifted Exponential Distribution (min_interval=2.0s) to prevent fork-causing race conditions while maintaining realistic block time variance.",
       "tier": "baseline",
       "config": {
         "node_count": 128,
@@ -27,7 +27,8 @@
         "seed": 42,
         "reindex_on_restart": false,
         "jitter_ms": 5,
-        "block_scheduler_use_variance": false
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 2.0
       },
       "experimental_params": {
         "block_size_limit": "1MB",
@@ -143,7 +144,8 @@
         "seed": 46,
         "reindex_on_restart": false,
         "jitter_ms": 5,
-        "block_scheduler_use_variance": false
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 2.0
       },
       "experimental_params": {
         "block_size_limit": "1MB",

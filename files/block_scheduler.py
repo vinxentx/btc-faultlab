@@ -121,25 +121,50 @@ def miner_cycle(miners: List[str], seed: int) -> Iterable[str]:
         index += 1
 
 
-def exponential_interval(target_avg: float, rng: random.Random) -> float:
+def exponential_interval(target_avg: float, rng: random.Random, min_interval: float = 0.0) -> float:
     """
-    Generiert eine exponentiell verteilte Wartezeit (wie im echten Bitcoin-Netzwerk).
+    Generiert eine SHIFTED exponentiell verteilte Wartezeit.
     
-    Im echten Bitcoin-Netzwerk folgt die Zeit zwischen Blöcken einer
-    Exponentialverteilung (Poisson-Prozess) mit E[X] = target_avg.
+    Basiert auf der "0-30s Anomalie" im Bitcoin-Netzwerk:
+    - Extrem kurze Block-Intervalle (<1-2s) sind unrealistisch
+    - Mining-Pools brauchen Zeit für Template-Switching
+    - Netzwerk-Propagation braucht Zeit
     
-    Parameter λ = 1/target_avg, damit E[X] = target_avg
+    Bei min_interval > 0 wird eine verschobene Exponentialverteilung verwendet:
+        T_total = min_interval + Exp(λ_eff)
     
-    Beispiel: Bei target_avg=6s werden Intervalle wie 0.5s, 3.2s, 8.1s, 12.3s
-    generiert, mit einem langfristigen Durchschnitt von ~6s.
+    wobei λ_eff so gewählt wird, dass E[T_total] = target_avg:
+    - E[T_total] = min_interval + E[Exp(λ_eff)] = min_interval + 1/λ_eff
+    - Für E[T_total] = target_avg: 1/λ_eff = target_avg - min_interval
+    
+    Der Shift verhindert Race-Conditions bei kurzen Intervallen und
+    eliminiert Fork-verursachende Sub-Sekunden-Blöcke.
+    
+    Args:
+        target_avg: Ziel-Mittelwert der Blockzeit (z.B. 16s)
+        rng: Random Number Generator (für Determinismus)
+        min_interval: Minimale Blockzeit / Shift der Verteilung (z.B. 2.0s)
+    
+    Returns:
+        Blockzeit T >= min_interval mit E[T] = target_avg
     """
-    # Exponentialverteilung: X = -ln(1-U) / λ = -ln(1-U) * target_avg
-    # wobei U ~ Uniform(0,1)
+    # Fallback wenn min_interval >= target_avg (ungültige Konfiguration)
+    if min_interval >= target_avg:
+        return target_avg
+    
+    # Effektive Mining-Zeit = Ziel - Minimum
+    effective_mining_avg = target_avg - min_interval
+    
+    # Exponentialverteilung: X = -ln(1-U) / λ = -ln(1-U) * (1/λ)
+    # mit λ = 1/effective_mining_avg
     u = rng.random()
     # Verhindere log(0) bei u=1
     if u >= 1.0:
         u = 1.0 - 1e-10
-    return -math.log(1.0 - u) * target_avg
+    t_mining = -math.log(1.0 - u) * effective_mining_avg
+    
+    # Shifted Exponential: T_total = min_interval + t_mining
+    return min_interval + t_mining
 
 
 def load_config(path: str, default_interval: float, miners: List[str], seed: int) -> dict:
@@ -176,6 +201,10 @@ def main() -> int:
                         help="Wartezeit (Sekunden) auf Konfigurationsdatei; <=0 bedeutet unendlich warten")
     parser.add_argument("--use-variance", action="store_true", default=False,
                         help="Exponentialverteilung für Block-Intervalle (wie im echten Netzwerk)")
+    parser.add_argument("--min-interval", type=float, default=None,
+                        help="Minimales Block-Intervall in Sekunden (Shifted Exponential). "
+                             "Verhindert Race-Conditions durch zu kurze Intervalle. "
+                             "Empfohlen: 2.0s für 16s Blockzeit. Default: 2.0s wenn variance aktiv, sonst 0.")
     parser.add_argument("--adaptive-interval", action="store_true", default=False,
                         help="Dynamische Blockzeit-Anpassung basierend auf verfügbaren Minern")
     parser.add_argument("--health-check-interval", type=float, default=30.0,
@@ -227,6 +256,22 @@ def main() -> int:
     seed = int(config.get("seed", args.seed))
     # use_variance kann via CLI oder Config gesetzt werden (CLI hat Vorrang wenn True)
     use_variance = args.use_variance or config.get("use_variance", False)
+    
+    # min_interval Priorität:
+    # 1) CLI --min-interval (auch wenn explizit 0.0)
+    # 2) Config "min_interval"
+    # 3) Default: 2.0s wenn variance aktiv, sonst 0.0
+    config_min_interval = config.get("min_interval", None)
+    if args.min_interval is not None:
+        min_interval = float(args.min_interval)
+    elif config_min_interval is not None:
+        min_interval = float(config_min_interval)
+    elif use_variance:
+        # Sinnvoller Default für Shifted Exponential bei aktivierter Varianz
+        min_interval = 2.0
+    else:
+        min_interval = 0.0
+    
     # adaptive_interval kann via CLI oder Config gesetzt werden
     adaptive_interval = args.adaptive_interval or config.get("adaptive_interval", False)
     health_check_interval = args.health_check_interval
@@ -240,7 +285,13 @@ def main() -> int:
     last_health_check = 0.0  # Erzwingt initialen Health-Check
     last_active_count = total_miners
     
-    variance_mode = "(mit Exponentialverteilung)" if use_variance else "(festes Intervall)"
+    if use_variance:
+        if min_interval > 0:
+            variance_mode = f"(Shifted Exponential, min={min_interval}s)"
+        else:
+            variance_mode = "(Exponentialverteilung)"
+    else:
+        variance_mode = "(festes Intervall)"
     adaptive_mode = ", adaptives Intervall aktiv" if adaptive_interval else ""
     print(f"{format_ts()} ✅ Config geladen: {total_miners} Miner, "
           f"Ziel-Intervall {interval_s}s {variance_mode}{adaptive_mode}, Mining-Adresse {mining_address}")
@@ -303,7 +354,7 @@ def main() -> int:
             base = interval_s / hash_power_ratio
         
         if use_variance:
-            return exponential_interval(base, variance_rng)
+            return exponential_interval(base, variance_rng, min_interval)
         return base
 
     # Initialer Health-Check
@@ -328,7 +379,12 @@ def main() -> int:
         
         # Berechne nächstes Intervall (vor Block-Produktion für korrektes Timing)
         current_interval = get_effective_interval()
-        next_tick += current_interval
+        
+        # WICHTIG: Setze next_tick auf NOW + interval, nicht auf alten next_tick + interval
+        # Dies verhindert "Burst-Mining" nach langsamen RPC-Calls, wo mehrere Blöcke
+        # in schneller Folge gemint werden würden, weil next_tick bereits überschritten ist.
+        # Mit dieser Änderung wird IMMER mindestens current_interval gewartet.
+        next_tick = now_perf + current_interval
 
         # Versuche einen aktiven Miner zu finden
         attempts = 0

@@ -271,9 +271,139 @@ def main() -> int:
     )
     print(f"{format_ts()} 🎯 Mining-Adresse: {mining_address}")
 
-    print(f"{format_ts()} 🪨 Mine Initialblöcke (201 + 100 zur Reife)")
-    mine_blocks(miners_rpc, 201, auth, mining_address, timeout)
-    mine_blocks(miners_rpc, 100, auth, mining_address, timeout)
+    # KRITISCH: Mine die ersten Blöcke sequenziell auf einem einzelnen Miner,
+    # um Forks zu vermeiden und sicherzustellen, dass das Funding-Wallet sie sieht.
+    # Paralleles Mining auf vielen Nodes kann zu Forks führen, die das Funding-Wallet
+    # auf eine andere Chain setzen.
+    print(f"{format_ts()} 🪨 Mine Initialblöcke (201 + 100 zur Reife) - SEQUENZIELL auf einem Miner")
+    print(f"{format_ts()}   ⚠️  Sequenzielles Mining verhindert Forks und garantiert Synchronisation")
+    
+    # Verwende nur den ersten Miner für die Initialblöcke
+    primary_miner = miners_rpc[0]
+    print(f"{format_ts()}   ⛏️  Verwende {primary_miner} als primären Miner")
+    
+    # Mine 201 Blöcke sequenziell (in kleineren Batches für bessere Kontrolle)
+    print(f"{format_ts()}   ⛏️  Mine 201 Blöcke...")
+    mine_blocks([primary_miner], 201, auth, mining_address, timeout)
+    
+    # Warte kurz, damit Blöcke propagiert werden
+    print(f"{format_ts()}   ⏳ Warte 5s auf Block-Propagation...")
+    time.sleep(5)
+    
+    # Prüfe, ob Funding-Wallet die Blöcke sieht
+    try:
+        block_count = rpc_call(funding_rpc, "getblockcount", [], auth=auth, wallet=args.funding_wallet, timeout=timeout)
+        print(f"{format_ts()}   📊 Funding-Wallet Block-Höhe nach 201 Blöcken: {block_count}")
+        if block_count < 200:
+            print(f"{format_ts()}   ⚠️  WARNUNG: Funding-Wallet sieht nicht alle Blöcke! ({block_count} < 200)")
+    except Exception as exc:
+        print(f"{format_ts()}   ⚠️  Konnte Block-Höhe nicht prüfen: {exc}")
+    
+    # Mine weitere 100 Blöcke für Coin-Maturity
+    print(f"{format_ts()}   ⛏️  Mine 100 weitere Blöcke für Coin-Maturity...")
+    mine_blocks([primary_miner], 100, auth, mining_address, timeout)
+
+    # Warte länger auf Block-Propagation (besonders wichtig bei Topologie-Änderungen)
+    # Die neue Topologie sollte schnell sein, aber wir geben trotzdem genug Zeit
+    print(f"{format_ts()} ⏳ Warte 15s auf Block-Propagation zu allen Nodes...")
+    time.sleep(15)
+
+    # Prüfe, ob Funding-Wallet die geminten Blöcke sieht (wichtig bei Topologie-Änderungen)
+    print(f"{format_ts()} 🔍 Prüfe Block-Synchronisation des Funding-Wallets...")
+    expected_blocks = 301  # 201 + 100
+    max_wait_sync = 120  # Max 120 Sekunden für Synchronisation (erhöht wegen Topologie)
+    wait_start_sync = time.time()
+    
+    # Diagnose: Prüfe Peer-Verbindungen
+    try:
+        peers = rpc_call(funding_rpc, "getpeerinfo", [], auth=auth, wallet=args.funding_wallet, timeout=timeout)
+        print(f"{format_ts()}   📡 Funding-Wallet hat {len(peers)} Peer-Verbindungen")
+        if len(peers) == 0:
+            print(f"{format_ts()}   ⚠️  KRITISCH: Keine Peer-Verbindungen! Das Funding-Wallet ist nicht mit dem Netzwerk verbunden!")
+    except Exception as exc:
+        print(f"{format_ts()}   ⚠️  Konnte Peer-Info nicht abrufen: {exc}")
+    
+    # Prüfe Block-Höhe der Miner-Nodes zum Vergleich
+    try:
+        first_miner_rpc = f"http://{miners_rpc[0]}"
+        miner_block_count = rpc_call(first_miner_rpc, "getblockcount", [], auth=auth, timeout=timeout)
+        print(f"{format_ts()}   ⛏️  Erster Miner ({miners_rpc[0]}) hat Block-Höhe: {miner_block_count}")
+    except Exception as exc:
+        print(f"{format_ts()}   ⚠️  Konnte Miner Block-Höhe nicht prüfen: {exc}")
+    
+    while True:
+        try:
+            block_count = rpc_call(funding_rpc, "getblockcount", [], auth=auth, wallet=args.funding_wallet, timeout=timeout)
+            if block_count >= expected_blocks:
+                print(f"{format_ts()} ✅ Funding-Wallet synchronisiert: {block_count} Blöcke (erwartet: ≥{expected_blocks})")
+                break
+        except Exception as exc:
+            print(f"{format_ts()}   ⚠️  Fehler beim Prüfen der Block-Höhe: {exc}")
+        
+        elapsed = int(time.time() - wait_start_sync)
+        if elapsed >= max_wait_sync:
+            print(f"{format_ts()}   ⚠️  Funding-Wallet Block-Höhe nach {elapsed}s: {block_count if 'block_count' in locals() else 'unbekannt'}")
+            print(f"{format_ts()}   ⚠️  KRITISCH: Funding-Wallet ist nicht synchronisiert!")
+            print(f"{format_ts()}   ⚠️  Mögliche Ursachen:")
+            print(f"{format_ts()}      - Topologie-Problem: Blöcke werden nicht propagiert")
+            print(f"{format_ts()}      - Netzwerk-Problem: Funding-Wallet nicht verbunden")
+            print(f"{format_ts()}      - Fork-Problem: Blöcke auf unterschiedlichen Chains")
+            raise RuntimeError(
+                f"Funding-Wallet konnte nicht synchronisiert werden: "
+                f"Block-Höhe {block_count if 'block_count' in locals() else 'unbekannt'} "
+                f"statt erwartet ≥{expected_blocks} nach {elapsed}s"
+            )
+        
+        if elapsed % 10 == 0:
+            print(f"{format_ts()}   ⏳ Warte auf Block-Synchronisation... ({elapsed}s) "
+                  f"Aktuell: {block_count if 'block_count' in locals() else 'unbekannt'} Blöcke")
+        time.sleep(2)
+
+    # Prüfe Balance nach Mining - warte bis genug bestätigte UTXOs verfügbar sind
+    print(f"{format_ts()} 💰 Prüfe Funding-Wallet Balance...")
+    required_balance = len(shard_specs) * args.utxo_per_shard * args.utxo_amount
+    # Add 10% buffer for transaction fees
+    required_balance_with_fees = required_balance * 1.1
+    print(f"{format_ts()}   Benötigt: {required_balance:.8f} BTC (+ 10% Puffer für Fees = {required_balance_with_fees:.8f} BTC) "
+          f"für {len(shard_specs)} Shards ({args.utxo_per_shard} UTXOs × {args.utxo_amount:.8f} BTC pro Shard)")
+    
+    max_wait_balance = 60  # Max 60 Sekunden warten
+    wait_start_balance = time.time()
+    additional_blocks_mined = 0
+    while True:
+        funding_stats = fetch_wallet_utxos(funding_rpc, auth, args.funding_wallet, timeout, min_conf=1)
+        available_balance = funding_stats['balance']
+        if available_balance >= required_balance_with_fees:
+            print(f"{format_ts()} ✅ Funding-Wallet hat genug Balance: {available_balance:.8f} BTC "
+                  f"({funding_stats['confirmed']} bestätigte UTXOs)")
+            break
+        
+        elapsed = int(time.time() - wait_start_balance)
+        
+        # Wenn nach 10 Sekunden noch nicht genug Balance da ist, minen wir zusätzliche Blöcke
+        # WICHTIG: Sequenziell auf einem Miner, um Forks zu vermeiden!
+        if elapsed >= 10 and additional_blocks_mined == 0:
+            blocks_to_mine = max(50, int((required_balance_with_fees - available_balance) / 50) + 10)
+            print(f"{format_ts()}   ⛏️  Balance zu niedrig ({available_balance:.8f} BTC), "
+                  f"mine zusätzliche {blocks_to_mine} Blöcke SEQUENZIELL...")
+            mine_blocks([primary_miner], blocks_to_mine, auth, mining_address, timeout)
+            additional_blocks_mined = blocks_to_mine
+            wait_start_balance = time.time()  # Reset timer after mining
+            continue
+        
+        if elapsed >= max_wait_balance:
+            raise RuntimeError(
+                f"Funding-Wallet hat nicht genug Balance nach {elapsed}s: "
+                f"{available_balance:.8f} BTC verfügbar, {required_balance_with_fees:.8f} BTC benötigt. "
+                f"Bestätigte UTXOs: {funding_stats['confirmed']}. "
+                f"Zusätzlich geminte Blöcke: {additional_blocks_mined}. "
+                f"Mögliche Ursache: Block-Propagation-Problem durch Topologie-Änderung?"
+            )
+        
+        if elapsed % 5 == 0:
+            print(f"{format_ts()}   ⏳ Warte auf Balance... ({elapsed}s) "
+                  f"Verfügbar: {available_balance:.8f} BTC, Benötigt: {required_balance_with_fees:.8f} BTC")
+        time.sleep(1)
 
     addresses_per_shard: Dict[str, List[str]] = {}
     for shard in shard_specs:
@@ -301,9 +431,10 @@ def main() -> int:
                 auth=auth, wallet=args.funding_wallet, timeout=timeout
             )
             # Mine nach jedem 4. Batch, um Mempool-Druck zu vermeiden
+            # WICHTIG: Sequenziell auf einem Miner, um Forks zu vermeiden!
             if (batch_idx + 1) % 4 == 0:
-                print(f"{format_ts()}   ⛏️  Mine 2 Blöcke nach Batch {batch_idx + 1}/{len(batches)}")
-                mine_blocks(miners_rpc, 2, auth, mining_address, timeout)
+                print(f"{format_ts()}   ⛏️  Mine 2 Blöcke nach Batch {batch_idx + 1}/{len(batches)} (sequenziell)")
+                mine_blocks([primary_miner], 2, auth, mining_address, timeout)
         print(f"{format_ts()} ✅ Shard {shard.shard_id}: {len(addr_list)} Outputs queued")
 
     # Berechne benötigte Blöcke: mindestens so viele wie Batches, plus großzügigen Puffer
@@ -312,8 +443,9 @@ def main() -> int:
     utxo_buffer = max(20, args.utxo_per_shard // 50)  # Mindestens 20, mehr bei vielen UTXOs
     blocks_needed = max(args.confirmation_blocks, total_batches + utxo_buffer)
     print(f"{format_ts()} 🪙 Mine {blocks_needed} Blöcke zur finalen Bestätigung der Transfers "
-          f"({total_batches} Batches + {utxo_buffer} Puffer)")
-    mine_blocks(miners_rpc, blocks_needed, auth, mining_address, timeout)
+          f"({total_batches} Batches + {utxo_buffer} Puffer) - SEQUENZIELL")
+    # WICHTIG: Sequenziell auf einem Miner, um Forks zu vermeiden!
+    mine_blocks([primary_miner], blocks_needed, auth, mining_address, timeout)
 
     funding_stats = fetch_wallet_utxos(funding_rpc, auth, args.funding_wallet, timeout, min_conf=1)
     print(f"{format_ts()} 💰 Funding-Wallet nach Verteilung: Balance {funding_stats['balance']:.8f} BTC "

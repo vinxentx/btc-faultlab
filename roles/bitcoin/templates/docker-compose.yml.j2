@@ -6,6 +6,22 @@ name: "{{ network_name }}"
 {% set outer_size = n - core_size - secondary_size %}
 {% set core_nodes = range(1, core_size + 1) %}
 {% set secondary_nodes = range(core_size + 1, core_size + secondary_size + 1) %}
+{# 
+   OPTIMIERTE NETZWERKTOPOLOGIE (basierend auf Bitcoin-Netzwerk-Forschung)
+   
+   Wissenschaftliche Grundlage:
+   - "Miner-Clique dominiert Propagation" (2025): Mining-Pools bilden dicht 
+     verbundenen Kern, Full-Nodes sind peripher
+   - "Peer Selection affects Fork Rate" (2022): Gute Peer-Auswahl reduziert Forks
+   - Echtes Bitcoin: Median 0.5s, p90 2.5s Block-Propagation
+   
+   Topologie-Design:
+   - Core (8 Nodes): Volles Mesh - simuliert Mining-Pool-Clique
+   - Secondary (8 Nodes): Alle Core + Nachbarn - "gut verbundene Full-Nodes"  
+   - Outer (Rest): Alle Core + 2 Secondary - garantiert max 2 Hops
+   
+   KRITISCH: Keine lateralen Ketten! Das war das Hauptproblem der alten Topologie.
+#}
 services:
 {% for i in range(1, n + 1) %}
   node{{ "%02d"|format(i) }}:
@@ -32,55 +48,43 @@ services:
       - "-listen=1"
 {% set targets = [] %}
 {% if i <= core_size %}
-      # Core tier - dense mesh with spillover
+      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
+      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
 {% for j in core_nodes %}
 {% if j != i %}
 {% set targets = targets + [j] %}
 {% endif %}
 {% endfor %}
-{% if secondary_size > 0 %}
-{% set secondary_peer = core_size + ((i - 1) % secondary_size) + 1 %}
-{% set targets = targets + [secondary_peer] %}
-{% endif %}
-{% elif i <= core_size + secondary_size %}
-      # Secondary tier - connect to rotating core subset and neighbors
-{% set base = i - core_size - 1 %}
-{% for offset in range(0, [4, core_size] | min) %}
-{% set core_idx = ((base + offset) % core_size) + 1 %}
-{% set targets = targets + [core_idx] %}
+      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+{% for j in secondary_nodes %}
+{% set targets = targets + [j] %}
 {% endfor %}
+{% elif i <= core_size + secondary_size %}
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
+      # Das garantiert max 2 Hops für Blöcke die hier ankommen
+{% for j in core_nodes %}
+{% set targets = targets + [j] %}
+{% endfor %}
+      # Plus Nachbar-Secondary für lokale Redundanz
 {% if i - 1 >= core_size + 1 %}
 {% set targets = targets + [i - 1] %}
 {% endif %}
 {% if i + 1 <= core_size + secondary_size %}
 {% set targets = targets + [i + 1] %}
 {% endif %}
-{% if outer_size > 0 %}
-{% set outer_peer = core_size + secondary_size + ((base) % outer_size) + 1 %}
-{% set targets = targets + [outer_peer] %}
-{% endif %}
 {% else %}
-      # Outer tier - mix of core, secondary, and lateral links
+      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
+      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
+      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
+{% for j in core_nodes %}
+{% set targets = targets + [j] %}
+{% endfor %}
+      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
 {% set base = i - core_size - secondary_size - 1 %}
-{% if core_size > 0 %}
-{% for offset in [0, 2, 4] %}
-{% if offset < core_size %}
-{% set core_idx = ((base + offset) % core_size) + 1 %}
-{% set targets = targets + [core_idx] %}
-{% endif %}
-{% endfor %}
-{% endif %}
 {% if secondary_size > 0 %}
-{% for offset in range(0, [2, secondary_size] | min) %}
-{% set secondary_idx = core_size + ((base + offset) % secondary_size) + 1 %}
-{% set targets = targets + [secondary_idx] %}
-{% endfor %}
-{% endif %}
-{% if i - 1 >= core_size + secondary_size + 1 %}
-{% set targets = targets + [i - 1] %}
-{% endif %}
-{% if i + 1 <= n %}
-{% set targets = targets + [i + 1] %}
+{% set sec1 = core_size + ((base) % secondary_size) + 1 %}
+{% set sec2 = core_size + ((base + 4) % secondary_size) + 1 %}
+{% set targets = targets + [sec1, sec2] %}
 {% endif %}
 {% endif %}
 {% for target in targets | unique | list | sort %}
@@ -133,12 +137,17 @@ services:
       - "-dnsseed=0"
       - "-listen=1"
 {% if core_size > 0 %}
-      # Connect to multiple core nodes for redundancy (backup peers)
-      # Connect to first 10 core nodes (or all if fewer than 10)
-{% set wallet_peers = [core_size, 10] | min %}
-{% for i in range(1, wallet_peers + 1) %}
+      # Connect to ALL core nodes for maximum redundancy and fast block propagation
+      # This ensures the funding wallet sees all blocks immediately, even with the new topology
+{% for i in range(1, core_size + 1) %}
       - "-connect=node{{ '%02d'|format(i) }}:18444"
 {% endfor %}
+      # Also connect to secondary nodes for additional redundancy
+{% if secondary_size > 0 %}
+{% for i in range(core_size + 1, core_size + secondary_size + 1) %}
+      - "-connect=node{{ '%02d'|format(i) }}:18444"
+{% endfor %}
+{% endif %}
 {% endif %}
     volumes:
       - "{{ wallet_funding_container }}_data:/home/bitcoin/.bitcoin"
@@ -279,6 +288,10 @@ services:
       - /state/mining_targets.json
 {% if block_scheduler_use_variance | default(false) %}
       - --use-variance
+{% endif %}
+{% if block_scheduler_min_interval is defined and block_scheduler_min_interval is not none %}
+      - --min-interval
+      - "{{ block_scheduler_min_interval }}"
 {% endif %}
 {% if block_scheduler_adaptive_interval | default(true) %}
       - --adaptive-interval

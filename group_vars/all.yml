@@ -63,6 +63,9 @@ txgen_send_amount_btc: 0.0001           # Zielbetrag pro Transaktion
 block_scheduler_interval_s: 16           # Blocktakt in Sekunden
 block_scheduler_seed: 1337              # Deterministischer Seed für Miner-Rotation
 block_scheduler_use_variance: false     # true = Exponentialverteilung (wie echtes BTC-Netzwerk)
+block_scheduler_min_interval: 2.0       # Minimales Block-Intervall bei Varianz (Shifted Exponential)
+                                        # Verhindert Race-Conditions durch zu kurze Intervalle
+                                        # Empfohlen: 2.0s für 16s Blockzeit (eliminiert Forks)
 block_scheduler_adaptive_interval: true # Dynamische Blockzeit-Anpassung bei Crashes (simuliert Hash-Power-Verlust)
 block_scheduler_health_check_interval: 5.0  # Health-Check alle 5s (schneller als typische Crash-Dauern)
 

@@ -543,14 +543,22 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     if not log_files:
         return None
     
-    all_delays = []
-    per_node_delays = {}
-    per_block_delays = {}
-    samples = []
+    # IMPORTANT:
+    # Nodes may emit multiple UpdateTip logs for the same block hash (e.g. around reorgs,
+    # re-processing, or repeated logging). If we count every line as an independent sample,
+    # "propagation delay" develops heavy tails that are actually measurement artifacts.
+    #
+    # To measure propagation robustly we keep ONE sample per (block_hash, node) and take
+    # the earliest observation (minimum delay) as "first-seen".
+    #
+    # Data structures:
+    # - seen[(block_hash, node)] = (min_delay, mined_ts, earliest_arrival_ts)
+    # - per_block_node_delay[block_hash][node] = min_delay
+    seen: dict[tuple[str, str], tuple[float, "pd.Timestamp", "pd.Timestamp"]] = {}
+    per_block_node_delay: dict[str, dict[str, float]] = {}
     
     for log_path in log_files:
         node_name = log_path.stem
-        node_delays = []
         
         try:
             with open(log_path, "r", encoding="utf-8") as handle:
@@ -581,34 +589,33 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
                     # Ignore extreme outliers (>10 minutes)
                     if delay > 600:
                         continue
-                    
-                    node_delays.append(delay)
-                    all_delays.append(delay)
-                    per_block_delays.setdefault(block_hash, []).append(delay)
-                    samples.append({
-                        "block_hash": block_hash,
-                        "node": node_name,
-                        "mined_ts_utc": mined_ts.isoformat(),
-                        "arrival_ts_utc": arrival_ts.isoformat(),
-                        "delay_seconds": delay
-                    })
+
+                    key = (block_hash, node_name)
+                    prev = seen.get(key)
+                    if prev is None or delay < prev[0]:
+                        # Keep the earliest observation (minimum delay)
+                        seen[key] = (delay, mined_ts, arrival_ts)
+                        per_block_node_delay.setdefault(block_hash, {})[node_name] = delay
         except FileNotFoundError:
             continue
-        
-        if node_delays:
-            per_node_delays[node_name] = node_delays
-    
-    if not all_delays:
+
+    if not seen:
         return None
-    
+
+    # Build per-node delays from deduped samples
+    per_node_delays: dict[str, list[float]] = {}
+    for (block_hash, node_name), (delay, _, _) in seen.items():
+        per_node_delays.setdefault(node_name, []).append(delay)
+
+    all_delays = [delay for (delay, _, _) in seen.values()]
     delays_array = np.array(all_delays)
-    nodes_per_block = np.array([len(v) for v in per_block_delays.values()])
+    nodes_per_block = np.array([len(v) for v in per_block_node_delay.values()])
     total_nodes = len(per_node_delays)
     
     summary = {
         "total_samples": int(len(all_delays)),
         "nodes_with_data": int(total_nodes),
-        "blocks_with_data": int(len(per_block_delays)),
+        "blocks_with_data": int(len(per_block_node_delay)),
         "mean_seconds": float(np.mean(delays_array)),
         "median_seconds": float(np.median(delays_array)),
         "p90_seconds": float(np.percentile(delays_array, 90)),
@@ -633,11 +640,12 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
         }
     
     block_summaries = []
-    for block_hash, delays in per_block_delays.items():
-        arr = np.array(delays)
+    for block_hash, node_map in per_block_node_delay.items():
+        arr = np.array(list(node_map.values()))
         block_summaries.append({
             "block_hash": block_hash,
             "mined_ts_utc": block_times[block_hash].isoformat(),
+            # After dedup, this is truly "unique nodes with a sample"
             "sampled_nodes": int(arr.size),
             "median_seconds": float(np.median(arr)),
             "p90_seconds": float(np.percentile(arr, 90)) if arr.size > 1 else float(arr[0]),
@@ -646,6 +654,17 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     
     # Persist raw samples and block-level stats for offline analysis
     try:
+        # Export deduped samples only (one row per (block,node))
+        samples = [
+            {
+                "block_hash": block_hash,
+                "node": node_name,
+                "mined_ts_utc": mined_ts.isoformat(),
+                "arrival_ts_utc": arrival_ts.isoformat(),
+                "delay_seconds": delay,
+            }
+            for (block_hash, node_name), (delay, mined_ts, arrival_ts) in seen.items()
+        ]
         samples_df = pd.DataFrame(samples)
         samples_df.to_csv(os.path.join(run_dir, "block_propagation_samples.csv"), index=False)
         
@@ -1886,19 +1905,48 @@ def main():
             df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] <= end_observe]
     
     # Filter confirmations to experiment window only (exclude pre-funding, warmup, etc.)
+    # IMPORTANT: We filter by SUBMIT time (not confirm time) to include confirmations
+    # that happen during cooldown for transactions submitted during observation.
+    # This gives a fair availability metric that accounts for variable block times.
     df_conf_filtered = df_conf.copy()
-    if not df_conf_filtered.empty and "confirm_ts_utc" in df_conf_filtered.columns:
-        if start_experiment is not None:
-            df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] >= start_experiment]
-        if end_observe is not None:
-            df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] <= end_observe]
+    if not df_conf_filtered.empty:
         if start_experiment is not None and "submit_ts_utc" in df_conf_filtered.columns:
             df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] >= start_experiment]
+        if end_observe is not None and "submit_ts_utc" in df_conf_filtered.columns:
+            df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] <= end_observe]
+        # Also filter out confirmations before experiment start (safety check)
+        if start_experiment is not None and "confirm_ts_utc" in df_conf_filtered.columns:
+            df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] >= start_experiment]
     
     # Calculate availability using filtered data (only observation window)
+    # IMPORTANT: We already filtered confirmations by submit_ts_utc (not confirm_ts_utc),
+    # so we can safely compare counts. Using compute_availability would filter
+    # confirmed_times by time range again, which would exclude cooldown confirmations.
+    # Instead, we directly compare the counts since both lists are already correctly filtered.
     sub_times_filtered = sorted(df_sub_filtered["submit_ts_utc"].tolist()) if not df_sub_filtered.empty else []
     conf_times_filtered = sorted(df_conf_filtered["confirm_ts_utc"].tolist()) if not df_conf_filtered.empty else []
-    A = compute_availability(sub_times_filtered, conf_times_filtered)
+    
+    # Direct count comparison (prevents >100% availability since we only count
+    # confirmations of transactions submitted during observation)
+    if len(sub_times_filtered) == 0:
+        A = 0.0
+    else:
+        # Ensure we don't count more confirmations than submissions
+        # (can happen if same txid appears multiple times in confirmations due to reorgs)
+        unique_confirmed_txids = set()
+        if not df_conf_filtered.empty and "txid" in df_conf_filtered.columns:
+            unique_confirmed_txids = set(df_conf_filtered["txid"].tolist())
+        else:
+            # Fallback: use count if txid column missing
+            unique_confirmed_txids = len(conf_times_filtered)
+        
+        # Use unique txid count to prevent double-counting from reorgs
+        if isinstance(unique_confirmed_txids, set):
+            confirmed_count = len(unique_confirmed_txids)
+        else:
+            confirmed_count = unique_confirmed_txids
+        
+        A = min(1.0, confirmed_count / len(sub_times_filtered))  # Cap at 100%
     
     # Calculate official Bitcoin network throughput
     # Official definition: Total confirmed transactions / Total time (experiment window)
