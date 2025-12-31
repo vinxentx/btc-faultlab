@@ -25,7 +25,7 @@
   ansible.builtin.set_fact:
     network_fault_nodes_idx: "{{ all_nodes }}"
 
-- name: Apply netem
+- name: Apply netem (Parallel)
   when: 
     - clear | default(false) | bool == false
     - i | int in (network_fault_nodes_idx | default(all_nodes))
@@ -42,7 +42,22 @@
       {% else %}
       tc qdisc add dev eth0 root netem delay {{ latency_ms }}ms {{ jitter_ms | default(0) }}ms loss {{ loss_pct }}%; \
       {% endif %}"
+  async: 60
+  poll: 0
+  register: netem_apply_jobs
   changed_when: true
+
+- name: Wait for netem application to finish
+  when: clear | default(false) | bool == false
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  loop: "{{ netem_apply_jobs.results }}"
+  loop_control:
+    label: "node{{ '%02d'|format(item.i) }}"
+  register: job_results
+  until: job_results.finished
+  retries: 30
+  delay: 1
 
 - name: Compute network fault set for clearing (deterministic)
   when: clear | default(false) | bool
@@ -69,7 +84,7 @@
   ansible.builtin.set_fact:
     network_fault_nodes_idx_clear: "{{ all_nodes_clear }}"
 
-- name: Clear netem
+- name: Clear netem (Parallel)
   when: 
     - clear | default(false) | bool
     - i | int in (network_fault_nodes_idx_clear | default(all_nodes_clear))
@@ -79,4 +94,19 @@
   ansible.builtin.shell: |
     docker run --rm --network container:node{{ '%02d'|format(i) }} --cap-add NET_ADMIN \
       ghcr.io/nicolaka/netshoot:latest sh -lc "tc qdisc del dev eth0 root 2>/dev/null || true"
+  async: 60
+  poll: 0
+  register: netem_clear_jobs
   changed_when: true
+
+- name: Wait for netem clearing to finish
+  when: clear | default(false) | bool
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  loop: "{{ netem_clear_jobs.results }}"
+  loop_control:
+    label: "node{{ '%02d'|format(item.i) }}"
+  register: job_results
+  until: job_results.finished
+  retries: 30
+  delay: 1

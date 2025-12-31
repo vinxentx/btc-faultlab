@@ -170,7 +170,12 @@ def print_analysis(results: List[Dict]):
         
         metrics = r['metrics']
         availability = metrics.get('availability', 0)
-        prop_mean = metrics.get('block_propagation', {}).get('summary', {}).get('mean_seconds', 0)
+        
+        # Use clean online-only metrics
+        prop_metrics = metrics.get('block_propagation', {})
+        online_stats = prop_metrics.get('online_nodes', {})
+        prop_mean = online_stats.get('mean_seconds', 0)
+        prop_max = online_stats.get('max_seconds', 0)
         
         # Identifiziere Probleme
         has_problem = False
@@ -267,10 +272,18 @@ def main():
             metrics_summary = {
                 'availability': r['metrics'].get('availability'),
                 'avg_throughput': r['metrics'].get('avg_throughput'),
-                'block_propagation_mean': r['metrics'].get('block_propagation', {}).get('summary', {}).get('mean_seconds'),
-                'block_propagation_max': r['metrics'].get('block_propagation', {}).get('summary', {}).get('max_seconds'),
+                'block_propagation_mean': prop_mean,
+                'block_propagation_max': prop_max,
             }
             print(f"Metrics Summary: {json.dumps(metrics_summary, indent=2)}")
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
+

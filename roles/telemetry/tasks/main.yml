@@ -10,72 +10,49 @@
     path: "{{ rd }}"
     state: directory
 
-- name: Dump docker logs per node
-  loop: "{{ range(1, node_count + 1) | list }}"
-  loop_control: { loop_var: i }
+- name: Dump docker logs (Parallel)
   ansible.builtin.shell: |
-    docker logs node{{ '%02d'|format(i) }} > "{{ rd }}/node{{ '%02d'|format(i) }}.log" 2>&1
+    mkdir -p "{{ rd }}"
+    # Nodes logs
+    for i in $(seq -f "%02g" 1 {{ node_count }}); do
+      docker logs "node$i" > "{{ rd }}/node$i.log" 2>&1 &
+    done
+    # txgen logs
+    {% for item in txgen_shards %}
+    docker logs "txgen_{{ item.id }}" > "{{ rd }}/txgen_{{ item.id }}.log" 2>&1 &
+    {% endfor %}
+    # block scheduler logs
+    docker logs block_scheduler > "{{ rd }}/block_scheduler.log" 2>&1 &
+    wait
   changed_when: true
 
-- name: Dump txgen shard logs
-  ansible.builtin.shell: |
-    container="txgen_{{ item.id }}"
-    logfile="{{ rd }}/txgen_{{ item.id }}.log"
-    if docker ps -a --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^${container}$"; then
-      docker logs "${container}" > "${logfile}" 2>&1
-    else
-      echo "${container} container not found, skipping log collection" > "${logfile}"
-    fi
-  changed_when: true
-  loop: "{{ txgen_shards }}"
-
-- name: Dump block scheduler logs
-  ansible.builtin.shell: |
-    if docker ps -a --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^block_scheduler$"; then
-      docker logs block_scheduler > "{{ rd }}/block_scheduler.log" 2>&1
-    else
-      echo "block_scheduler container not found" > "{{ rd }}/block_scheduler.log"
-    fi
-  changed_when: true
-
-- name: Snapshot chain tips
+- name: Snapshot network and mempool status
   ansible.builtin.shell: |
     docker exec node01 bitcoin-cli -regtest getchaintips > "{{ rd }}/chaintips.json"
-  changed_when: true
-
-- name: Snapshot mempool info
-  ansible.builtin.shell: |
     docker exec node01 bitcoin-cli -regtest getmempoolinfo > "{{ rd }}/mempool.json"
+    docker exec node01 bitcoin-cli -regtest getpeerinfo > "{{ rd }}/peerinfo.json"
+    docker exec node01 bitcoin-cli -regtest listbanned > "{{ rd }}/banned.json"
+    docker exec node01 bitcoin-cli -regtest getnettotals > "{{ rd }}/nettotals.json"
   changed_when: true
 
-# Falls txlog im allgemeinen results liegt, verlinke ihn in diesen Run
-- name: Copy txgen shard artefacts from volumes
+- name: Copy txgen shard artefacts from volumes (Parallel)
   ansible.builtin.shell: |
-    volume="{{ network_name }}_txlogs_{{ item.log_suffix }}"
-    if docker volume inspect "${volume}" >/dev/null 2>&1; then
-      docker run --rm -v "${volume}":/v -v "{{ rd }}":/out alpine:3.19 sh -lc '
-        set -e
-        # Suche nach Dateien mit Shard-Suffix (txlog_a.csv) oder ohne (txlog.csv)
-        suffix="{{ item.log_suffix }}"
-        if [ -f "/v/txlog_${suffix}.csv" ]; then
-          cp -f "/v/txlog_${suffix}.csv" "/out/txgen_{{ item.id }}_txlog.csv"
-        elif [ -f "/v/txlog.csv" ]; then
-          cp -f "/v/txlog.csv" "/out/txgen_{{ item.id }}_txlog.csv"
-        fi
-        if [ -f "/v/txlog_${suffix}_performance.csv" ]; then
-          cp -f "/v/txlog_${suffix}_performance.csv" "/out/txgen_{{ item.id }}_txlog_performance.csv"
-        elif [ -f "/v/txlog_performance.csv" ]; then
-          cp -f "/v/txlog_performance.csv" "/out/txgen_{{ item.id }}_txlog_performance.csv"
-        fi
-        if [ -f "/v/txlog_${suffix}_errors.csv" ]; then
-          cp -f "/v/txlog_${suffix}_errors.csv" "/out/txgen_{{ item.id }}_txlog_errors.csv"
-        elif [ -f "/v/txlog_errors.csv" ]; then
-          cp -f "/v/txlog_errors.csv" "/out/txgen_{{ item.id }}_txlog_errors.csv"
-        fi
-      '
-    fi
+    {% for item in txgen_shards %}
+    (
+      volume="{{ network_name }}_txlogs_{{ item.log_suffix }}"
+      if docker volume inspect "${volume}" >/dev/null 2>&1; then
+        docker run --rm -v "${volume}":/v -v "{{ rd }}":/out alpine:3.19 sh -lc '
+          set -e
+          suffix="{{ item.log_suffix }}"
+          [ -f "/v/txlog_${suffix}.csv" ] && cp -f "/v/txlog_${suffix}.csv" "/out/txgen_{{ item.id }}_txlog.csv" || ([ -f "/v/txlog.csv" ] && cp -f "/v/txlog.csv" "/out/txgen_{{ item.id }}_txlog.csv" || true)
+          [ -f "/v/txlog_${suffix}_performance.csv" ] && cp -f "/v/txlog_${suffix}_performance.csv" "/out/txgen_{{ item.id }}_txlog_performance.csv" || ([ -f "/v/txlog_performance.csv" ] && cp -f "/v/txlog_performance.csv" "/out/txgen_{{ item.id }}_txlog_performance.csv" || true)
+          [ -f "/v/txlog_${suffix}_errors.csv" ] && cp -f "/v/txlog_${suffix}_errors.csv" "/out/txgen_{{ item.id }}_txlog_errors.csv" || ([ -f "/v/txlog_errors.csv" ] && cp -f "/v/txlog_errors.csv" "/out/txgen_{{ item.id }}_txlog_errors.csv" || true)
+        '
+      fi
+    ) &
+    {% endfor %}
+    wait
   changed_when: false
-  loop: "{{ txgen_shards }}"
 
 - name: Copy funding state artefacts
   ansible.builtin.copy:
@@ -181,6 +158,13 @@
             writer = csv.DictWriter(out, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(rows)
+        
+        # Cleanup: Remove redundant shard files after successful merge
+        for path in files:
+            try:
+                os.remove(path)
+            except OSError:
+                pass
     PY
   changed_when: true
 
@@ -196,22 +180,28 @@
     chdir: "{{ workdir }}"
   changed_when: true
 
-- name: Collect node health status at experiment end
+- name: Collect node health status (Parallel)
   ansible.builtin.shell: |
-    # Collect final health status for all nodes
-    echo "node,status,block_height,peer_count" > "{{ rd }}/node_health.csv"
+    echo "node,status,block_height,peer_count,banned_count" > "{{ rd }}/node_health.csv"
+    # Create temp files for each node to avoid race conditions when writing to the CSV
+    TMP_DIR=$(mktemp -d)
     for i in $(seq -f "%02g" 1 {{ node_count }}); do
-      node="node$i"
-      if docker ps --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^$node$"; then
-        # Node is running - get stats
-        height=$(docker exec $node bitcoin-cli -regtest getblockcount 2>/dev/null || echo "N/A")
-        peers=$(docker exec $node bitcoin-cli -regtest getconnectioncount 2>/dev/null || echo "N/A")
-        echo "$node,running,$height,$peers" >> "{{ rd }}/node_health.csv"
-      else
-        # Node is not running
-        echo "$node,stopped,N/A,N/A" >> "{{ rd }}/node_health.csv"
-      fi
+      (
+        node="node$i"
+        if docker ps --format "{{"{{"}} .Names {{"}}"}}" | grep -q "^$node$"; then
+          height=$(docker exec $node bitcoin-cli -regtest getblockcount 2>/dev/null || echo "N/A")
+          peers=$(docker exec $node bitcoin-cli -regtest getconnectioncount 2>/dev/null || echo "N/A")
+          banned=$(docker exec $node bitcoin-cli -regtest listbanned 2>/dev/null | jq '. | length' 2>/dev/null || echo "0")
+          echo "$node,running,$height,$peers,$banned" > "$TMP_DIR/$node"
+        else
+          echo "$node,stopped,N/A,N/A,N/A" > "$TMP_DIR/$node"
+        fi
+      ) &
     done
+    wait
+    # Aggregate temp files
+    cat $TMP_DIR/node* >> "{{ rd }}/node_health.csv"
+    rm -rf "$TMP_DIR"
   changed_when: true
 
 - name: Save final mining statistics summary

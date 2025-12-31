@@ -6,6 +6,13 @@ rpcallowip=0.0.0.0/0
 rpcbind=0.0.0.0
 rpcuser={{ rpc_user }}
 rpcpassword={{ rpc_pass }}
+{% if block_size_limit is defined %}
+{% if block_size_limit == '2MB' %}
+blockmaxweight=8000000
+{% else %}
+blockmaxweight=4000000
+{% endif %}
+{% endif %}
 {% if reindex_on_restart | default(false) | bool %}
 reindex=1
 {% endif %}

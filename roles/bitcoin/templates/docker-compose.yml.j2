@@ -190,10 +190,16 @@ services:
       - "-dnsseed=0"
       - "-listen=1"
 {% if core_size > 0 %}
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
-{% for peer in range(1, ([core_size, 3] | min) + 1) %}
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
+{% for peer in range(1, core_size + 1) %}
       - "-connect=node{{ '%02d'|format(peer) }}:18444"
 {% endfor %}
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+{% if secondary_size > 0 %}
+{% for peer in range(core_size + 1, ([core_size + secondary_size, core_size + 4] | min) + 1) %}
+      - "-connect=node{{ '%02d'|format(peer) }}:18444"
+{% endfor %}
+{% endif %}
 {% endif %}
     volumes:
       - "{{ shard.wallet_container }}_data:/home/bitcoin/.bitcoin"

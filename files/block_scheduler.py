@@ -312,9 +312,12 @@ def main() -> int:
             print(f"{format_ts()} ⚠️ Miner {miner} nicht erreichbar: {err}")
 
     rotation = miner_cycle(miner_hosts, seed)
-    next_tick = time.perf_counter()
     produced_blocks = 0
     fail_counts = {miner: 0 for miner in miner_hosts}
+    
+    # Initiales Intervall berechnen (wird unten verfeinert)
+    current_interval = interval_s
+    next_tick = time.perf_counter()
     
     def perform_health_check() -> None:
         """Führt Health-Check durch und aktualisiert active_miners."""
@@ -343,14 +346,15 @@ def main() -> int:
         effective_interval = base_interval × (total_miners / active_miners)
         
         Dies simuliert den Effekt von Miner-Crashes auf die Blockzeit wie im echten
-        Bitcoin-Netzwerk, wo weniger Hash-Power zu längeren Block-Intervallen führt.
+        Bitcoin-Netzwerk (vor einem Difficulty Adjustment). Weniger Hash-Power 
+        führt zu längeren Block-Intervallen.
         """
         base = interval_s
         
         if adaptive_interval and len(active_miners) > 0:
             # Skaliere Intervall basierend auf verfügbarer Hash-Power
             hash_power_ratio = len(active_miners) / total_miners
-            # effective_interval = base / ratio = base * (total / active)
+            # effective_interval = base / ratio (Simulation von Hashrate-Verlust wie im echten Netzwerk)
             base = interval_s / hash_power_ratio
         
         if use_variance:
@@ -363,6 +367,10 @@ def main() -> int:
         ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
         print(f"{format_ts()} 🔍 Initialer Health-Check: {len(active_miners)}/{total_miners} Miner "
               f"(Ratio: {ratio:.2f})")
+
+    # Erstes Intervall festlegen
+    current_interval = get_effective_interval()
+    next_tick = time.perf_counter() + current_interval
 
     while True:
         now_perf = time.perf_counter()
@@ -377,15 +385,9 @@ def main() -> int:
             time.sleep(min(sleep_for, 0.1))
             continue
         
-        # Berechne nächstes Intervall (vor Block-Produktion für korrektes Timing)
-        current_interval = get_effective_interval()
+        # HIER: Wir berechnen kein neues Intervall am Anfang, sondern verwenden das bestehende.
+        # Ein neues Intervall wird erst NACH einem erfolgreichen Block berechnet.
         
-        # WICHTIG: Setze next_tick auf NOW + interval, nicht auf alten next_tick + interval
-        # Dies verhindert "Burst-Mining" nach langsamen RPC-Calls, wo mehrere Blöcke
-        # in schneller Folge gemint werden würden, weil next_tick bereits überschritten ist.
-        # Mit dieser Änderung wird IMMER mindestens current_interval gewartet.
-        next_tick = now_perf + current_interval
-
         # Versuche einen aktiven Miner zu finden
         attempts = 0
         max_attempts = len(miner_hosts)  # Verhindere Endlosschleife
@@ -451,6 +453,10 @@ def main() -> int:
                           f"Miner aktiv (Ratio: {ratio:.2f})")
                     print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
                     last_active_count = len(active_miners)
+
+            # JETZT erst das nächste Intervall berechnen
+            current_interval = get_effective_interval()
+            next_tick = time.perf_counter() + current_interval
                 
         except RuntimeError as err:
             code, message = decode_rpc_error(err)
@@ -471,11 +477,13 @@ def main() -> int:
             if fail_counts[miner] >= 3:
                 print(f"{format_ts()} 🔁 Warte zusätzliche 3s wegen wiederholter Fehler")
                 time.sleep(3.0)
-                next_tick = max(next_tick, time.perf_counter() + get_effective_interval())
+                next_tick = time.perf_counter() + 3.0
+            else:
+                next_tick = time.perf_counter() + 1.0
         except Exception as err:  # noqa: BLE001
             print(f"{format_ts()} ❌ Unerwarteter Fehler bei Miner {miner}: {err}")
             
-            # Bei Verbindungsfehlern: Miner sofort als inaktiv markieren
+            # Bei Fehler: Miner als inaktiv markieren
             if adaptive_interval:
                 if miner in active_miners:
                     active_miners.discard(miner)
@@ -502,13 +510,10 @@ def main() -> int:
             
             if is_connection_error:
                 # Bei Verbindungsfehlern: nur sehr kurz warten, dann sofort nächsten Miner versuchen
-                time.sleep(0.5)
-                # Setze next_tick nicht zu weit in die Zukunft, damit schnell der nächste Versuch kommt
-                next_tick = max(next_tick, time.perf_counter() + 0.5)
+                next_tick = time.perf_counter() + 0.5
             else:
                 # Bei anderen Fehlern: normale Behandlung
-                time.sleep(2.0)
-                next_tick = max(next_tick, time.perf_counter() + get_effective_interval() / 2)
+                next_tick = time.perf_counter() + 2.0
 
 
 if __name__ == "__main__":

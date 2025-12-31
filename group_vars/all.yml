@@ -55,6 +55,22 @@ txgen_shards:
     wallet_container: "wallet_shard_d"
     wallet_name: "txshard_d"
     log_suffix: "d"
+  - id: "e"
+    wallet_container: "wallet_shard_e"
+    wallet_name: "txshard_e"
+    log_suffix: "e"
+  - id: "f"
+    wallet_container: "wallet_shard_f"
+    wallet_name: "txshard_f"
+    log_suffix: "f"
+  - id: "g"
+    wallet_container: "wallet_shard_g"
+    wallet_name: "txshard_g"
+    log_suffix: "g"
+  - id: "h"
+    wallet_container: "wallet_shard_h"
+    wallet_name: "txshard_h"
+    log_suffix: "h"
 
 txgen_address_pool_size: 2048           # Anzahl vorbereiteter Zieladressen pro Shard
 txgen_address_reuse_window: 100         # Nur jede 100. TX ruft getnewaddress auf
@@ -82,9 +98,9 @@ zmq_block: "tcp://0.0.0.0:28332"
 zmq_tx: "tcp://0.0.0.0:28333"
 
 # --- Phasen (Sekunden) - OPTIMIZED FOR FULL RECOVERY OBSERVATION ---
-warmup_s: 180                # 3 min warmup (was 2 min - more stable baseline)
-observe_s: 1800              # 30 min observation (was 10 min - FULL recovery)
-cooldown_s: 60               # 1 min cooldown (was 30s)
+warmup_s: 120                # 2 min warmup
+observe_s: 480               # 8 min observation (was 10 min)
+cooldown_s: 60               # 1 min cooldown
 
 # --- Reproduzierbarkeit ---
 seed: 42

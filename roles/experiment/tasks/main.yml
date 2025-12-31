@@ -59,132 +59,100 @@
   changed_when: true
 
 # =============================================================================
-# BURST MODE: All nodes crash simultaneously
+# CRASH INJECTION: Unified Async Logic for Burst and Staggered
 # =============================================================================
-- name: Burst crash - stop all nodes simultaneously
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "burst"
-  loop: "{{ crash_nodes }}"
-  loop_control: { loop_var: c }
-  ansible.builtin.shell: "docker stop {{ c }}"
-
-# EVENT: crash_complete - All containers are stopped (Burst mode)
-- name: Log crash_complete event (burst)
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "burst"
-  environment:
-    RUN_DIR: "{{ run_dir }}"
-  ansible.builtin.shell: |
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_complete" >> "${RUN_DIR}/events.log"
-  changed_when: true
-
-- name: Burst mode - pause while nodes are crashed
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "burst"
-  ansible.builtin.pause: { seconds: "{{ crash_duration_s }}" }
-
-# =============================================================================
-# STAGGERED MODE: Nodes crash with time delays (rolling wave)
-# Each node is stopped with a delay, creating a cascading failure pattern.
-# The interval between crashes is: crash_duration_s / number_of_crash_nodes
-# This ensures the total crash injection period equals crash_duration_s.
-# =============================================================================
-- name: Calculate staggered interval
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "staggered"
+- name: Calculate interval
+  when: (crash_count | int) > 0
   ansible.builtin.set_fact:
-    stagger_interval_s: "{{ (crash_duration_s | float) / (crash_nodes | length | default(1)) }}"
+    # Staggered uses calculated interval, Burst uses 0 (simultaneous)
+    # Use stagger_period_s if provided, otherwise default to crash_duration_s
+    effective_interval_s: "{{ (crash_mode == 'staggered') | ternary(((stagger_period_s | default(crash_duration_s | float)) | float) / (crash_nodes | length | default(1)), 0) }}"
 
-- name: Staggered crash - stop nodes with time delays
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "staggered"
+- name: Inject crashes (Async)
+  when: (crash_count | int) > 0
+  async: 3600
+  poll: 0
   loop: "{{ crash_nodes }}"
   loop_control: 
     loop_var: c
     index_var: i
   ansible.builtin.shell: |
+    # Wait for my turn (0s for burst, i*interval for staggered)
+    sleep $(python3 -c "print({{ i }} * {{ effective_interval_s }})")
+    
     # Log individual node crash event
     echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) node_crash node={{ c }} index={{ i }}" >> "{{ run_dir }}/events.log"
     docker stop {{ c }}
-    # Sleep before next node (except for last node)
-    {% if not loop.last %}
-    sleep {{ stagger_interval_s }}
-    {% endif %}
 
-# EVENT: crash_complete - All containers are stopped (Staggered mode)
-- name: Log crash_complete event (staggered)
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "staggered"
+# EVENT: crash_complete - Logged when the last node has started stopping
+- name: Log crash_complete event
+  when: (crash_count | int) > 0
+  async: 3600
+  poll: 0
   environment:
     RUN_DIR: "{{ run_dir }}"
+    LAST_NODE: "{{ crash_nodes | last }}"
   ansible.builtin.shell: |
+    until grep -q "node_crash node=${LAST_NODE}" "${RUN_DIR}/events.log"; do
+      sleep 0.5
+    done
+    # Small buffer to ensure docker stop command was at least received
+    sleep 1
     echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_complete" >> "${RUN_DIR}/events.log"
   changed_when: true
 
-- name: Staggered mode - additional pause to ensure minimum downtime
-  when:
-    - (crash_count | int) > 0
-    - crash_mode == "staggered"
-  ansible.builtin.pause: 
-    # Ensure the last crashed node has at least stagger_interval_s of downtime
-    seconds: "{{ stagger_interval_s | float | round(0, 'ceil') | int }}"
-
 # =============================================================================
-# RECOVERY: Full resync mode (reindex blockchain)
-# Scientific: recovery_start is logged AFTER first successful container start
+# RECOVERY: Unified Logic (Full Resync / Fast Resync)
+# Each node waits individually for its crash_duration_s to pass
 # =============================================================================
 - name: Recovery with full resync (reindex blockchain)
   when:
     - (crash_count | int) > 0
     - recovery_mode == "full_resync"
     - reindex_on_restart | default(false) | bool
-  loop: "{{ crash_nodes }}"
+  async: 7200 # Allow up to 2 hours for full resync
+  poll: 0      # Fire and forget to allow parallel recovery
+  loop: "{{ crash_nodes | default([]) }}"
   loop_control: 
     loop_var: c
     index_var: node_idx
   ignore_errors: yes
+  environment:
+    RUN_DIR: "{{ run_dir | default('') }}"
+    CRASH_DURATION: "{{ crash_duration_s | default(0) }}"
   ansible.builtin.shell: |
-    # Restart container to ensure clean state (no lock issues)
-    docker restart {{ c }}
+    # Individual recovery: each node waits until exactly crash_duration_s after its crash
+    # 1. Wait until this node has actually crashed (event exists in log)
+    until grep -q "node_crash node={{ c }}" "${RUN_DIR}/events.log"; do
+      sleep 0.2
+    done
+
+    # 2. Calculate remaining wait time
+    NODE_CRASH_LINE=$(grep "node_crash node={{ c }}" "${RUN_DIR}/events.log" | tail -1)
+    NODE_CRASH_TIME=$(echo "$NODE_CRASH_LINE" | awk '{print $1}')
     
-    # Wait for container to be fully up
-    sleep 3
+    # Calculate wait time using python in a one-liner
+    WAIT_SECONDS=$(python3 -c "import sys, datetime; ct=datetime.datetime.fromisoformat(sys.argv[1].replace('Z', '+00:00')); now=datetime.datetime.now(ct.tzinfo); print(max(0, int(float(sys.argv[2]) - (now-ct).total_seconds())))" "$NODE_CRASH_TIME" "$CRASH_DURATION")
     
+    if [ "$WAIT_SECONDS" -gt 0 ] 2>/dev/null; then
+      echo "Node {{ c }} waiting ${WAIT_SECONDS}s for equal downtime..."
+      sleep "$WAIT_SECONDS"
+    fi
+
+    # Start container - bitcoind starts automatically via entrypoint
+    # Config contains reindex=1 when reindex_on_restart is true (set during deploy)
+    docker start {{ c }}
+    
+    # Log individual node recovery start
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_node_start node={{ c }} index={{ node_idx }}" >> "${RUN_DIR}/events.log"
+
     # Log recovery_start after FIRST successful container restart
     {% if node_idx == 0 %}
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | join(',') }}" >> "{{ run_dir }}/events.log"
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "${RUN_DIR}/events.log"
     {% endif %}
     
-    # Stop bitcoind gracefully
-    docker exec {{ c }} bitcoin-cli -regtest stop 2>/dev/null || true
-    
-    # Wait for bitcoind to fully stop
-    for i in {1..15}; do
-      if ! docker exec {{ c }} pgrep -x bitcoind >/dev/null 2>&1; then
-        echo "✓ bitcoind stopped successfully"
-        break
-      fi
-      echo "Waiting for bitcoind to stop... ($i/15)"
-      sleep 1
-    done
-    
-    # Force kill if still running (should not happen)
-    docker exec {{ c }} pkill -9 bitcoind 2>/dev/null || true
-    sleep 1
-    
-    # Remove lock file if it exists (ensure clean start)
-    docker exec {{ c }} sh -c "rm -f /home/bitcoin/.bitcoin/regtest/.lock" 2>/dev/null || true
-    
-    # Start with reindex
-    docker exec {{ c }} bitcoind -regtest -reindex -daemon
-    
-    echo "✓ Reindex started for {{ c }}"
+    echo "✓ Recovery started for {{ c }} (reindex via config)"
+  register: full_resync_jobs
 
 # =============================================================================
 # RECOVERY: Fast resync mode (no reindex)
@@ -194,57 +162,62 @@
   when:
     - (crash_count | int) > 0
     - recovery_mode == "fast_resync" or (reindex_on_restart | default(false) | bool == false)
-  loop: "{{ crash_nodes }}"
+  async: 3600
+  poll: 0
+  loop: "{{ crash_nodes | default([]) }}"
   loop_control: 
     loop_var: c
     index_var: node_idx
+  environment:
+    RUN_DIR: "{{ run_dir | default('') }}"
+    CRASH_DURATION: "{{ crash_duration_s | default(0) }}"
   ansible.builtin.shell: |
-    docker start {{ c }}
-    # Log recovery_start after FIRST successful container start
-    {% if node_idx == 0 %}
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | join(',') }}" >> "{{ run_dir }}/events.log"
-    {% endif %}
-
-# =============================================================================
-# SYNC WAIT: Wait for recovered nodes to finish syncing
-# Robust criteria for Regtest:
-# 1) Node has at least one peer
-# 2) Node's block height >= current network max height
-# =============================================================================
-- name: Wait for recovered nodes to complete blockchain sync
-  when: (crash_count | int) > 0
-  loop: "{{ crash_nodes }}"
-  loop_control: { loop_var: c }
-  ansible.builtin.shell: |
-    # Calculate current network height (max over all nodes)
-    NET_H=0
-    for i in $(seq -f "%02g" 1 {{ node_count }}); do
-      H=$(docker exec node$i bitcoin-cli -regtest getblockcount 2>/dev/null || echo 0)
-      [ "$H" -gt "$NET_H" ] && NET_H=$H
+    # Individual recovery: each node waits until exactly crash_duration_s after its crash
+    # 1. Wait until this node has actually crashed (event exists in log)
+    until grep -q "node_crash node={{ c }}" "${RUN_DIR}/events.log"; do
+      sleep 0.2
     done
 
-    # Local node height and peers
-    NODE_H=$(docker exec {{ c }} bitcoin-cli -regtest getblockcount 2>/dev/null || echo 0)
-    PEERS=$(docker exec {{ c }} bitcoin-cli -regtest getconnectioncount 2>/dev/null || echo 0)
-
-    # Optional IBD flag (best-effort)
-    IBD=$(docker exec {{ c }} bitcoin-cli -regtest getblockchaininfo 2>/dev/null | jq -r '.initialblockdownload' || echo false)
-
-    # Consider synced if:
-    # - has peers AND node height >= network height
-    # - or IBD explicitly reports false and heights differ by at most 1 (tolerance)
-    if [ "$PEERS" -gt 0 ] && [ "$NODE_H" -ge "$NET_H" ]; then
-      echo synced
-    elif [ "$IBD" = "false" ] && [ $((NET_H - NODE_H)) -le 1 ]; then
-      echo synced
-    else
-      echo syncing
+    # 2. Calculate remaining wait time
+    NODE_CRASH_LINE=$(grep "node_crash node={{ c }}" "${RUN_DIR}/events.log" | tail -1)
+    NODE_CRASH_TIME=$(echo "$NODE_CRASH_LINE" | awk '{print $1}')
+    
+    # Calculate wait time using python in a one-liner
+    WAIT_SECONDS=$(python3 -c "import sys, datetime; ct=datetime.datetime.fromisoformat(sys.argv[1].replace('Z', '+00:00')); now=datetime.datetime.now(ct.tzinfo); print(max(0, int(float(sys.argv[2]) - (now-ct).total_seconds())))" "$NODE_CRASH_TIME" "$CRASH_DURATION")
+    
+    if [ "$WAIT_SECONDS" -gt 0 ] 2>/dev/null; then
+      echo "Node {{ c }} waiting ${WAIT_SECONDS}s for equal downtime..."
+      sleep "$WAIT_SECONDS"
     fi
-  register: sync_status
-  until: sync_status.stdout == "synced"
-  retries: 300
-  delay: 2
-  failed_when: false
+
+    docker start {{ c }}
+
+    # Log individual node recovery start
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_node_start node={{ c }} index={{ node_idx }}" >> "${RUN_DIR}/events.log"
+
+    # Log recovery_start after FIRST successful container start
+    {% if node_idx == 0 %}
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "${RUN_DIR}/events.log"
+    {% endif %}
+  register: fast_resync_jobs
+
+# =============================================================================
+# SYNC WAIT: Wait for ALL recovered nodes to finish syncing
+# Uses a ROBUST Python script to avoid Ansible/Bash escaping and race conditions
+# =============================================================================
+- name: Find healthy reference nodes (Sampling for stability)
+  when: (crash_count | int) > 0
+  ansible.builtin.set_fact:
+    # Take up to 3 healthy nodes as a reference group
+    reference_nodes: "{{ (query('sequence', 'start=1 end=' ~ node_count, format='node%02d') | list | difference(crash_nodes))[:3] | list }}"
+
+- name: Wait for ALL recovered nodes to sync (Python script)
+  when: (crash_count | int) > 0
+  ansible.builtin.shell: |
+    python3 files/wait_for_sync.py "{{ run_dir }}" "{{ crash_nodes | join(',') }}" "{{ reference_nodes | join(',') }}"
+  args:
+    chdir: "{{ workdir }}"
+  register: sync_result
 
 # =============================================================================
 # EVENT: recovery_complete - All nodes synchronized

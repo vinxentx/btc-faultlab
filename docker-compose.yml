@@ -2800,10 +2800,20 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_a_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_a/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2841,10 +2851,20 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_b_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_b/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2882,10 +2902,20 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_c_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_c/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2923,10 +2953,20 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # Verbinde jeden Shard mit zwei Kernknoten für geringe Latenz
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_d_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_d/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2936,6 +2976,210 @@ services:
       - "21084:18444"
       - "31072:28332"
       - "31073:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+  wallet_shard_e:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet_shard_e"
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command:
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=32"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
+    volumes:
+      - "wallet_shard_e_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_e/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "btcnet" ]
+    ports:
+      - "21093:18443"
+      - "21094:18444"
+      - "31082:28332"
+      - "31083:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+  wallet_shard_f:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet_shard_f"
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command:
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=32"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
+    volumes:
+      - "wallet_shard_f_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_f/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "btcnet" ]
+    ports:
+      - "21103:18443"
+      - "21104:18444"
+      - "31092:28332"
+      - "31093:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+  wallet_shard_g:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet_shard_g"
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command:
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=32"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
+    volumes:
+      - "wallet_shard_g_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_g/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "btcnet" ]
+    ports:
+      - "21113:18443"
+      - "21114:18444"
+      - "31102:28332"
+      - "31103:28333"
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+  wallet_shard_h:
+    image: "bitcoin/bitcoin:27.0"
+    container_name: "wallet_shard_h"
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: ["bitcoind"]
+    command:
+      - "-regtest=1"
+      - "-printtoconsole=1"
+      - "-datadir=/home/bitcoin/.bitcoin"
+      - "-server=1"
+      - "-txindex=1"
+      - "-rpcuser=user"
+      - "-rpcpassword=pass"
+      - "-rpcbind=0.0.0.0"
+      - "-rpcallowip=0.0.0.0/0"
+      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
+      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
+      - "-maxconnections=32"
+      - "-discover=1"
+      - "-dnsseed=0"
+      - "-listen=1"
+      # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
+      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
+      - "-connect=node09:18444"
+      - "-connect=node10:18444"
+      - "-connect=node11:18444"
+      - "-connect=node12:18444"
+    volumes:
+      - "wallet_shard_h_data:/home/bitcoin/.bitcoin"
+      - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_h/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
+    networks: [ "btcnet" ]
+    ports:
+      - "21123:18443"
+      - "21124:18444"
+      - "31112:28332"
+      - "31113:28333"
     healthcheck:
       test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
       interval: 30s
@@ -2976,7 +3220,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "2400"
+      - "1200"
     depends_on:
       wallet_shard_a:
         condition: service_healthy
@@ -3016,7 +3260,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "2400"
+      - "1200"
     depends_on:
       wallet_shard_b:
         condition: service_healthy
@@ -3056,7 +3300,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "2400"
+      - "1200"
     depends_on:
       wallet_shard_c:
         condition: service_healthy
@@ -3096,9 +3340,169 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "2400"
+      - "1200"
     depends_on:
       wallet_shard_d:
+        condition: service_healthy
+    networks: [ "btcnet" ]
+    profiles:
+      - txgen
+  txgen_e:
+    image: "python:3.12-slim"
+    container_name: "txgen_e"
+    restart: unless-stopped
+    user: "0:0"
+    working_dir: /app
+    volumes:
+      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
+      - "txlogs_e:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
+    command:
+      - python
+      - -u
+      - /app/txgen.py
+      - --shard-id
+      - "e"
+      - --rate
+      - "2.5000"
+      - --rpc
+      - "http://user:pass@wallet_shard_e:18443"
+      - --wallet
+      - "txshard_e"
+      - --log
+      - "/results/txlog_e.csv"
+      - --node-count
+      - "64"
+      - --address-pool-size
+      - "2048"
+      - --address-reuse-window
+      - "100"
+      - --amount-btc
+      - "0.0001"
+      - --utxo-target
+      - "1200"
+    depends_on:
+      wallet_shard_e:
+        condition: service_healthy
+    networks: [ "btcnet" ]
+    profiles:
+      - txgen
+  txgen_f:
+    image: "python:3.12-slim"
+    container_name: "txgen_f"
+    restart: unless-stopped
+    user: "0:0"
+    working_dir: /app
+    volumes:
+      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
+      - "txlogs_f:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
+    command:
+      - python
+      - -u
+      - /app/txgen.py
+      - --shard-id
+      - "f"
+      - --rate
+      - "2.5000"
+      - --rpc
+      - "http://user:pass@wallet_shard_f:18443"
+      - --wallet
+      - "txshard_f"
+      - --log
+      - "/results/txlog_f.csv"
+      - --node-count
+      - "64"
+      - --address-pool-size
+      - "2048"
+      - --address-reuse-window
+      - "100"
+      - --amount-btc
+      - "0.0001"
+      - --utxo-target
+      - "1200"
+    depends_on:
+      wallet_shard_f:
+        condition: service_healthy
+    networks: [ "btcnet" ]
+    profiles:
+      - txgen
+  txgen_g:
+    image: "python:3.12-slim"
+    container_name: "txgen_g"
+    restart: unless-stopped
+    user: "0:0"
+    working_dir: /app
+    volumes:
+      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
+      - "txlogs_g:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
+    command:
+      - python
+      - -u
+      - /app/txgen.py
+      - --shard-id
+      - "g"
+      - --rate
+      - "2.5000"
+      - --rpc
+      - "http://user:pass@wallet_shard_g:18443"
+      - --wallet
+      - "txshard_g"
+      - --log
+      - "/results/txlog_g.csv"
+      - --node-count
+      - "64"
+      - --address-pool-size
+      - "2048"
+      - --address-reuse-window
+      - "100"
+      - --amount-btc
+      - "0.0001"
+      - --utxo-target
+      - "1200"
+    depends_on:
+      wallet_shard_g:
+        condition: service_healthy
+    networks: [ "btcnet" ]
+    profiles:
+      - txgen
+  txgen_h:
+    image: "python:3.12-slim"
+    container_name: "txgen_h"
+    restart: unless-stopped
+    user: "0:0"
+    working_dir: /app
+    volumes:
+      - "/Users/vincenttietze/btc-faultlab/files:/app:ro"
+      - "txlogs_h:/results"
+      - "/Users/vincenttietze/btc-faultlab/state:/state:ro"
+    command:
+      - python
+      - -u
+      - /app/txgen.py
+      - --shard-id
+      - "h"
+      - --rate
+      - "2.5000"
+      - --rpc
+      - "http://user:pass@wallet_shard_h:18443"
+      - --wallet
+      - "txshard_h"
+      - --log
+      - "/results/txlog_h.csv"
+      - --node-count
+      - "64"
+      - --address-pool-size
+      - "2048"
+      - --address-reuse-window
+      - "100"
+      - --amount-btc
+      - "0.0001"
+      - --utxo-target
+      - "1200"
+    depends_on:
+      wallet_shard_h:
         condition: service_healthy
     networks: [ "btcnet" ]
     profiles:
@@ -3118,7 +3522,7 @@ services:
       - -u
       - /app/block_scheduler.py
       - --interval
-      - "16"
+      - "12"
       - --node-count
       - "64"
       - --mining-percentage
@@ -3133,7 +3537,7 @@ services:
       - /state/mining_targets.json
       - --use-variance
       - --min-interval
-      - "2.0"
+      - "0"
       - --adaptive-interval
       - --health-check-interval
       - "5.0"
@@ -3219,3 +3623,11 @@ volumes:
   txlogs_c: {}
   wallet_shard_d_data: {}
   txlogs_d: {}
+  wallet_shard_e_data: {}
+  txlogs_e: {}
+  wallet_shard_f_data: {}
+  txlogs_f: {}
+  wallet_shard_g_data: {}
+  txlogs_g: {}
+  wallet_shard_h_data: {}
+  txlogs_h: {}

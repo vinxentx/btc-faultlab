@@ -54,11 +54,20 @@
         dest: "{{ run_dir }}/metadata.yml"
         content: |
           run_id: {{ run_id }}
+          experiment_name: {{ experiment_name | default('unknown') }}
           node_count: {{ node_count }}
           tx_rate: {{ tx_rate }}
+          wallet_descriptor_pool_size: {{ wallet_descriptor_pool_size | default(800) }}
+          block_scheduler_interval_s: {{ block_scheduler_interval_s | default(16) }}
+          block_scheduler_use_variance: {{ block_scheduler_use_variance | default(false) }}
+          block_scheduler_min_interval: {{ block_scheduler_min_interval | default(2.0) }}
+          block_scheduler_adaptive_interval: {{ block_scheduler_adaptive_interval | default(true) }}
+          block_scheduler_health_check_interval: {{ block_scheduler_health_check_interval | default(5.0) }}
+          mining_percentage: {{ mining_percentage | default(1.0) }}
           crash_fraction: {{ crash_fraction }}
           crash_duration_s: {{ crash_duration_s }}
           crash_mode: {{ crash_mode }}
+          stagger_period_s: {{ stagger_period_s | default('N/A') }}
           recovery_mode: {{ recovery_mode }}
           reindex_on_restart: {{ reindex_on_restart }}
           loss_pct: {{ loss_pct }}
@@ -66,6 +75,8 @@
           bandwidth_mbit: {{ bandwidth_mbit }}
           jitter_ms: {{ jitter_ms | default(0) }}
           network_fault_fraction: {{ network_fault_fraction | default(1.0) }}
+          block_size_limit: {{ block_size_limit | default('1MB') }}
+          confirmations_for_latency_metric: {{ confirmations_for_latency_metric | default(6) }}
           warmup_s: {{ warmup_s }}
           observe_s: {{ observe_s }}
           cooldown_s: {{ cooldown_s }}
@@ -98,6 +109,14 @@
       ansible.builtin.shell: |
         echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_warmup" >> "{{ run_dir }}/events.log"
 
+    - name: Apply net impairments DURING warmup (scientific fix - network stabilization)
+      include_role: { name: netem }
+      vars: { run_dir: "{{ run_dir }}" }
+
+    - name: Log_event - netem_applied
+      ansible.builtin.shell: |
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms" >> "{{ run_dir }}/events.log"
+
     - name: Start mempool monitoring in background
       ansible.builtin.shell: |
         python3 files/mempool_monitor.py \
@@ -109,22 +128,18 @@
         chdir: "{{ workdir }}"
       changed_when: true
 
-    - name: Warm-up
+    - name: Warm-up (network stabilization under degraded conditions)
       ansible.builtin.pause: { seconds: "{{ warmup_s }}" }
 
-    - name: Apply net impairments (loss/latency/bandwidth)
-      include_role: { name: netem }
-      vars: { run_dir: "{{ run_dir }}" }
-
-    - name: Log_event - after_netem_before_crash
+    - name: Log_event - start_observation
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) after_netem" >> "{{ run_dir }}/events.log"
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_observation" >> "{{ run_dir }}/events.log"
 
     - name: Inject crashes
       include_role: { name: experiment }
       vars: { phase: "crash" }
 
-    - name: Observe recovery period
+    - name: Post-recovery observation period
       ansible.builtin.pause: { seconds: "{{ observe_s }}" }
 
     - name: Remove net impairments

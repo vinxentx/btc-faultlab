@@ -96,3 +96,12 @@ echo "   1. Check AWS Console for instance status"
 echo "   2. Verify Security Group rules"
 echo "   3. Confirm current public IP address"
 
+
+
+
+
+
+
+
+
+

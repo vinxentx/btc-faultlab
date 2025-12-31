@@ -207,9 +207,14 @@ class TierExperimentRunner:
             print(f"\n📊 Running: {exp_config['name']}")
             print(f"   {exp_config['description']}")
             
+            # Merge config and experimental_params
+            full_config = exp_config["config"].copy()
+            if "experimental_params" in exp_config:
+                full_config.update(exp_config["experimental_params"])
+            
             results = self.run_experiment_with_replications(
                 "baseline", 
-                exp_config["config"], 
+                full_config, 
                 num_runs,
                 node_count_override=node_count_override
             )
@@ -268,9 +273,14 @@ class TierExperimentRunner:
                 print(f"\n📊 Running: {exp_data['name']}")
                 print(f"   {exp_data['description']}")
                 
+                # Merge config and experimental_params
+                full_config = exp_data["config"].copy()
+                if "experimental_params" in exp_data:
+                    full_config.update(exp_data["experimental_params"])
+                
                 results = self.run_experiment_with_replications(
                     exp_name, 
-                    exp_data["config"], 
+                    full_config, 
                     num_runs,
                     node_count_override=node_count_override
                 )
@@ -301,14 +311,19 @@ class TierExperimentRunner:
         
         all_results = []
         for exp_name in all_experiments:
-            exp_config = tier_config["experiments"][exp_name]
-            print(f"\n📊 Running: {exp_config['name']}")
-            print(f"   Tier: {exp_config.get('tier', 'N/A')}")
-            print(f"   {exp_config['description']}")
+            exp_data = tier_config["experiments"][exp_name]
+            print(f"\n📊 Running: {exp_data['name']}")
+            print(f"   Tier: {exp_data.get('tier', 'N/A')}")
+            print(f"   {exp_data['description']}")
+            
+            # Merge config and experimental_params
+            full_config = exp_data["config"].copy()
+            if "experimental_params" in exp_data:
+                full_config.update(exp_data["experimental_params"])
             
             results = self.run_experiment_with_replications(
                 exp_name, 
-                exp_config["config"], 
+                full_config, 
                 num_runs,
                 node_count_override=node_count_override
             )
@@ -331,14 +346,19 @@ class TierExperimentRunner:
             print(f"Available experiments: {', '.join(tier_config['experiments'].keys())}")
             return None
         
-        exp_config = tier_config["experiments"][experiment_name]
-        print(f"\n📊 Running: {exp_config['name']}")
-        print(f"   Tier: {exp_config.get('tier', 'N/A')}")
-        print(f"   {exp_config['description']}")
+        exp_data = tier_config["experiments"][experiment_name]
+        print(f"\n📊 Running: {exp_data['name']}")
+        print(f"   Tier: {exp_data.get('tier', 'N/A')}")
+        print(f"   {exp_data['description']}")
+        
+        # Merge config and experimental_params
+        full_config = exp_data["config"].copy()
+        if "experimental_params" in exp_data:
+            full_config.update(exp_data["experimental_params"])
         
         return self.run_experiment_with_replications(
             experiment_name,
-            exp_config["config"],
+            full_config,
             num_runs,
             node_count_override=node_count_override
         )
