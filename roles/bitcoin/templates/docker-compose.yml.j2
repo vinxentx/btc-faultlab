@@ -73,13 +73,9 @@ services:
 {% set targets = targets + [i + 1] %}
 {% endif %}
 {% else %}
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-{% for j in core_nodes %}
-{% set targets = targets + [j] %}
-{% endfor %}
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
 {% set base = i - core_size - secondary_size - 1 %}
 {% if secondary_size > 0 %}
 {% set sec1 = core_size + ((base) % secondary_size) + 1 %}

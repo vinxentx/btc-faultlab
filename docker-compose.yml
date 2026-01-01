@@ -677,10 +677,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -720,10 +719,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -763,10 +761,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -806,10 +803,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -849,10 +845,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -892,10 +887,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -935,10 +929,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -978,10 +971,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1021,10 +1013,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1064,10 +1055,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1107,10 +1097,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1150,10 +1139,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1193,10 +1181,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1236,10 +1223,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1279,10 +1265,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1322,10 +1307,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1365,10 +1349,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1408,10 +1391,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1451,10 +1433,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1494,10 +1475,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1537,10 +1517,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1580,10 +1559,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1623,10 +1601,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1666,10 +1643,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1709,10 +1685,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1752,10 +1727,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1795,10 +1769,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1838,10 +1811,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1881,10 +1853,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1924,10 +1895,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1967,10 +1937,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2010,10 +1979,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -2053,10 +2021,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -2096,10 +2063,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -2139,10 +2105,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2182,10 +2147,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -2225,10 +2189,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -2268,10 +2231,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -2311,10 +2273,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2354,10 +2315,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -2397,10 +2357,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -2440,10 +2399,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -2483,10 +2441,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2526,10 +2483,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -2569,10 +2525,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -2612,10 +2567,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -2655,10 +2609,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2698,10 +2651,9 @@ services:
       - "-discover=1"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Direkte Verbindung zu ALLEN Core-Nodes
-      # Das ist der kritische Fix - garantiert max 2 Hops für Block-Propagation
-      # KEINE lateralen Ketten mehr (das war das Hauptproblem!)
-      # Plus 2 Secondary-Nodes für Redundanz (deterministisch verteilt)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
+      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
+      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:

@@ -51,7 +51,7 @@
   when: clear | default(false) | bool == false
   async_status:
     jid: "{{ item.ansible_job_id }}"
-  loop: "{{ netem_apply_jobs.results }}"
+  loop: "{{ netem_apply_jobs.results | selectattr('ansible_job_id', 'defined') | list }}"
   loop_control:
     label: "node{{ '%02d'|format(item.i) }}"
   register: job_results
@@ -103,7 +103,7 @@
   when: clear | default(false) | bool
   async_status:
     jid: "{{ item.ansible_job_id }}"
-  loop: "{{ netem_clear_jobs.results }}"
+  loop: "{{ netem_clear_jobs.results | selectattr('ansible_job_id', 'defined') | list }}"
   loop_control:
     label: "node{{ '%02d'|format(item.i) }}"
   register: job_results
