@@ -15,9 +15,9 @@ JSONRPC_HEADERS = {"Content-Type": "application/json"}
 
 class PersistentRPCClient:
     def __init__(self, rpc_url: str, auth: Optional[str] = None):
-        proto, rest = rpc_url.split("://", 1)
-        if proto != "http":
-            raise ValueError("Only http RPC endpoints are supported")
+    proto, rest = rpc_url.split("://", 1)
+    if proto != "http":
+        raise ValueError("Only http RPC endpoints are supported")
         self.host = rest
         self.auth = auth
         self._conn: Optional[HTTPConnection] = None
@@ -33,29 +33,29 @@ class PersistentRPCClient:
             self._conn = None
 
     def call(self, method: str, params=None, *, wallet: Optional[str] = None, timeout: int = 10):
-        payload = json.dumps({
-            "jsonrpc": "1.0",
-            "id": "txgen",
-            "method": method,
-            "params": params or []
-        })
-        headers = dict(JSONRPC_HEADERS)
+    payload = json.dumps({
+        "jsonrpc": "1.0",
+        "id": "txgen",
+        "method": method,
+        "params": params or []
+    })
+    headers = dict(JSONRPC_HEADERS)
         if self.auth:
             auth_str = base64.b64encode(self.auth.encode("utf-8")).decode("ascii")
             headers["Authorization"] = "Basic " + auth_str
         
-        path = f"/wallet/{wallet}" if wallet else "/"
+    path = f"/wallet/{wallet}" if wallet else "/"
         
         for attempt in range(2):  # Try once, then retry once if connection was closed by server
-            try:
+    try:
                 conn = self.get_connection(timeout)
-                conn.request("POST", path, payload, headers)
-                resp = conn.getresponse()
-                body = resp.read()
-                data = json.loads(body)
-                if data.get("error"):
-                    raise RuntimeError(data["error"])
-                return data["result"]
+        conn.request("POST", path, payload, headers)
+        resp = conn.getresponse()
+        body = resp.read()
+    data = json.loads(body)
+    if data.get("error"):
+        raise RuntimeError(data["error"])
+    return data["result"]
             except (ConnectionError, BrokenPipeError, EOFError):
                 self.close()
                 if attempt == 1:
