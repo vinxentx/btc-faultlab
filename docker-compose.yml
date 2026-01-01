@@ -3156,7 +3156,7 @@ services:
       - --shard-id
       - "a"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_a:18443"
       - --wallet
@@ -3172,7 +3172,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_a:
         condition: service_healthy
@@ -3196,7 +3196,7 @@ services:
       - --shard-id
       - "b"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_b:18443"
       - --wallet
@@ -3212,7 +3212,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_b:
         condition: service_healthy
@@ -3236,7 +3236,7 @@ services:
       - --shard-id
       - "c"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_c:18443"
       - --wallet
@@ -3252,7 +3252,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_c:
         condition: service_healthy
@@ -3276,7 +3276,7 @@ services:
       - --shard-id
       - "d"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_d:18443"
       - --wallet
@@ -3292,7 +3292,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_d:
         condition: service_healthy
@@ -3316,7 +3316,7 @@ services:
       - --shard-id
       - "e"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_e:18443"
       - --wallet
@@ -3332,7 +3332,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_e:
         condition: service_healthy
@@ -3356,7 +3356,7 @@ services:
       - --shard-id
       - "f"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_f:18443"
       - --wallet
@@ -3372,7 +3372,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_f:
         condition: service_healthy
@@ -3396,7 +3396,7 @@ services:
       - --shard-id
       - "g"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_g:18443"
       - --wallet
@@ -3412,7 +3412,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_g:
         condition: service_healthy
@@ -3436,7 +3436,7 @@ services:
       - --shard-id
       - "h"
       - --rate
-      - "2.5000"
+      - "2.0000"
       - --rpc
       - "http://user:pass@wallet_shard_h:18443"
       - --wallet
@@ -3452,7 +3452,7 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1200"
+      - "1400"
     depends_on:
       wallet_shard_h:
         condition: service_healthy

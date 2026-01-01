@@ -240,7 +240,7 @@ def main() -> int:
                         help="Erwartete Mindestanzahl bestätigter UTXOs vor Start")
     parser.add_argument("--stats-interval", type=int, default=200,
                         help="Alle X erfolgreichen TX werden UTXO-Statistiken erhoben")
-    parser.add_argument("--throughput-window", type=int, default=30,
+    parser.add_argument("--throughput-window", type=int, default=10,
                         help="Fenstergröße für Rolling Throughput in Sekunden")
     args = parser.parse_args()
 
@@ -314,9 +314,12 @@ def main() -> int:
     throughput_window: Deque[float] = deque()
     tx_index = 0
     last_stats = utxo_stats
+    
+    experiment_start_time = time.time()
 
     next_tick = time.perf_counter()
     print(f"⚡ Shard {args.shard_id}: Zielrate {args.rate:.4f} tx/s, Betrag {args.amount_btc} BTC")
+    print(f"   Rolling Window: {args.throughput_window}s für hohe Präzision")
 
     with open(args.log, "w", encoding="utf-8") as txlog, \
             open(performance_log, "w", encoding="utf-8") as perflog, \
@@ -325,84 +328,95 @@ def main() -> int:
         perflog.write(perflog_header)
         errlog.write(errorlog_header)
 
-        while True:
-            now = time.perf_counter()
-            sleep_for = next_tick - now
-            if sleep_for > 0:
-                time.sleep(min(sleep_for, 0.05))
-                continue
-            next_tick += interval
+        try:
+            while True:
+                now = time.perf_counter()
+                sleep_for = next_tick - now
+                if sleep_for > 0:
+                    time.sleep(min(sleep_for, 0.05))
+                    continue
+                next_tick += interval
 
-            dest_address = address_pool.current()
+                dest_address = address_pool.current()
 
-            start = time.perf_counter()
-            wall_clock = time.time()
-            try:
-                txid = rpc_call_with_retry(
-                    client,
-                    "sendtoaddress",
-                    [dest_address, args.amount_btc],
-                    wallet=args.wallet,
-                    timeout=timeout,
-                )
-                latency_ms = (time.perf_counter() - start) * 1000
-                tx_index += 1
-                address_pool.mark_success()
+                start = time.perf_counter()
+                wall_clock = time.time()
+                try:
+                    txid = rpc_call_with_retry(
+                        client,
+                        "sendtoaddress",
+                        [dest_address, args.amount_btc],
+                        wallet=args.wallet,
+                        timeout=timeout,
+                    )
+                    latency_ms = (time.perf_counter() - start) * 1000
+                    tx_index += 1
+                    address_pool.mark_success()
 
-                # Rolling throughput
-                rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
+                    # Rolling throughput
+                    rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
+                    
+                    # Erreicht vs Erwartet
+                    elapsed_total = wall_clock - experiment_start_time
+                    expected_tx = elapsed_total * args.rate
+                    achieved_pct = (tx_index / expected_tx * 100) if expected_tx > 0 else 100.0
 
-                # NOTE: expensive wallet stats collection disabled.
-                # Left in place for the old insufficient-funds debugging but skipped by default.
-                # if args.stats_interval > 0 and tx_index % args.stats_interval == 0:
-                #     last_stats = fetch_wallet_utxos(client, args.wallet, timeout, min_conf=0)
+                    # NOTE: expensive wallet stats collection disabled.
+                    # Left in place for the old insufficient-funds debugging but skipped by default.
+                    # if args.stats_interval > 0 and tx_index % args.stats_interval == 0:
+                    #     last_stats = fetch_wallet_utxos(client, args.wallet, timeout, min_conf=0)
 
-                timestamp = datetime.now(timezone.utc).isoformat()
-                txlog.write(f"{tx_index},{args.shard_id},{timestamp},{txid}\n")
-                txlog.flush()
+                    timestamp = datetime.now(timezone.utc).isoformat()
+                    txlog.write(f"{tx_index},{args.shard_id},{timestamp},{txid}\n")
+                    txlog.flush()
 
-                perflog.write(
-                    f"{tx_index},{timestamp},{latency_ms:.2f},{rtps:.4f},"
-                    f"{last_stats['confirmed']},{last_stats['unconfirmed']},"
-                    f"{last_stats['total']},{last_stats['balance']:.8f},ok\n"
-                )
-                perflog.flush()
+                    perflog.write(
+                        f"{tx_index},{timestamp},{latency_ms:.2f},{rtps:.4f},"
+                        f"{last_stats['confirmed']},{last_stats['unconfirmed']},"
+                        f"{last_stats['total']},{last_stats['balance']:.8f},ok\n"
+                    )
+                    perflog.flush()
 
-                if tx_index % 200 == 0:
-                    print(f"📤 Shard {args.shard_id}: {tx_index} TX, Latenz {latency_ms:.1f} ms, "
-                          f"Rolling TPS {rtps:.2f}, UTXOs {last_stats['confirmed']}/{last_stats['total']}")
+                    if tx_index % 50 == 0:
+                        print(f"📤 Shard {args.shard_id}: {tx_index} TX, Latenz {latency_ms:.1f} ms, "
+                              f"Rolling TPS {rtps:.4f} (Ziel: {args.rate:.4f}), "
+                              f"Erreicht: {achieved_pct:.1f}%, UTXOs {last_stats['confirmed']}/{last_stats['total']}")
 
-            except RuntimeError as err:
-                address_pool.mark_failure()
-                code, message = decode_rpc_error(err)
-                timestamp = datetime.now(timezone.utc).isoformat()
-                safe_message = (message or "").replace('"', '""')
-                errlog.write(f"{timestamp},{code if code is not None else ''},\"{safe_message}\","
-                             f"tx_index={tx_index}\n")
-                errlog.flush()
+                except RuntimeError as err:
+                    address_pool.mark_failure()
+                    code, message = decode_rpc_error(err)
+                    timestamp = datetime.now(timezone.utc).isoformat()
+                    safe_message = (message or "").replace('"', '""')
+                    errlog.write(f"{timestamp},{code if code is not None else ''},\"{safe_message}\","
+                                 f"tx_index={tx_index}\n")
+                    errlog.flush()
 
-                rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
-                perflog.write(
-                    f"{tx_index},{timestamp},0.00,{rtps:.4f},"
-                    f"{last_stats['confirmed']},{last_stats['unconfirmed']},"
-                    f"{last_stats['total']},{last_stats['balance']:.8f},error\n"
-                )
-                perflog.flush()
+                    rtps = rolling_throughput(throughput_window, wall_clock, args.throughput_window)
+                    perflog.write(
+                        f"{tx_index},{timestamp},0.00,{rtps:.4f},"
+                        f"{last_stats['confirmed']},{last_stats['unconfirmed']},"
+                        f"{last_stats['total']},{last_stats['balance']:.8f},error\n"
+                    )
+                    perflog.flush()
 
-                msg_lower = message.lower() if message else ""
-                if code == -6 or "insufficient funds" in msg_lower:
-                    print(f"⚠️  Shard {args.shard_id}: unzureichende Mittel – warte auf nächste Blöcke")
-                    time.sleep(2.5)
-                    last_stats = fetch_wallet_utxos(client, args.wallet, timeout, min_conf=0)
-                else:
-                    print(f"⚠️  Shard {args.shard_id}: RPC-Fehler ({code}): {message}")
-                    time.sleep(1.0)
+                    msg_lower = message.lower() if message else ""
+                    if code == -6 or "insufficient funds" in msg_lower:
+                        print(f"⚠️  Shard {args.shard_id}: unzureichende Mittel – warte auf nächste Blöcke")
+                        time.sleep(2.5)
+                        last_stats = fetch_wallet_utxos(client, args.wallet, timeout, min_conf=0)
+                    else:
+                        print(f"⚠️  Shard {args.shard_id}: RPC-Fehler ({code}): {message}")
+                        time.sleep(1.0)
 
-                # Reset Zeitplanung, damit keine Altlasten aufholen müssen
-                next_tick = max(next_tick, time.perf_counter() + interval)
-            except KeyboardInterrupt:
-                print("⏹️  Abbruchsignal erhalten – stoppe Shard sauber.")
-                break
+                    # Reset Zeitplanung, damit keine Altlasten aufholen müssen
+                    next_tick = max(next_tick, time.perf_counter() + interval)
+        except KeyboardInterrupt:
+            elapsed_final = time.time() - experiment_start_time
+            actual_rate = tx_index / elapsed_final if elapsed_final > 0 else 0.0
+            print(f"\n⏹️  Shard {args.shard_id} stoppt – Zusammenfassung:")
+            print(f"   Gesendet: {tx_index} TX in {elapsed_final:.1f}s")
+            print(f"   Rate: {actual_rate:.4f} tx/s (Ziel: {args.rate:.4f})")
+            print(f"   Effizienz: {(actual_rate / args.rate * 100):.2f}%")
 
     return 0
 
