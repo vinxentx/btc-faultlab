@@ -833,16 +833,16 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 20,
-        "wallet_descriptor_pool_size": 1200,
+        "tx_rate": 16,
+        "wallet_descriptor_pool_size": 1400,
         "block_scheduler_interval_s": 12,
         "crash_fraction": 0.25,
         "crash_duration_s": 120,
         "crash_mode": "burst",
         "recovery_mode": "full_resync",
         "loss_pct": 10,
-        "latency_ms": 200,
-        "bandwidth_mbit": 10,
+        "latency_ms": 150,
+        "bandwidth_mbit": 25,
         "warmup_s": 120,
         "observe_s": 480,
         "cooldown_s": 60,
@@ -853,7 +853,7 @@
         "block_scheduler_min_interval": 0
       },
       "experimental_params": {
-        "block_size_limit": "2MB",
+        "block_size_limit": "1MB",
         "confirmations_for_latency_metric": 6
       }
     },
