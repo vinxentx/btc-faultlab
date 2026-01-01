@@ -20,10 +20,10 @@ def encode_basic_auth(credential: str) -> str:
 
 def rpc_timeout_for(node_count: int) -> int:
     if node_count >= 128:
-        return 20
+        return 60
     if node_count >= 64:
-        return 15
-    return 10
+        return 30
+    return 15
 
 
 def rpc_call(rpc_url: str, method: str, params=None, *, auth: Optional[str], wallet: Optional[str] = None,
@@ -426,10 +426,18 @@ def main() -> int:
         total_batches += len(batches)
         for batch_idx, batch in enumerate(batches):
             outputs = {addr: round(args.utxo_amount, 8) for addr in batch}
+            # minconf=0 erlaubt Wiederverwendung von unbestätigtem Change
             rpc_call_with_retry(
-                funding_rpc, "sendmany", ["", outputs, 1],
+                funding_rpc, "sendmany", ["", outputs, 0],
                 auth=auth, wallet=args.funding_wallet, timeout=timeout
             )
+            
+            if (batch_idx + 1) % 5 == 0:
+                print(f"{format_ts()}   Batch {batch_idx + 1}/{len(batches)} für Shard {shard.shard_id} gesendet...")
+            
+            # Kurze Pause für den Wallet-Prozess
+            time.sleep(0.2)
+
             # Mine nach jedem 4. Batch, um Mempool-Druck zu vermeiden
             # WICHTIG: Sequenziell auf einem Miner, um Forks zu vermeiden!
             if (batch_idx + 1) % 4 == 0:
