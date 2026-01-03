@@ -13,6 +13,6 @@ blockmaxweight=8000000
 blockmaxweight=4000000
 {% endif %}
 {% endif %}
-{% if reindex_on_restart | default(false) | bool %}
+{% if reindex_on_restart is defined and reindex_on_restart | bool %}
 reindex=1
 {% endif %}

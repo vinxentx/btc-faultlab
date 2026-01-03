@@ -4,10 +4,10 @@ name: "{{ network_name }}"
 {% set core_size = 8 if n >= 8 else n %}
 {% set secondary_size = ([n - core_size, 8] | min) if n > core_size else 0 %}
 {% set outer_size = n - core_size - secondary_size %}
-{% set core_nodes = range(1, core_size + 1) %}
-{% set secondary_nodes = range(core_size + 1, core_size + secondary_size + 1) %}
+{% set core_nodes = range(1, core_size + 1) | list %}
+{% set secondary_nodes = range(core_size + 1, core_size + secondary_size + 1) | list %}
 {# 
-   OPTIMIERTE NETZWERKTOPOLOGIE (basierend auf Bitcoin-Netzwerk-Forschung)
+   DETERMINISTISCHE NETZWERKTOPOLOGIE für wissenschaftliche Experimente
    
    Wissenschaftliche Grundlage:
    - "Miner-Clique dominiert Propagation" (2025): Mining-Pools bilden dicht 
@@ -15,12 +15,13 @@ name: "{{ network_name }}"
    - "Peer Selection affects Fork Rate" (2022): Gute Peer-Auswahl reduziert Forks
    - Echtes Bitcoin: Median 0.5s, p90 2.5s Block-Propagation
    
-   Topologie-Design:
-   - Core (8 Nodes): Volles Mesh - simuliert Mining-Pool-Clique
-   - Secondary (8 Nodes): Alle Core + Nachbarn - "gut verbundene Full-Nodes"  
-   - Outer (Rest): Alle Core + 2 Secondary - garantiert max 2 Hops
+   Topologie-Design (Hub-and-Spoke):
+   - Core (8 Nodes): Volles Mesh - simuliert Mining-Pool-Clique (7 Peers je)
+   - Secondary (8 Nodes): Alle 8 Core + 2 Nachbarn = 10 Peers je
+   - Outer (Rest): 2 Secondary-Nodes = 2 Peers je (max 3 Hops)
    
-   KRITISCH: Keine lateralen Ketten! Das war das Hauptproblem der alten Topologie.
+   KRITISCH: -discover=0 für deterministische, reproduzierbare Topologie!
+   Gesamtverbindungen: 8*7/2 + 8*8 + 8*2/2 + 112*2 = 28 + 64 + 8 + 224 = 324
 #}
 services:
 {% for i in range(1, n + 1) %}
@@ -43,51 +44,46 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-{% set targets = [] %}
+{# Berechne Targets basierend auf Node-Tier #}
 {% if i <= core_size %}
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
 {% for j in core_nodes %}
-{% if j != i %}
-{% set targets = targets + [j] %}
+{% if j > i %}
+      - "-connect=node{{ '%02d'|format(j) }}:18444"
 {% endif %}
-{% endfor %}
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
-{% for j in secondary_nodes %}
-{% set targets = targets + [j] %}
 {% endfor %}
 {% elif i <= core_size + secondary_size %}
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
 {% for j in core_nodes %}
-{% set targets = targets + [j] %}
+      - "-connect=node{{ '%02d'|format(j) }}:18444"
 {% endfor %}
-      # Plus Nachbar-Secondary für lokale Redundanz
-{% if i - 1 >= core_size + 1 %}
-{% set targets = targets + [i - 1] %}
-{% endif %}
 {% if i + 1 <= core_size + secondary_size %}
-{% set targets = targets + [i + 1] %}
+      - "-connect=node{{ '%02d'|format(i + 1) }}:18444"
 {% endif %}
 {% else %}
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-{% set base = i - core_size - secondary_size - 1 %}
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
 {% if secondary_size > 0 %}
-{% set sec1 = core_size + ((base) % secondary_size) + 1 %}
+{% set base = i - core_size - secondary_size - 1 %}
+{% set sec1 = core_size + (base % secondary_size) + 1 %}
 {% set sec2 = core_size + ((base + 4) % secondary_size) + 1 %}
-{% set targets = targets + [sec1, sec2] %}
+{% if sec1 != sec2 %}
+      - "-connect=node{{ '%02d'|format(sec1) }}:18444"
+      - "-connect=node{{ '%02d'|format(sec2) }}:18444"
+{% else %}
+      - "-connect=node{{ '%02d'|format(sec1) }}:18444"
+      - "-connect=node{{ '%02d'|format((sec1 - core_size) % secondary_size + core_size + 1) }}:18444"
 {% endif %}
-{% endif %}
-{% for target in targets | unique | list | sort %}
-{% if target != i %}
-      - "-connect=node{{ '%02d'|format(target) }}:18444"
-{% endif %}
+{% else %}
+      # Keine Secondary-Nodes, verbinde direkt zu Core-Nodes
+{% for j in core_nodes[:2] %}
+      - "-connect=node{{ '%02d'|format(j) }}:18444"
 {% endfor %}
+{% endif %}
+{% endif %}
     volumes:
       - "node{{ '%02d'|format(i) }}_data:/home/bitcoin/.bitcoin"
       - "{{ workdir }}/config/node{{ '%02d'|format(i) }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -129,21 +125,15 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
 {% if core_size > 0 %}
       # Connect to ALL core nodes for maximum redundancy and fast block propagation
-      # This ensures the funding wallet sees all blocks immediately, even with the new topology
-{% for i in range(1, core_size + 1) %}
-      - "-connect=node{{ '%02d'|format(i) }}:18444"
+      # This ensures the funding wallet sees all blocks immediately
+{% for j in range(1, core_size + 1) %}
+      - "-connect=node{{ '%02d'|format(j) }}:18444"
 {% endfor %}
-      # Also connect to secondary nodes for additional redundancy
-{% if secondary_size > 0 %}
-{% for i in range(core_size + 1, core_size + secondary_size + 1) %}
-      - "-connect=node{{ '%02d'|format(i) }}:18444"
-{% endfor %}
-{% endif %}
 {% endif %}
     volumes:
       - "{{ wallet_funding_container }}_data:/home/bitcoin/.bitcoin"
@@ -182,7 +172,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
 {% if core_size > 0 %}
@@ -190,12 +180,6 @@ services:
 {% for peer in range(1, core_size + 1) %}
       - "-connect=node{{ '%02d'|format(peer) }}:18444"
 {% endfor %}
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-{% if secondary_size > 0 %}
-{% for peer in range(core_size + 1, ([core_size + secondary_size, core_size + 4] | min) + 1) %}
-      - "-connect=node{{ '%02d'|format(peer) }}:18444"
-{% endfor %}
-{% endif %}
 {% endif %}
     volumes:
       - "{{ shard.wallet_container }}_data:/home/bitcoin/.bitcoin"
@@ -252,6 +236,10 @@ services:
       - "{{ txgen_send_amount_btc }}"
       - --utxo-target
       - "{{ wallet_descriptor_pool_size }}"
+      - --num-workers
+      - "{{ txgen_num_workers | default(4) }}"
+      - --queue-size
+      - "{{ txgen_queue_size | default(200) }}"
     depends_on:
       {{ shard.wallet_container }}:
         condition: service_healthy
@@ -317,3 +305,4 @@ volumes:
   {{ shard.wallet_container }}_data: {}
   txlogs_{{ shard.log_suffix }}: {}
 {% endfor %}
+

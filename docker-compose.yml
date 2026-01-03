@@ -20,12 +20,17 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node01_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node01/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -60,12 +65,16 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node02_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node02/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -100,12 +109,15 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node03_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node03/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -140,12 +152,14 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node04_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node04/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -180,12 +194,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node05_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node05/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -220,12 +235,12 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node06_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node06/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -260,12 +275,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
+      - "-connect=node08:18444"
     volumes:
       - "node07_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node07/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -300,12 +314,10 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # CORE TIER: Volles Mesh untereinander (simuliert Mining-Pool-Clique)
-      # Forschung zeigt: Mining-Pools sind extrem gut vernetzt untereinander
-      # Plus Verbindung zu allen Secondary-Nodes (bidirektionale Redundanz)
+      # CORE TIER: Volles Mesh zu anderen Core-Nodes (simuliert Mining-Pool-Clique)
     volumes:
       - "node08_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node08/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -340,12 +352,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node10:18444"
     volumes:
       - "node09_data:/home/bitcoin/.bitcoin"
@@ -381,13 +399,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node09:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node11:18444"
     volumes:
       - "node10_data:/home/bitcoin/.bitcoin"
@@ -423,13 +446,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node10:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node12:18444"
     volumes:
       - "node11_data:/home/bitcoin/.bitcoin"
@@ -465,13 +493,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node11:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node13:18444"
     volumes:
       - "node12_data:/home/bitcoin/.bitcoin"
@@ -507,13 +540,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node12:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node14:18444"
     volumes:
       - "node13_data:/home/bitcoin/.bitcoin"
@@ -549,13 +587,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node13:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node15:18444"
     volumes:
       - "node14_data:/home/bitcoin/.bitcoin"
@@ -591,13 +634,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node14:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
       - "-connect=node16:18444"
     volumes:
       - "node15_data:/home/bitcoin/.bitcoin"
@@ -633,13 +681,18 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes (nicht nur 4!)
-      # Das garantiert max 2 Hops für Blöcke die hier ankommen
-      # Plus Nachbar-Secondary für lokale Redundanz
-      - "-connect=node15:18444"
+      # SECONDARY TIER: Verbindung zu ALLEN Core-Nodes + Ring-Nachbarn
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node16_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node16/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -674,12 +727,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -716,12 +768,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -758,12 +809,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -800,12 +850,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -842,14 +891,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node09:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node13:18444"
+      - "-connect=node09:18444"
     volumes:
       - "node21_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node21/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -884,14 +932,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node10:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node14:18444"
+      - "-connect=node10:18444"
     volumes:
       - "node22_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node22/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -926,14 +973,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node11:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node15:18444"
+      - "-connect=node11:18444"
     volumes:
       - "node23_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node23/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -968,14 +1014,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node12:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node16:18444"
+      - "-connect=node12:18444"
     volumes:
       - "node24_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node24/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1010,12 +1055,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1052,12 +1096,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1094,12 +1137,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1136,12 +1178,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1178,14 +1219,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node09:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node13:18444"
+      - "-connect=node09:18444"
     volumes:
       - "node29_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node29/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1220,14 +1260,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node10:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node14:18444"
+      - "-connect=node10:18444"
     volumes:
       - "node30_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node30/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1262,14 +1301,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node11:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node15:18444"
+      - "-connect=node11:18444"
     volumes:
       - "node31_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node31/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1304,14 +1342,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node12:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node16:18444"
+      - "-connect=node12:18444"
     volumes:
       - "node32_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node32/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1346,12 +1383,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1388,12 +1424,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1430,12 +1465,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1472,12 +1506,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1514,14 +1547,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node09:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node13:18444"
+      - "-connect=node09:18444"
     volumes:
       - "node37_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node37/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1556,14 +1588,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node10:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node14:18444"
+      - "-connect=node10:18444"
     volumes:
       - "node38_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node38/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1598,14 +1629,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node11:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node15:18444"
+      - "-connect=node11:18444"
     volumes:
       - "node39_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node39/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1640,14 +1670,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node12:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node16:18444"
+      - "-connect=node12:18444"
     volumes:
       - "node40_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node40/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1682,12 +1711,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -1724,12 +1752,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -1766,12 +1793,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -1808,12 +1834,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -1850,14 +1875,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node09:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node13:18444"
+      - "-connect=node09:18444"
     volumes:
       - "node45_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node45/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1892,14 +1916,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node10:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node14:18444"
+      - "-connect=node10:18444"
     volumes:
       - "node46_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node46/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1934,14 +1957,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node11:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node15:18444"
+      - "-connect=node11:18444"
     volumes:
       - "node47_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node47/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1976,14 +1998,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node12:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node16:18444"
+      - "-connect=node12:18444"
     volumes:
       - "node48_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node48/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2018,12 +2039,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -2060,12 +2080,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -2102,12 +2121,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2144,12 +2162,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -2186,14 +2203,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node09:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node13:18444"
+      - "-connect=node09:18444"
     volumes:
       - "node53_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node53/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2228,14 +2244,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node10:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node14:18444"
+      - "-connect=node10:18444"
     volumes:
       - "node54_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node54/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2270,14 +2285,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node11:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node15:18444"
+      - "-connect=node11:18444"
     volumes:
       - "node55_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node55/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2312,14 +2326,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node12:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node16:18444"
+      - "-connect=node12:18444"
     volumes:
       - "node56_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node56/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2354,12 +2367,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node09:18444"
       - "-connect=node13:18444"
     volumes:
@@ -2396,12 +2408,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node10:18444"
       - "-connect=node14:18444"
     volumes:
@@ -2438,12 +2449,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node11:18444"
       - "-connect=node15:18444"
     volumes:
@@ -2480,12 +2490,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node12:18444"
       - "-connect=node16:18444"
     volumes:
@@ -2522,14 +2531,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node09:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node13:18444"
+      - "-connect=node09:18444"
     volumes:
       - "node61_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node61/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2564,14 +2572,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node10:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node14:18444"
+      - "-connect=node10:18444"
     volumes:
       - "node62_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node62/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2606,14 +2613,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node11:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node15:18444"
+      - "-connect=node11:18444"
     volumes:
       - "node63_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node63/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2648,14 +2654,13 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch verteilt)
-      # Diese Topologie simuliert realistische "Home Nodes" mit wenigen Peers
-      # Block-Propagation erfolgt über Secondary → Core (max 3 Hops)
-      - "-connect=node12:18444"
+      # OUTER TIER: Verbindung zu 2 Secondary-Nodes (deterministisch Round-Robin)
+      # Falls keine Secondary-Nodes existieren (n <= 8), verbinde direkt zu Core
       - "-connect=node16:18444"
+      - "-connect=node12:18444"
     volumes:
       - "node64_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node64/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2692,11 +2697,11 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=64"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Connect to ALL core nodes for maximum redundancy and fast block propagation
-      # This ensures the funding wallet sees all blocks immediately, even with the new topology
+      # This ensures the funding wallet sees all blocks immediately
       - "-connect=node01:18444"
       - "-connect=node02:18444"
       - "-connect=node03:18444"
@@ -2705,15 +2710,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Also connect to secondary nodes for additional redundancy
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
-      - "-connect=node13:18444"
-      - "-connect=node14:18444"
-      - "-connect=node15:18444"
-      - "-connect=node16:18444"
     volumes:
       - "wallet_funding_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_funding/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2749,7 +2745,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -2761,11 +2757,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_a_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_a/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2800,7 +2791,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -2812,11 +2803,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_b_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_b/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2851,7 +2837,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -2863,11 +2849,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_c_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_c/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2902,7 +2883,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -2914,11 +2895,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_d_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_d/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2953,7 +2929,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -2965,11 +2941,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_e_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_e/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3004,7 +2975,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -3016,11 +2987,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_f_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_f/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3055,7 +3021,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -3067,11 +3033,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_g_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_g/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3106,7 +3067,7 @@ services:
       - "-zmqpubhashblock=tcp://0.0.0.0:28332"
       - "-zmqpubhashtx=tcp://0.0.0.0:28333"
       - "-maxconnections=32"
-      - "-discover=1"
+      - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
       # Verbinde jeden Shard mit ALLEN Kernknoten für maximale Resilienz gegen netem
@@ -3118,11 +3079,6 @@ services:
       - "-connect=node06:18444"
       - "-connect=node07:18444"
       - "-connect=node08:18444"
-      # Plus die ersten 4 Secondary-Nodes für zusätzliche Redundanz
-      - "-connect=node09:18444"
-      - "-connect=node10:18444"
-      - "-connect=node11:18444"
-      - "-connect=node12:18444"
     volumes:
       - "wallet_shard_h_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_h/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3172,7 +3128,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_a:
         condition: service_healthy
@@ -3212,7 +3172,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_b:
         condition: service_healthy
@@ -3252,7 +3216,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_c:
         condition: service_healthy
@@ -3292,7 +3260,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_d:
         condition: service_healthy
@@ -3332,7 +3304,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_e:
         condition: service_healthy
@@ -3372,7 +3348,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_f:
         condition: service_healthy
@@ -3412,7 +3392,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_g:
         condition: service_healthy
@@ -3452,7 +3436,11 @@ services:
       - --amount-btc
       - "0.0001"
       - --utxo-target
-      - "1400"
+      - "1800"
+      - --num-workers
+      - "4"
+      - --queue-size
+      - "200"
     depends_on:
       wallet_shard_h:
         condition: service_healthy
@@ -3583,3 +3571,4 @@ volumes:
   txlogs_g: {}
   wallet_shard_h_data: {}
   txlogs_h: {}
+
