@@ -23,6 +23,8 @@
     {% endfor %}
     # block scheduler logs
     docker logs block_scheduler > "{{ rd }}/block_scheduler.log" 2>&1 &
+    # injection gateway logs
+    docker logs injection_gateway > "{{ rd }}/injection_gateway.log" 2>&1 &
     wait
   changed_when: true
 
