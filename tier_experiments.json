@@ -12,7 +12,7 @@
       "config": {
         "node_count": 128,
         "tx_rate": 20,
-        "wallet_descriptor_pool_size": 1800,
+        "wallet_descriptor_pool_size": 2400,
         "block_scheduler_interval_s": 12,
         "crash_fraction": 0.0,
         "crash_duration_s": 0,
