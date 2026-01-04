@@ -15,9 +15,9 @@
     group: "{{ file_group }}"
   loop: "{{ range(1, (node_count | int) + 1) | list }}"
 
-- name: Build wallet service list
+- name: Build wallet service list (includes injection_gateway for clean TX injection)
   ansible.builtin.set_fact:
-    wallet_services: "{{ [wallet_funding_container] + (txgen_shards | map(attribute='wallet_container') | list) }}"
+    wallet_services: "{{ [wallet_funding_container, 'injection_gateway'] + (txgen_shards | map(attribute='wallet_container') | list) }}"
 
 - name: Ensure wallet config dirs exist
   ansible.builtin.file:

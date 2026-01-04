@@ -803,8 +803,8 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 16,
-        "wallet_descriptor_pool_size": 1800,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2000,
         "block_scheduler_interval_s": 12,
         "crash_fraction": 0.25,
         "crash_duration_s": 120,
