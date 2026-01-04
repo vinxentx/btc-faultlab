@@ -32,7 +32,7 @@ workdir: "{{ playbook_dir | realpath | dirname }}"
 wallet_funding_container: "wallet_funding"
 wallet_funding_name: "funding"
 wallet_descriptor_pool_size: 800         # Zielanzahl an bestätigten UTXOs pro Shard
-wallet_descriptor_amount_btc: 0.0002     # Betrag pro vorbereiteter UTXO
+wallet_descriptor_amount_btc: 0.001      # Betrag pro vorbereiteter UTXO (erhöht für Gebühren-Headroom)
 funding_confirmation_blocks: 12          # Blöcke zur Bestätigung nach Verteilung
 
 wallet_rpc_base: 21043
@@ -74,7 +74,7 @@ txgen_shards:
 
 txgen_address_pool_size: 2048           # Anzahl vorbereiteter Zieladressen pro Shard
 txgen_address_reuse_window: 100         # Nur jede 100. TX ruft getnewaddress auf
-txgen_send_amount_btc: 0.0001           # Zielbetrag pro Transaktion
+txgen_send_amount_btc: 0.00001          # Zielbetrag pro Transaktion (reduziert für bessere UTXO-Nutzung)
 
 block_scheduler_interval_s: 16           # Blocktakt in Sekunden
 block_scheduler_seed: 1337              # Deterministischer Seed für Miner-Rotation

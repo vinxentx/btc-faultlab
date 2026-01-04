@@ -9,19 +9,19 @@
 - name: Compute network fault count
   when: clear | default(false) | bool == false
   ansible.builtin.set_fact:
-    network_fault_count: "{{ (node_count * network_fault_fraction_val) | round(0,'floor') | int }}"
+    network_fault_count: "{{ (node_count | int * network_fault_fraction_val | float) | round(0,'floor') | int }}"
 
 - name: Pick nodes for network faults (seeded shuffle, take first k)
-  when: 
+  when:
     - clear | default(false) | bool == false
-    - network_fault_fraction_val < 1.0
+    - (network_fault_fraction_val | float) < 1.0
   ansible.builtin.set_fact:
     network_fault_nodes_idx: "{{ (all_nodes | shuffle(seed=seed) | list)[: (network_fault_count | int)] | default([]) }}"
 
 - name: Use all nodes for network faults (when fraction = 1.0 or not specified)
-  when: 
+  when:
     - clear | default(false) | bool == false
-    - network_fault_fraction_val >= 1.0
+    - (network_fault_fraction_val | float) >= 1.0
   ansible.builtin.set_fact:
     network_fault_nodes_idx: "{{ all_nodes }}"
 
@@ -68,19 +68,19 @@
 - name: Compute network fault count for clearing
   when: clear | default(false) | bool
   ansible.builtin.set_fact:
-    network_fault_count_clear: "{{ (node_count * network_fault_fraction_clear) | round(0,'floor') | int }}"
+    network_fault_count_clear: "{{ (node_count | int * network_fault_fraction_clear | float) | round(0,'floor') | int }}"
 
 - name: Pick nodes for clearing network faults (seeded shuffle, take first k)
-  when: 
+  when:
     - clear | default(false) | bool
-    - network_fault_fraction_clear < 1.0
+    - (network_fault_fraction_clear | float) < 1.0
   ansible.builtin.set_fact:
     network_fault_nodes_idx_clear: "{{ (all_nodes_clear | shuffle(seed=seed) | list)[: (network_fault_count_clear | int)] | default([]) }}"
 
 - name: Use all nodes for clearing (when fraction = 1.0 or not specified)
-  when: 
+  when:
     - clear | default(false) | bool
-    - network_fault_fraction_clear >= 1.0
+    - (network_fault_fraction_clear | float) >= 1.0
   ansible.builtin.set_fact:
     network_fault_nodes_idx_clear: "{{ all_nodes_clear }}"
 

@@ -151,54 +151,6 @@ services:
       retries: 3
       start_period: 40s
 
-  # INJECTION GATEWAY: Clean relay point for transaction injection
-  # This node is EXCLUDED from netem/crashes to ensure consistent TX injection rate.
-  # It connects to core nodes and relays transactions into the network.
-  # Wallet shards connect ONLY to this node, isolating injection from network faults.
-  injection_gateway:
-    image: "{{ image }}"
-    container_name: "injection_gateway"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command:
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser={{ rpc_user }}"
-      - "-rpcpassword={{ rpc_pass }}"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-maxconnections=64"
-      - "-discover=0"
-      - "-dnsseed=0"
-      - "-listen=1"
-{% if core_size > 0 %}
-      # Connect to ALL core nodes for fast propagation into the network
-{% for j in range(1, core_size + 1) %}
-      - "-connect=node{{ '%02d'|format(j) }}:18444"
-{% endfor %}
-{% endif %}
-    volumes:
-      - "injection_gateway_data:/home/bitcoin/.bitcoin"
-      - "{{ workdir }}/config/injection_gateway/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "{{ network_name }}" ]
-    ports:
-      - "21033:18443"
-      - "21034:18444"
-      - "31022:28332"
-      - "31023:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
 {% for shard in txgen_shards %}
 {% set offset = (loop.index) * 10 %}
   {{ shard.wallet_container }}:
@@ -223,8 +175,13 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+{% if core_size > 0 %}
+{% for j in range(1, core_size + 1) %}
+      - "-connect=node{{ '%02d'|format(j) }}:18444"
+{% endfor %}
+{% endif %}
     volumes:
       - "{{ shard.wallet_container }}_data:/home/bitcoin/.bitcoin"
       - "{{ workdir }}/config/{{ shard.wallet_container }}/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -345,7 +302,6 @@ volumes:
   node{{ '%02d'|format(i) }}_data: {}
 {% endfor %}
   {{ wallet_funding_container }}_data: {}
-  injection_gateway_data: {}
 {% for shard in txgen_shards %}
   {{ shard.wallet_container }}_data: {}
   txlogs_{{ shard.log_suffix }}: {}

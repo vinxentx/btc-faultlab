@@ -2726,57 +2726,6 @@ services:
       retries: 3
       start_period: 40s
 
-  # INJECTION GATEWAY: Clean relay point for transaction injection
-  # This node is EXCLUDED from netem/crashes to ensure consistent TX injection rate.
-  # It connects to core nodes and relays transactions into the network.
-  # Wallet shards connect ONLY to this node, isolating injection from network faults.
-  injection_gateway:
-    image: "bitcoin/bitcoin:27.0"
-    container_name: "injection_gateway"
-    restart: unless-stopped
-    user: "101:101"
-    entrypoint: ["bitcoind"]
-    command:
-      - "-regtest=1"
-      - "-printtoconsole=1"
-      - "-datadir=/home/bitcoin/.bitcoin"
-      - "-server=1"
-      - "-txindex=1"
-      - "-rpcuser=user"
-      - "-rpcpassword=pass"
-      - "-rpcbind=0.0.0.0"
-      - "-rpcallowip=0.0.0.0/0"
-      - "-zmqpubhashblock=tcp://0.0.0.0:28332"
-      - "-zmqpubhashtx=tcp://0.0.0.0:28333"
-      - "-maxconnections=64"
-      - "-discover=0"
-      - "-dnsseed=0"
-      - "-listen=1"
-      # Connect to ALL core nodes for fast propagation into the network
-      - "-connect=node01:18444"
-      - "-connect=node02:18444"
-      - "-connect=node03:18444"
-      - "-connect=node04:18444"
-      - "-connect=node05:18444"
-      - "-connect=node06:18444"
-      - "-connect=node07:18444"
-      - "-connect=node08:18444"
-    volumes:
-      - "injection_gateway_data:/home/bitcoin/.bitcoin"
-      - "/Users/vincenttietze/btc-faultlab/config/injection_gateway/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
-    networks: [ "btcnet" ]
-    ports:
-      - "21033:18443"
-      - "21034:18444"
-      - "31022:28332"
-      - "31023:28333"
-    healthcheck:
-      test: ["CMD", "bitcoin-cli", "-regtest", "getblockchaininfo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
   wallet_shard_a:
     image: "bitcoin/bitcoin:27.0"
     container_name: "wallet_shard_a"
@@ -2799,8 +2748,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_a_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_a/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2838,8 +2795,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_b_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_b/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2877,8 +2842,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_c_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_c/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2916,8 +2889,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_d_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_d/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2955,8 +2936,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_e_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_e/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2994,8 +2983,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_f_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_f/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3033,8 +3030,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_g_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_g/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3072,8 +3077,16 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      # Connect ONLY to injection_gateway - isolates TX injection from netem/network faults
-      - "-connect=injection_gateway:18444"
+      # Connect directly to ALL core nodes for fast propagation
+      # wallet_shard nodes are implicitly excluded from netem (different naming pattern)
+      - "-connect=node01:18444"
+      - "-connect=node02:18444"
+      - "-connect=node03:18444"
+      - "-connect=node04:18444"
+      - "-connect=node05:18444"
+      - "-connect=node06:18444"
+      - "-connect=node07:18444"
+      - "-connect=node08:18444"
     volumes:
       - "wallet_shard_h_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/wallet_shard_h/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -3121,9 +3134,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3165,9 +3178,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3209,9 +3222,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3253,9 +3266,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3297,9 +3310,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3341,9 +3354,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3385,9 +3398,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3429,9 +3442,9 @@ services:
       - --address-reuse-window
       - "100"
       - --amount-btc
-      - "0.0001"
+      - "1e-05"
       - --utxo-target
-      - "1800"
+      - "2400"
       - --num-workers
       - "4"
       - --queue-size
@@ -3550,7 +3563,6 @@ volumes:
   node63_data: {}
   node64_data: {}
   wallet_funding_data: {}
-  injection_gateway_data: {}
   wallet_shard_a_data: {}
   txlogs_a: {}
   wallet_shard_b_data: {}
