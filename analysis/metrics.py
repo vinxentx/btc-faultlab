@@ -2381,13 +2381,21 @@ def main():
                 break
     
     # Filter submissions to experiment window only (exclude pre-funding, warmup, cooldown, etc.)
+    # IMPORTANT: We apply a confirmation buffer to exclude TXs submitted too close to the end
+    # of observation. These TXs may not have had time to confirm, which would unfairly lower
+    # availability metrics. The buffer ensures we only count TXs that had a fair chance to confirm.
+    CONFIRMATION_BUFFER_SECONDS = 60  # Time needed for TX to get into a block and confirm
+
     df_sub_filtered = df_sub.copy()
     if not df_sub_filtered.empty and "submit_ts_utc" in df_sub_filtered.columns:
         if start_experiment is not None:
             df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] >= start_experiment]
         if end_observe is not None:
-            df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] <= end_observe]
-    
+            # Apply confirmation buffer: only count TXs submitted before (end_observe - buffer)
+            # This ensures every counted TX had time to confirm during cooldown
+            submission_cutoff = end_observe - pd.Timedelta(seconds=CONFIRMATION_BUFFER_SECONDS)
+            df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] <= submission_cutoff]
+
     # Filter confirmations to experiment window only (exclude pre-funding, warmup, etc.)
     # IMPORTANT: We filter by SUBMIT time (not confirm time) to include confirmations
     # that happen during cooldown for transactions submitted during observation.
@@ -2397,7 +2405,9 @@ def main():
         if start_experiment is not None and "submit_ts_utc" in df_conf_filtered.columns:
             df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] >= start_experiment]
         if end_observe is not None and "submit_ts_utc" in df_conf_filtered.columns:
-            df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] <= end_observe]
+            # Use same cutoff as submissions for consistency
+            submission_cutoff = end_observe - pd.Timedelta(seconds=CONFIRMATION_BUFFER_SECONDS)
+            df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] <= submission_cutoff]
         # Also filter out confirmations before experiment start (safety check)
         if start_experiment is not None and "confirm_ts_utc" in df_conf_filtered.columns:
             df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] >= start_experiment]

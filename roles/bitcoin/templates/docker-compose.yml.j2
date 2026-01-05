@@ -241,6 +241,8 @@ services:
       - "{{ txgen_num_workers | default(4) }}"
       - --queue-size
       - "{{ txgen_queue_size | default(200) }}"
+      - --max-duration
+      - "{{ warmup_s + observe_s }}"
     depends_on:
       {{ shard.wallet_container }}:
         condition: service_healthy

@@ -608,7 +608,9 @@ def main() -> int:
     parser.add_argument("--num-workers", type=int, default=4, help="Anzahl paralleler Sender")
     parser.add_argument("--queue-size", type=int, default=200, help="TX-Queue Größe")
     parser.add_argument("--prep-multiplier", type=float, default=1.5,
-                        help="Multiplier für TX-Pool (rate * observe_time * multiplier)")
+                        help="Multiplier für TX-Pool (rate * max_duration * multiplier)")
+    parser.add_argument("--max-duration", type=int, default=0,
+                        help="Max injection duration in seconds (0 = unlimited)")
     # Legacy args (ignored but accepted for compatibility)
     parser.add_argument("--address-pool-size", type=int, default=1024)
     parser.add_argument("--address-reuse-window", type=int, default=100)
@@ -657,8 +659,9 @@ def main() -> int:
         raise RuntimeError(f"Nicht genug UTXOs nach {max_utxo_wait}s")
 
     # Calculate how many transactions to prepare
-    # Estimate: rate * 600s (10 min max observation) * multiplier
-    tx_count = int(args.rate * 600 * args.prep_multiplier)
+    # Use max_duration if specified, otherwise default to 600s (10 min)
+    base_duration = args.max_duration if args.max_duration > 0 else 600
+    tx_count = int(args.rate * base_duration * args.prep_multiplier)
     tx_count = max(tx_count, 1000)  # Minimum 1000 TXs
     tx_count = min(tx_count, args.utxo_target)  # Can't exceed available UTXOs
 
@@ -703,6 +706,8 @@ def main() -> int:
     errorlog_header = "timestamp_utc,error_code,error_message,context\n"
 
     print(f"⚡ Shard {args.shard_id}: Zielrate {args.rate:.4f} tx/s via sendrawtransaction")
+    if args.max_duration > 0:
+        print(f"⏱️  Shard {args.shard_id}: Max Injection-Dauer {args.max_duration}s")
 
     try:
         with open(args.log, "w", encoding="utf-8") as txlog, \
@@ -715,10 +720,19 @@ def main() -> int:
 
             injector.start(txlog, perflog, errlog)
 
+            injection_start = time.time()
             while True:
                 time.sleep(1.0)
+                # Stop after max_duration if specified
+                if args.max_duration > 0:
+                    elapsed = time.time() - injection_start
+                    if elapsed >= args.max_duration:
+                        print(f"⏱️  Shard {args.shard_id}: Max Dauer erreicht ({args.max_duration}s)")
+                        break
 
     except KeyboardInterrupt:
+        pass
+    finally:
         injector.stop()
 
     return 0
