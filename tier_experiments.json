@@ -28,7 +28,7 @@
         "reindex_on_restart": false,
         "jitter_ms": 5,
         "block_scheduler_use_variance": true,
-        "block_scheduler_min_interval": 0
+        "block_scheduler_min_interval": 2
       },
       "experimental_params": {
         "block_size_limit": "1MB",
