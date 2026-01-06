@@ -6,6 +6,11 @@ node_count: 32
 tx_rate: 10
 regions: ["eu","us"]
 
+# --- Network Topology ---
+# Modes: "hierarchical" (3-tier) | "hybrid" (core mesh + k-regular random)
+topology_mode: "hybrid"
+topology_k: 4                    # Non-core node degree for hybrid mode
+
 # --- Fault Injection ---
 crash_fraction: 0.30
 crash_duration_s: 300

@@ -111,6 +111,33 @@ def check_miners_health(miners: List[str], auth: str, timeout: int = 2) -> Set[s
     return active
 
 
+def read_crashed_nodes(filepath: str = "/state/crashed_nodes.txt") -> Set[str]:
+    """
+    Liest die Liste der gecrachten Nodes aus einer Datei.
+
+    Die Datei wird vom Ansible-Playbook geschrieben BEVOR Nodes gestoppt werden.
+    Format: Ein Node-Name pro Zeile (z.B. "node01", "node02")
+
+    Returns:
+        Set der gecrachten Node-Namen (z.B. {"node01:18443", "node02:18443"})
+    """
+    crashed: Set[str] = set()
+    try:
+        with open(filepath, "r") as f:
+            for line in f:
+                node = line.strip()
+                if node:
+                    # Konvertiere "node01" zu "node01:18443"
+                    if ":" not in node:
+                        node = f"{node}:18443"
+                    crashed.add(node)
+    except FileNotFoundError:
+        pass  # Keine gecrachten Nodes
+    except Exception:
+        pass  # Bei Fehlern ignorieren
+    return crashed
+
+
 def miner_cycle(miners: List[str], seed: int) -> Iterable[str]:
     order = miners[:]
     rng = random.Random(seed)
@@ -379,7 +406,21 @@ def main() -> int:
         # Periodischer Health-Check
         if adaptive_interval and (now_time - last_health_check) >= health_check_interval:
             perform_health_check()
-        
+
+        # Prüfe auf extern signalisierte Crashes (vom Ansible-Playbook)
+        if adaptive_interval:
+            crashed_nodes = read_crashed_nodes()
+            if crashed_nodes:
+                newly_crashed = crashed_nodes & active_miners
+                if newly_crashed:
+                    active_miners -= newly_crashed
+                    ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+                    ts = format_ts()
+                    print(f"{ts} 📢 Crash-Signal empfangen: {len(newly_crashed)} Nodes entfernt - "
+                          f"{len(active_miners)}/{total_miners} Miner aktiv (Ratio: {ratio:.2f})")
+                    print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
+                    last_active_count = len(active_miners)
+
         sleep_for = next_tick - now_perf
         if sleep_for > 0:
             time.sleep(min(sleep_for, 0.1))
@@ -481,21 +522,7 @@ def main() -> int:
             else:
                 next_tick = time.perf_counter() + 1.0
         except Exception as err:  # noqa: BLE001
-            print(f"{format_ts()} ❌ Unerwarteter Fehler bei Miner {miner}: {err}")
-            
-            # Bei Fehler: Miner als inaktiv markieren
-            if adaptive_interval:
-                if miner in active_miners:
-                    active_miners.discard(miner)
-                    ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
-                    ts = format_ts()
-                    print(f"{ts} 🔍 Miner {miner} inaktiv (Verbindungsfehler) - "
-                          f"{len(active_miners)}/{total_miners} Miner aktiv (Ratio: {ratio:.2f})")
-                    print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
-                    last_active_count = len(active_miners)
-            
-            # Bei Verbindungsfehlern: kürzere Wartezeit, dann sofort nächsten Miner versuchen
-            # Prüfe ob es ein Verbindungsfehler ist (Name or service not known, Connection refused, etc.)
+            # Prüfe ob es ein Verbindungsfehler ist (erwartet bei Crash-Experimenten)
             err_str = str(err).lower()
             is_connection_error = any(keyword in err_str for keyword in [
                 "name or service not known",
@@ -507,10 +534,29 @@ def main() -> int:
                 "errno 111",
                 "errno 110"
             ])
-            
+
+            # Nur unerwartete Fehler loggen (Verbindungsfehler sind bei Crash-Experimenten normal)
+            if not is_connection_error:
+                print(f"{format_ts()} ❌ Unerwarteter Fehler bei Miner {miner}: {err}")
+
+            # Bei Fehler: Miner als inaktiv markieren
+            if adaptive_interval:
+                if miner in active_miners:
+                    active_miners.discard(miner)
+                    ratio = len(active_miners) / total_miners if total_miners > 0 else 0.0
+                    ts = format_ts()
+                    print(f"{ts} 🔍 Miner {miner} inaktiv (Verbindungsfehler) - "
+                          f"{len(active_miners)}/{total_miners} Miner aktiv (Ratio: {ratio:.2f})")
+                    print(f"HASHPOWER_EVENT,{ts},{len(active_miners)},{total_miners},{ratio:.4f}")
+                    last_active_count = len(active_miners)
+
             if is_connection_error:
-                # Bei Verbindungsfehlern: nur sehr kurz warten, dann sofort nächsten Miner versuchen
-                next_tick = time.perf_counter() + 0.5
+                # Bei Verbindungsfehlern: sofort Health-Check um alle ausgefallenen Nodes zu finden
+                # Dies verhindert wiederholte Fehlversuche bei Burst-Crashes
+                if adaptive_interval:
+                    perform_health_check()
+                # Kurz warten, dann sofort nächsten Miner versuchen
+                next_tick = time.perf_counter() + 0.1
             else:
                 # Bei anderen Fehlern: normale Behandlung
                 next_tick = time.perf_counter() + 2.0

@@ -162,8 +162,18 @@ def mine_blocks(miner_hosts: Sequence[str], total_blocks: int, auth: str, addres
             continue
         rpc_url = f"http://{miner}"
         print(f"{format_ts()} ⛏️  Miner {miner} erzeugt {count} Blöcke auf Adresse {address}")
-        result = rpc_call(rpc_url, "generatetoaddress", [count, address], auth=auth, timeout=timeout)
-        blocks.extend(result or [])
+        # Use retry logic to handle transient connection issues
+        for attempt in range(3):
+            try:
+                result = rpc_call(rpc_url, "generatetoaddress", [count, address], auth=auth, timeout=timeout)
+                blocks.extend(result or [])
+                break
+            except Exception as exc:
+                if attempt < 2:
+                    print(f"{format_ts()}   ⚠️  Miner {miner} Fehler (Versuch {attempt+1}/3): {exc}, retry...")
+                    time.sleep(2)
+                else:
+                    print(f"{format_ts()}   ❌ Miner {miner} endgültig fehlgeschlagen, überspringe")
     return blocks
 
 

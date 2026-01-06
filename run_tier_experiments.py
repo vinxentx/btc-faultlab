@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import argparse
+import random
 from pathlib import Path
 from datetime import datetime
 from run_experiments import ExperimentRunner
@@ -23,7 +24,7 @@ class TierExperimentRunner:
         with open(self.config_file, 'r') as f:
             return json.load(f)
     
-    def run_experiment_with_replications(self, name, config, num_runs=3, max_retries=2, node_count_override=None):
+    def run_experiment_with_replications(self, name, config, num_runs=4, max_retries=2, node_count_override=None):
         """Run a single experiment configuration multiple times for statistical significance"""
         print(f"\n{'='*80}")
         print(f"EXPERIMENT: {name}")
@@ -34,11 +35,13 @@ class TierExperimentRunner:
         failed_runs = []
         
         for run_num in range(1, num_runs + 1):
-            print(f"\n>>> Replication {run_num}/{num_runs}")
-            
-            # Vary seed for each replication
+            # Generate random seed for each replication (ensures statistical independence)
+            random_seed = random.randint(1, 999999)
+            print(f"\n>>> Replication {run_num}/{num_runs} (seed: {random_seed})")
+
+            # Use random seed for each replication
             config_copy = config.copy()
-            config_copy["seed"] = config.get("seed", 42) + run_num - 1
+            config_copy["seed"] = random_seed
             
             # Override node count if specified
             if node_count_override is not None:
@@ -194,7 +197,7 @@ class TierExperimentRunner:
         with open(checkpoint_file, 'w') as f:
             json.dump(checkpoint_data, f, indent=2)
     
-    def run_baseline(self, num_runs=3, node_count_override=None):
+    def run_baseline(self, num_runs=4, node_count_override=None):
         """Run baseline experiment only"""
         print("\n" + "="*80)
         print("🎯 RUNNING BASELINE EXPERIMENT")
@@ -207,14 +210,9 @@ class TierExperimentRunner:
             print(f"\n📊 Running: {exp_config['name']}")
             print(f"   {exp_config['description']}")
             
-            # Merge config and experimental_params
-            full_config = exp_config["config"].copy()
-            if "experimental_params" in exp_config:
-                full_config.update(exp_config["experimental_params"])
-            
             results = self.run_experiment_with_replications(
-                "baseline", 
-                full_config, 
+                "baseline",
+                exp_config["config"], 
                 num_runs,
                 node_count_override=node_count_override
             )
@@ -230,39 +228,50 @@ class TierExperimentRunner:
             print("❌ Baseline experiment not found in configuration")
             return []
     
-    def run_tier_a(self, num_runs=3, node_count_override=None):
+    def run_tier_a(self, num_runs=4, node_count_override=None):
         """Run all Tier A experiments (crash impact)"""
         print("\n" + "="*80)
         print("🎯 RUNNING TIER A EXPERIMENTS (Crash Impact Analysis)")
         print("="*80)
-        print(f"24 experiments × {num_runs} replications = {24 * num_runs} runs")
-        print(f"Estimated duration: ~{24 * num_runs * 35 / 60:.1f} hours")
+        print(f"12 experiments × {num_runs} replications = {12 * num_runs} runs")
+        print(f"Estimated duration: ~{12 * num_runs * 35 / 60:.1f} hours")
         print("="*80)
-        
+
         return self._run_tier("A", num_runs, node_count_override)
     
-    def run_tier_b(self, num_runs=3, node_count_override=None):
+    def run_tier_b(self, num_runs=4, node_count_override=None):
         """Run all Tier B experiments (stress environment)"""
         print("\n" + "="*80)
         print("🎯 RUNNING TIER B EXPERIMENTS (Stress Environment)")
         print("="*80)
-        print(f"4 experiments × {num_runs} replications = {4 * num_runs} runs")
-        print(f"Estimated duration: ~{4 * num_runs * 35 / 60:.1f} hours")
+        print(f"14 experiments × {num_runs} replications = {14 * num_runs} runs")
+        print(f"Estimated duration: ~{14 * num_runs * 35 / 60:.1f} hours")
         print("="*80)
-        
+
         return self._run_tier("B", num_runs, node_count_override)
-    
-    def run_tier_c(self, num_runs=3, node_count_override=None):
+
+    def run_tier_c(self, num_runs=4, node_count_override=None):
         """Run all Tier C experiments (block interval sensitivity)"""
         print("\n" + "="*80)
         print("🎯 RUNNING TIER C EXPERIMENTS (Block Interval Sensitivity)")
         print("="*80)
-        print(f"4 experiments × {num_runs} replications = {4 * num_runs} runs")
-        print(f"Estimated duration: ~{4 * num_runs * 35 / 60:.1f} hours")
+        print(f"6 experiments × {num_runs} replications = {6 * num_runs} runs")
+        print(f"Estimated duration: ~{6 * num_runs * 35 / 60:.1f} hours")
         print("="*80)
-        
+
         return self._run_tier("C", num_runs, node_count_override)
-    
+
+    def run_tier_d(self, num_runs=4, node_count_override=None):
+        """Run all Tier D experiments (64-node network size comparison)"""
+        print("\n" + "="*80)
+        print("🎯 RUNNING TIER D EXPERIMENTS (64-Node Network Size Comparison)")
+        print("="*80)
+        print(f"10 experiments × {num_runs} replications = {10 * num_runs} runs")
+        print(f"Estimated duration: ~{10 * num_runs * 35 / 60:.1f} hours")
+        print("="*80)
+
+        return self._run_tier("D", num_runs, node_count_override)
+
     def _run_tier(self, tier_name, num_runs, node_count_override=None):
         """Run all experiments for a specific tier"""
         tier_config = self.load_tier_config()
@@ -273,14 +282,9 @@ class TierExperimentRunner:
                 print(f"\n📊 Running: {exp_data['name']}")
                 print(f"   {exp_data['description']}")
                 
-                # Merge config and experimental_params
-                full_config = exp_data["config"].copy()
-                if "experimental_params" in exp_data:
-                    full_config.update(exp_data["experimental_params"])
-                
                 results = self.run_experiment_with_replications(
-                    exp_name, 
-                    full_config, 
+                    exp_name,
+                    exp_data["config"],
                     num_runs,
                     node_count_override=node_count_override
                 )
@@ -294,7 +298,7 @@ class TierExperimentRunner:
         print(f"\n✅ Tier {tier_name} complete! Results saved to: {summary_file}")
         return all_results
     
-    def run_extended_suite(self, num_runs=3, node_count_override=None):
+    def run_extended_suite(self, num_runs=4, node_count_override=None):
         """Run all tier experiments (baseline + all tiers)"""
         print("\n" + "="*80)
         print("🎯 RUNNING FULL TIER EXPERIMENT SUITE")
@@ -316,14 +320,9 @@ class TierExperimentRunner:
             print(f"   Tier: {exp_data.get('tier', 'N/A')}")
             print(f"   {exp_data['description']}")
             
-            # Merge config and experimental_params
-            full_config = exp_data["config"].copy()
-            if "experimental_params" in exp_data:
-                full_config.update(exp_data["experimental_params"])
-            
             results = self.run_experiment_with_replications(
-                exp_name, 
-                full_config, 
+                exp_name,
+                exp_data["config"],
                 num_runs,
                 node_count_override=node_count_override
             )
@@ -351,14 +350,9 @@ class TierExperimentRunner:
         print(f"   Tier: {exp_data.get('tier', 'N/A')}")
         print(f"   {exp_data['description']}")
         
-        # Merge config and experimental_params
-        full_config = exp_data["config"].copy()
-        if "experimental_params" in exp_data:
-            full_config.update(exp_data["experimental_params"])
-        
         return self.run_experiment_with_replications(
             experiment_name,
-            full_config,
+            exp_data["config"],
             num_runs,
             node_count_override=node_count_override
         )
@@ -431,16 +425,16 @@ Examples:
     
     parser.add_argument("--baseline", action="store_true",
                        help="Run baseline experiment only")
-    parser.add_argument("--tier", type=str, choices=["A", "B", "C"],
-                       help="Run specific tier (A, B, or C)")
+    parser.add_argument("--tier", type=str, choices=["A", "B", "C", "D"],
+                       help="Run specific tier (A, B, C, or D)")
     parser.add_argument("--extended", action="store_true",
                        help="Run full suite (all experiments)")
     parser.add_argument("--experiment", type=str,
                        help="Run specific experiment by name")
     parser.add_argument("--list", action="store_true",
                        help="List all available tier experiments")
-    parser.add_argument("--runs", type=int, default=3,
-                       help="Number of replications per experiment (default: 3)")
+    parser.add_argument("--runs", type=int, default=4,
+                       help="Number of replications per experiment (default: 4)")
     parser.add_argument("--node-count", type=int, default=None,
                        help="Override node count from config (e.g., --node-count 64)")
     parser.add_argument("--with-bootstrap", action="store_true",
@@ -466,6 +460,8 @@ Examples:
             runner.run_tier_b(num_runs=args.runs, node_count_override=args.node_count)
         elif args.tier == "C":
             runner.run_tier_c(num_runs=args.runs, node_count_override=args.node_count)
+        elif args.tier == "D":
+            runner.run_tier_d(num_runs=args.runs, node_count_override=args.node_count)
     elif args.extended:
         runner.run_extended_suite(num_runs=args.runs, node_count_override=args.node_count)
     elif args.experiment:

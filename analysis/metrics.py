@@ -740,8 +740,9 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     # Parse crash/recovery events for separating online vs recovery sync samples
     crashed_nodes_set = set()
     crash_start_ts = None
+    recovery_start_ts = None
     recovery_complete_ts = None
-    
+
     if events:
         for (ts, evt, rest) in events:
             if evt == "crash_start" and crash_start_ts is None:
@@ -749,6 +750,8 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
                 if rest and "nodes=" in rest:
                     nodes_str = rest.split("nodes=", 1)[1].strip()
                     crashed_nodes_set = set(nodes_str.split(","))
+            elif evt == "recovery_start" and recovery_start_ts is None:
+                recovery_start_ts = ts
             elif evt == "recovery_complete" and recovery_complete_ts is None:
                 recovery_complete_ts = ts
                 if rest and "nodes=" in rest and not crashed_nodes_set:
@@ -869,33 +872,62 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     
     online_samples = []
     recovery_samples = []
-    
-    # Make recovery_complete_ts timezone-aware if needed
+    partition_samples = []  # For non-crashed nodes that received blocks via network heal/reorg
+
+    # Make timestamps timezone-aware if needed
     recovery_complete_ts_aware = None
     if recovery_complete_ts is not None:
         if recovery_complete_ts.tzinfo is None:
             recovery_complete_ts_aware = recovery_complete_ts.replace(tzinfo=timezone.utc)
         else:
             recovery_complete_ts_aware = recovery_complete_ts
-    
+
+    recovery_start_ts_aware = None
+    if recovery_start_ts is not None:
+        if recovery_start_ts.tzinfo is None:
+            recovery_start_ts_aware = recovery_start_ts.replace(tzinfo=timezone.utc)
+        else:
+            recovery_start_ts_aware = recovery_start_ts
+
+    crash_start_ts_aware = None
+    if crash_start_ts is not None:
+        if crash_start_ts.tzinfo is None:
+            crash_start_ts_aware = crash_start_ts.replace(tzinfo=timezone.utc)
+        else:
+            crash_start_ts_aware = crash_start_ts
+
     for (block_hash, node_name), (delay, mined_ts, arrival_ts) in seen.items():
-        # Determine if this is a recovery sync sample
-        is_recovery_sample = False
-        
+        # Ensure timestamps are timezone-aware
+        mined_ts_aware = mined_ts
+        if hasattr(mined_ts, 'tzinfo') and mined_ts.tzinfo is None:
+            mined_ts_aware = mined_ts.replace(tzinfo=timezone.utc)
+        arrival_ts_aware = arrival_ts
+        if hasattr(arrival_ts, 'tzinfo') and arrival_ts.tzinfo is None:
+            arrival_ts_aware = arrival_ts.replace(tzinfo=timezone.utc)
+
+        sample_type = "online"  # Default
+
+        # Threshold for abnormal delay that indicates partition (vs normal network variance)
+        # Normal P2P propagation is <1s; anything >10s during crash period is partition effect
+        PARTITION_DELAY_THRESHOLD = 10.0  # seconds
+
         if crashed_nodes_set and node_name in crashed_nodes_set:
             # Node was crashed - check if block was mined during outage
-            if recovery_complete_ts_aware is not None:
-                # Ensure mined_ts is timezone-aware
-                mined_ts_aware = mined_ts
-                if hasattr(mined_ts, 'tzinfo') and mined_ts.tzinfo is None:
-                    mined_ts_aware = mined_ts.replace(tzinfo=timezone.utc)
-                
-                # Block mined before recovery_complete = recovery sync sample
-                if mined_ts_aware < recovery_complete_ts_aware:
-                    is_recovery_sample = True
-        
-        if is_recovery_sample:
+            if recovery_complete_ts_aware is not None and mined_ts_aware < recovery_complete_ts_aware:
+                sample_type = "recovery_sync"
+        elif crash_start_ts_aware and recovery_complete_ts_aware:
+            # Non-crashed node: detect partition_resync
+            # A non-crashed node with abnormally high delay during crash/recovery period
+            # indicates it was isolated (on wrong fork) and received blocks via reorg
+            block_mined_during_outage = (crash_start_ts_aware <= mined_ts_aware < recovery_complete_ts_aware)
+            abnormal_delay = (delay > PARTITION_DELAY_THRESHOLD)
+            if block_mined_during_outage and abnormal_delay:
+                sample_type = "partition_resync"
+
+        if sample_type == "recovery_sync":
             recovery_samples.append((delay, mined_ts, arrival_ts, block_hash, node_name))
+        elif sample_type == "partition_resync":
+            partition_samples.append((delay, mined_ts, arrival_ts, block_hash, node_name))
         else:
             online_samples.append((delay, mined_ts, arrival_ts, block_hash, node_name))
     
@@ -918,18 +950,25 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     
     # Compute separated statistics
     online_stats = compute_delay_stats(
-        online_samples, 
+        online_samples,
         "Network propagation for nodes online at mining time"
     )
     recovery_stats = compute_delay_stats(
         recovery_samples,
         "Sync delay for crashed nodes catching up after recovery"
     )
+    partition_stats = compute_delay_stats(
+        partition_samples,
+        "Partition resync - online nodes that received blocks via reorg after network healed"
+    )
 
-    # Build per-node delays from deduped samples
+    # Build per-node delays from ONLINE samples only (exclude recovery_sync AND partition_resync)
+    # This ensures CSV exports reflect true P2P propagation, not crash recovery or partition effects
     per_node_delays: dict[str, list[float]] = {}
+    online_sample_keys = {(bh, nn) for (delay, mts, ats, bh, nn) in online_samples}
     for (block_hash, node_name), (delay, _, _) in seen.items():
-        per_node_delays.setdefault(node_name, []).append(delay)
+        if (block_hash, node_name) in online_sample_keys:
+            per_node_delays.setdefault(node_name, []).append(delay)
 
     all_delays = [delay for (delay, _, _) in seen.values()]
     delays_array = np.array(all_delays)
@@ -978,27 +1017,51 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
             "max_seconds": float(arr.max())
         }
     
+    # Build sets of recovery and partition sample keys (needed for filtering)
+    recovery_sample_keys = set()
+    for (delay, mined_ts, arrival_ts, block_hash, node_name) in recovery_samples:
+        recovery_sample_keys.add((block_hash, node_name))
+
+    partition_sample_keys = set()
+    for (delay, mined_ts, arrival_ts, block_hash, node_name) in partition_samples:
+        partition_sample_keys.add((block_hash, node_name))
+
+    # Combined set of non-online samples (for filtering)
+    non_online_keys = recovery_sample_keys | partition_sample_keys
+
+    # Build block summaries using ONLY online samples (exclude recovery_sync AND partition_resync)
     block_summaries = []
     for block_hash, node_map in per_block_node_delay.items():
-        arr = np.array(list(node_map.values()))
+        # Filter out recovery_sync and partition_resync samples from this block
+        online_delays = [
+            delay for node_name, delay in node_map.items()
+            if (block_hash, node_name) not in non_online_keys
+        ]
+        if not online_delays:
+            # Block only has non-online samples - skip
+            continue
+        arr = np.array(online_delays)
         block_summaries.append({
             "block_hash": block_hash,
             "mined_ts_utc": block_times[block_hash].isoformat(),
-            # After dedup, this is truly "unique nodes with a sample"
+            # After filtering, this is online nodes only
             "sampled_nodes": int(arr.size),
             "median_seconds": float(np.median(arr)),
             "p90_seconds": float(np.percentile(arr, 90)) if arr.size > 1 else float(arr[0]),
             "max_seconds": float(arr.max())
         })
     
-    # Build set of recovery sample keys for CSV export classification
-    recovery_sample_keys = set()
-    for (delay, mined_ts, arrival_ts, block_hash, node_name) in recovery_samples:
-        recovery_sample_keys.add((block_hash, node_name))
-    
     # Persist raw samples and block-level stats for offline analysis
     try:
         # Export deduped samples with sample_type classification
+        def get_sample_type(block_hash, node_name):
+            if (block_hash, node_name) in recovery_sample_keys:
+                return "recovery_sync"
+            elif (block_hash, node_name) in partition_sample_keys:
+                return "partition_resync"
+            else:
+                return "online"
+
         samples = [
             {
                 "block_hash": block_hash,
@@ -1006,7 +1069,7 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
                 "mined_ts_utc": mined_ts.isoformat(),
                 "arrival_ts_utc": arrival_ts.isoformat(),
                 "delay_seconds": delay,
-                "sample_type": "recovery_sync" if (block_hash, node_name) in recovery_sample_keys else "online",
+                "sample_type": get_sample_type(block_hash, node_name),
             }
             for (block_hash, node_name), (delay, mined_ts, arrival_ts) in seen.items()
         ]
@@ -1034,16 +1097,20 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     
     # Build result with separated metrics
     result = {}
-    
+
     # Add separated metrics if available
     if online_stats:
         result["online_nodes"] = online_stats
-    
+
     if recovery_stats:
         result["recovery_sync"] = recovery_stats
         result["recovery_sync"]["blocks_during_outage"] = blocks_during_outage
         result["recovery_sync"]["crashed_nodes_count"] = len(crashed_nodes_set)
-    
+
+    if partition_stats:
+        result["partition_resync"] = partition_stats
+        result["partition_resync"]["description"] = "Non-crashed nodes that received blocks via reorg after network partition healed"
+
     return result
 
 
@@ -1444,7 +1511,7 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
                 if before_crash:
                     before_times = [t for (t, _) in before_crash]
                     before_vals = [v for (_, v) in before_crash]
-                    ax3.plot(before_times, before_vals, linewidth=2.5, color='#4CAF50', alpha=0.9, label='Before Crash (Warmup)')
+                    ax3.plot(before_times, before_vals, linewidth=2.5, color='#4CAF50', alpha=0.9, label='Pre-Crash (Baseline)')
                     ax3.fill_between(before_times, before_vals, alpha=0.2, color='#4CAF50')
                 
                 if after_crash:
@@ -1509,44 +1576,50 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
     # System recovery analysis (only show if faults exist)
     if has_faults and not df_conf.empty and events and len(df_conf) > 0:
         ax4 = axes[1, 1]
-        
-        # Find fault injection time
-        fault_time = None
+
+        # Find crash_start time (when faults actually begin, not observation start)
+        crash_time = None
+        observation_time = None
         for (ts, evt, _) in events:
-            if evt in ("start_observation", "after_netem"):
-                fault_time = ts
-                break
-        
-        if fault_time:
+            if evt == "crash_start":
+                crash_time = ts
+            if evt in ("start_observation", "after_netem") and observation_time is None:
+                observation_time = ts
+
+        # Use crash_start if available, fall back to observation start
+        reference_time = crash_time or observation_time
+        time_label = "Time Since Crash Start (s)" if crash_time else "Time Since Observation Start (s)"
+
+        if reference_time:
             # Analyze recovery after fault
-            recovery_data = df_conf[df_conf['confirm_ts_utc'] >= fault_time].copy()
+            recovery_data = df_conf[df_conf['confirm_ts_utc'] >= reference_time].copy()
             if not recovery_data.empty:
-                recovery_data['time_since_fault'] = (recovery_data['confirm_ts_utc'] - fault_time).dt.total_seconds()
-                
+                recovery_data['time_since_fault'] = (recovery_data['confirm_ts_utc'] - reference_time).dt.total_seconds()
+
                 # Rolling average for recovery analysis
                 window_size = min(20, len(recovery_data) // 5)
                 if window_size > 1:
                     rolling_latency = recovery_data['latency_seconds'].rolling(window=window_size).mean()
-                    ax4.plot(recovery_data['time_since_fault'], rolling_latency, 
+                    ax4.plot(recovery_data['time_since_fault'], rolling_latency,
                            linewidth=2, color='red', alpha=0.8, label=f'Recovery Latency (window={window_size})')
                 else:
-                    ax4.plot(recovery_data['time_since_fault'], recovery_data['latency_seconds'], 
+                    ax4.plot(recovery_data['time_since_fault'], recovery_data['latency_seconds'],
                            linewidth=1, color='red', alpha=0.6, label='Recovery Latency')
-                
-                # Add recovery event markers
+
+                # Add recovery event markers (relative to reference_time)
                 recovery_start_time = None
                 recovery_complete_time = None
                 for (ts, evt, _) in events:
                     if evt == "recovery_start":
-                        recovery_start_time = (ts - fault_time).total_seconds()
-                        ax4.axvline(recovery_start_time, linestyle=":", alpha=0.8, color='purple', 
+                        recovery_start_time = (ts - reference_time).total_seconds()
+                        ax4.axvline(recovery_start_time, linestyle=":", alpha=0.8, color='purple',
                                   linewidth=2, label='Recovery Start')
                     elif evt == "recovery_complete":
-                        recovery_complete_time = (ts - fault_time).total_seconds()
-                        ax4.axvline(recovery_complete_time, linestyle=":", alpha=0.8, color='blue', 
+                        recovery_complete_time = (ts - reference_time).total_seconds()
+                        ax4.axvline(recovery_complete_time, linestyle=":", alpha=0.8, color='blue',
                                   linewidth=2, label='Recovery Complete')
-                
-                ax4.set_xlabel('Time Since Fault Injection (s)')
+
+                ax4.set_xlabel(time_label)
                 ax4.set_ylabel('Confirmation Latency (s)')
                 ax4.set_title('System Recovery Analysis')
                 ax4.legend()
@@ -1555,7 +1628,7 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
                 ax4.text(0.5, 0.5, 'No recovery data available', ha='center', va='center', transform=ax4.transAxes)
                 ax4.set_title('System Recovery Analysis')
         else:
-            ax4.text(0.5, 0.5, 'No fault injection time found', ha='center', va='center', transform=ax4.transAxes)
+            ax4.text(0.5, 0.5, 'No crash or observation start event found', ha='center', va='center', transform=ax4.transAxes)
             ax4.set_title('System Recovery Analysis')
     elif not has_faults:
         # For baseline, show latency stability over time
@@ -1710,12 +1783,43 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
         ax1.text(0.5, 0.5, 'No data for availability analysis', ha='center', va='center', transform=ax1.transAxes)
         ax1.set_title('Transaction Availability Over Time')
     
-    # Transaction success rate
+    # Transaction success rate (FILTERED exactly like metrics.json for consistency)
+    # metrics.json uses: netem_applied -> (end_observe - 60s buffer)
+    # and filters confirmations by submit_ts_utc
     if not df_conf.empty and df_sub is not None and len(df_conf) > 0:
         ax2 = axes[0, 1]
-        
-        total_submitted = len(df_sub)
-        total_confirmed = len(df_conf)
+
+        # Use same filtering as metrics.json (netem_applied as start, with 60s buffer)
+        CONFIRMATION_BUFFER_SECONDS = 60
+        start_ts = netem_applied_ts or observation_start_ts
+        end_ts_with_buffer = end_observe_ts - pd.Timedelta(seconds=CONFIRMATION_BUFFER_SECONDS) if end_observe_ts else None
+
+        # Filter SUBMISSIONS
+        df_sub_obs = df_sub.copy()
+        df_sub_obs["submit_ts_utc"] = pd.to_datetime(df_sub_obs["submit_ts_utc"])
+        if start_ts is not None:
+            df_sub_obs = df_sub_obs[df_sub_obs["submit_ts_utc"] >= start_ts]
+        if end_ts_with_buffer is not None:
+            df_sub_obs = df_sub_obs[df_sub_obs["submit_ts_utc"] <= end_ts_with_buffer]
+
+        # Filter CONFIRMATIONS by their SUBMIT time (same as metrics.json)
+        df_conf_obs = df_conf.copy()
+        if "submit_ts_utc" in df_conf_obs.columns:
+            df_conf_obs["submit_ts_utc"] = pd.to_datetime(df_conf_obs["submit_ts_utc"])
+            if start_ts is not None:
+                df_conf_obs = df_conf_obs[df_conf_obs["submit_ts_utc"] >= start_ts]
+            if end_ts_with_buffer is not None:
+                df_conf_obs = df_conf_obs[df_conf_obs["submit_ts_utc"] <= end_ts_with_buffer]
+        else:
+            # Fallback: filter by confirm time if submit time not available
+            df_conf_obs["confirm_ts_utc"] = pd.to_datetime(df_conf_obs["confirm_ts_utc"])
+            if start_ts is not None:
+                df_conf_obs = df_conf_obs[df_conf_obs["confirm_ts_utc"] >= start_ts]
+            if end_ts_with_buffer is not None:
+                df_conf_obs = df_conf_obs[df_conf_obs["confirm_ts_utc"] <= end_ts_with_buffer]
+
+        total_submitted = len(df_sub_obs)
+        total_confirmed = len(df_conf_obs)
         success_rate = total_confirmed / total_submitted if total_submitted > 0 else 0
         
         # Create a simple bar chart
@@ -2164,14 +2268,38 @@ def create_mempool_plot(run_dir, events):
         print("⚠️  No mempool_timeseries.csv found, skipping mempool plot")
         return
     
-    # Load mempool data
+    # Load mempool data (supports both old and new format)
     try:
         df_mempool = pd.read_csv(mempool_file)
         if df_mempool.empty:
             print("⚠️  mempool_timeseries.csv is empty, skipping mempool plot")
             return
-        
-        df_mempool["timestamp_utc"] = pd.to_datetime(df_mempool["timestamp_utc"])
+
+        # Handle both old format (timestamp_utc) and new format (cycle_start_utc)
+        if "cycle_start_utc" in df_mempool.columns:
+            # New format with cycle-based sampling
+            # Filter out corrupted rows (where timestamp column doesn't look like a timestamp)
+            valid_mask = df_mempool["cycle_start_utc"].str.startswith("202", na=False)
+            if not valid_mask.all():
+                bad_count = (~valid_mask).sum()
+                print(f"⚠️  Filtered {bad_count} corrupted rows from mempool data")
+                df_mempool = df_mempool[valid_mask].copy()
+            df_mempool["timestamp_utc"] = pd.to_datetime(df_mempool["cycle_start_utc"])
+        elif "timestamp_utc" in df_mempool.columns:
+            # Old format - also filter corrupted rows
+            valid_mask = df_mempool["timestamp_utc"].str.startswith("202", na=False)
+            if not valid_mask.all():
+                bad_count = (~valid_mask).sum()
+                print(f"⚠️  Filtered {bad_count} corrupted rows from mempool data")
+                df_mempool = df_mempool[valid_mask].copy()
+            df_mempool["timestamp_utc"] = pd.to_datetime(df_mempool["timestamp_utc"])
+        else:
+            print("⚠️  mempool_timeseries.csv has unknown format, skipping mempool plot")
+            return
+
+        if df_mempool.empty:
+            print("⚠️  No valid mempool data after filtering, skipping mempool plot")
+            return
     except Exception as e:
         print(f"⚠️  Could not load mempool_timeseries.csv: {e}")
         return
@@ -2223,16 +2351,24 @@ def create_mempool_plot(run_dir, events):
                      alpha=0.2, color='blue', label='Min-Max Range')
     
     # Add fault event markers
+    event_labels_added = set()
     if has_faults:
         for (ts, evt, _) in events:
-            if evt in ("start_warmup", "after_netem", "end_observe"):
-                color = 'red' if evt in ("start_observation", "after_netem") else 'green'
-                label = "Fault Injection" if evt in ("start_observation", "after_netem") else f"{evt.replace('_', ' ').title()}"
-                ax1.axvline(ts, linestyle="--", alpha=0.7, color=color, label=label)
-            elif evt in ("recovery_start", "recovery_complete"):
-                color = 'purple' if evt == "recovery_start" else 'blue'
-                label = "Recovery Start" if evt == "recovery_start" else "Recovery Complete"
-                ax1.axvline(ts, linestyle=":", alpha=0.8, color=color, linewidth=2, label=label)
+            if evt == "start_warmup" and "Start Warmup" not in event_labels_added:
+                ax1.axvline(ts, linestyle="--", alpha=0.7, color='green', label="Start Warmup")
+                event_labels_added.add("Start Warmup")
+            elif evt == "crash_start" and "Crash Start" not in event_labels_added:
+                ax1.axvline(ts, linestyle="--", alpha=0.8, color='red', linewidth=2, label="Crash Start")
+                event_labels_added.add("Crash Start")
+            elif evt == "end_observe" and "End Observe" not in event_labels_added:
+                ax1.axvline(ts, linestyle="--", alpha=0.7, color='gray', label="End Observe")
+                event_labels_added.add("End Observe")
+            elif evt == "recovery_start" and "Recovery Start" not in event_labels_added:
+                ax1.axvline(ts, linestyle=":", alpha=0.8, color='purple', linewidth=2, label="Recovery Start")
+                event_labels_added.add("Recovery Start")
+            elif evt == "recovery_complete" and "Recovery Complete" not in event_labels_added:
+                ax1.axvline(ts, linestyle=":", alpha=0.8, color='blue', linewidth=2, label="Recovery Complete")
+                event_labels_added.add("Recovery Complete")
     else:
         for (ts, evt, _) in events:
             if evt == "start_warmup":
@@ -2259,15 +2395,19 @@ def create_mempool_plot(run_dir, events):
     ax2.fill_between(times_bytes, mempool_bytes_by_time['min'], mempool_bytes_by_time['max'], 
                      alpha=0.2, color='orange', label='Min-Max Range')
     
-    # Add fault event markers
+    # Add fault event markers (same as above but no labels - they're in legend from ax1)
     if has_faults:
         for (ts, evt, _) in events:
-            if evt in ("start_warmup", "after_netem", "end_observe"):
-                color = 'red' if evt in ("start_observation", "after_netem") else 'green'
-                ax2.axvline(ts, linestyle="--", alpha=0.7, color=color)
-            elif evt in ("recovery_start", "recovery_complete"):
-                color = 'purple' if evt == "recovery_start" else 'blue'
-                ax2.axvline(ts, linestyle=":", alpha=0.8, color=color, linewidth=2)
+            if evt == "start_warmup":
+                ax2.axvline(ts, linestyle="--", alpha=0.7, color='green')
+            elif evt == "crash_start":
+                ax2.axvline(ts, linestyle="--", alpha=0.8, color='red', linewidth=2)
+            elif evt == "end_observe":
+                ax2.axvline(ts, linestyle="--", alpha=0.7, color='gray')
+            elif evt == "recovery_start":
+                ax2.axvline(ts, linestyle=":", alpha=0.8, color='purple', linewidth=2)
+            elif evt == "recovery_complete":
+                ax2.axvline(ts, linestyle=":", alpha=0.8, color='blue', linewidth=2)
     else:
         for (ts, evt, _) in events:
             if evt == "start_warmup":
@@ -2494,7 +2634,43 @@ def main():
         cl95 = float(np.percentile(cl_filtered, 95))
     else:
         cl50 = cl95 = float("nan")
-    
+
+    # Calculate k=6 confirmation latency (time from submit to 6 confirmations deep)
+    k6_median = k6_p95 = float("nan")
+    mining_file = os.path.join(run_dir, "mining.csv")
+    if not df_conf_filtered.empty and os.path.exists(mining_file):
+        try:
+            df_mining = pd.read_csv(mining_file)
+            df_mining['timestamp_utc'] = pd.to_datetime(df_mining['timestamp_utc'])
+            # Create lookups: block_hash -> block_number, block_number -> timestamp
+            hash_to_num = dict(zip(df_mining['block_hash'], df_mining['block_number']))
+            num_to_time = dict(zip(df_mining['block_number'], df_mining['timestamp_utc']))
+            max_block = df_mining['block_number'].max()
+
+            k6_latencies = []
+            for _, row in df_conf_filtered.iterrows():
+                confirm_hash = row.get('confirm_block_hash')
+                if pd.notna(confirm_hash) and confirm_hash in hash_to_num:
+                    k1_num = hash_to_num[confirm_hash]
+                    k6_num = k1_num + 5
+                    if k6_num in num_to_time:
+                        submit_ts = row['submit_ts_utc']
+                        if isinstance(submit_ts, str):
+                            submit_ts = pd.to_datetime(submit_ts)
+                        k6_ts = num_to_time[k6_num]
+                        k6_lat = (k6_ts - submit_ts).total_seconds()
+                        if k6_lat > 0:
+                            k6_latencies.append(k6_lat)
+
+            if k6_latencies:
+                k6_median = float(np.percentile(k6_latencies, 50))
+                k6_p95 = float(np.percentile(k6_latencies, 95))
+                print(f"\n🔒 K=6 CONFIRMATION LATENCY:")
+                print(f"   Samples: {len(k6_latencies)} / {len(df_conf_filtered)} ({100*len(k6_latencies)/len(df_conf_filtered):.1f}%)")
+                print(f"   Median: {k6_median:.2f}s, P95: {k6_p95:.2f}s")
+        except Exception as e:
+            print(f"⚠️  Could not calculate k=6 latency: {e}")
+
     # Calculate metrics (using filtered data - only observation window)
     metrics = {
         "run_dir": run_dir,
@@ -2503,6 +2679,8 @@ def main():
         "availability": A,
         "median_latency": cl50,
         "p95_latency": cl95,
+        "k6_median_latency": k6_median,
+        "k6_p95_latency": k6_p95,
         "avg_throughput": avg_throughput_official  # Official Bitcoin network throughput definition
     }
     
@@ -2521,7 +2699,11 @@ def main():
         recovery_sync = block_propagation_metrics.get("recovery_sync")
         if recovery_sync:
             print(f"   Recovery sync: mean={recovery_sync.get('mean_seconds', 0):.2f}s, max={recovery_sync.get('max_seconds', 0):.2f}s ({recovery_sync.get('total_samples', 0)} samples, {recovery_sync.get('blocks_during_outage', 0)} blocks during outage)")
-    
+
+        partition_resync = block_propagation_metrics.get("partition_resync")
+        if partition_resync:
+            print(f"   Partition resync: mean={partition_resync.get('mean_seconds', 0):.2f}s, max={partition_resync.get('max_seconds', 0):.2f}s ({partition_resync.get('total_samples', 0)} samples)")
+
     # Prefer events-based recovery (Option 1); fall back to latency-based if missing
     events_recovery = compute_event_recovery_metrics(run_dir, events)
     if events_recovery:

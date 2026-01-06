@@ -28,6 +28,20 @@
     group: "{{ file_group }}"
   loop: "{{ wallet_services }}"
 
+- name: Generate network topology
+  ansible.builtin.command: >
+    python3 {{ workdir }}/files/topology_generator.py
+    --node-count {{ node_count }}
+    --seed {{ seed }}
+    --mode {{ topology_mode | default('hybrid') }}
+    --k {{ topology_k | default(4) }}
+  register: topology_result
+  changed_when: false
+
+- name: Parse topology JSON
+  ansible.builtin.set_fact:
+    network_topology: "{{ topology_result.stdout | from_json }}"
+
 - name: Template docker-compose.yml
   ansible.builtin.template:
     src: "docker-compose.yml.j2"
@@ -65,7 +79,7 @@
     mode: "0644"
     owner: "{{ lookup('env','USER') }}"
     group: "{{ file_group }}"
-  loop: "{{ range(1, node_count + 1) | list }}"
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
   loop_control:
     label: "node{{ '%02d'|format(item) }}"
 

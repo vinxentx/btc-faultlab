@@ -80,6 +80,7 @@
           warmup_s: {{ warmup_s }}
           observe_s: {{ observe_s }}
           cooldown_s: {{ cooldown_s }}
+          pre_crash_delay_s: {{ pre_crash_delay_s | default(30) }}
           seed: {{ seed }}
 
     - name: Validiere Funding-Snapshot vor Start
@@ -121,7 +122,8 @@
       ansible.builtin.shell: |
         python3 files/mempool_monitor.py \
           --node-count {{ node_count }} \
-          --interval 5 \
+          --interval {{ mempool_interval | default(2) }} \
+          --workers {{ mempool_workers | default(32) }} \
           --output "{{ workdir }}/state/mempool_timeseries.csv" > "{{ workdir }}/state/mempool_monitor.log" 2>&1 &
         echo $! > "{{ workdir }}/state/mempool_monitor.pid"
       args:
@@ -135,11 +137,33 @@
       ansible.builtin.shell: |
         echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_observation" >> "{{ run_dir }}/events.log"
 
-    - name: Inject crashes
-      include_role: { name: experiment }
-      vars: { phase: "crash" }
+    # ==========================================================================
+    # CRASH INJECTION: Runs ASYNC during observation window
+    # This allows observe_s to be a fixed window regardless of crash duration
+    # ==========================================================================
+    - name: Start crash manager (async - runs during observation)
+      when: (crash_fraction | float) > 0
+      async: 7200  # Allow up to 2 hours for crash + recovery
+      poll: 0      # Don't wait - let observation timer run independently
+      ansible.builtin.shell: |
+        python3 files/crash_manager.py \
+          --run-dir "{{ run_dir }}" \
+          --node-count {{ node_count }} \
+          --crash-fraction {{ crash_fraction }} \
+          --crash-duration {{ crash_duration_s }} \
+          --crash-mode {{ crash_mode }} \
+          {% if stagger_period_s is defined %}--stagger-period {{ stagger_period_s }}{% endif %} \
+          --seed {{ seed }} \
+          --pre-crash-delay {{ pre_crash_delay_s | default(30) }} \
+          >> "{{ run_dir }}/crash_manager.log" 2>&1
+      args:
+        chdir: "{{ workdir }}"
+      register: crash_manager_job
 
-    - name: Post-recovery observation period
+    # ==========================================================================
+    # OBSERVATION WINDOW: Fixed duration, crash/recovery happens within it
+    # ==========================================================================
+    - name: Observation period (fixed window - crash happens during this)
       ansible.builtin.pause: { seconds: "{{ observe_s }}" }
 
     - name: Remove net impairments
@@ -153,11 +177,22 @@
     - name: Cool-down
       ansible.builtin.pause: { seconds: "{{ cooldown_s }}" }
 
-    - name: Stop mempool monitoring
+    - name: Stop mempool monitoring (graceful shutdown)
       ansible.builtin.shell: |
         if [ -f "{{ workdir }}/state/mempool_monitor.pid" ]; then
-          kill $(cat "{{ workdir }}/state/mempool_monitor.pid") 2>/dev/null || true
-          rm "{{ workdir }}/state/mempool_monitor.pid"
+          PID=$(cat "{{ workdir }}/state/mempool_monitor.pid")
+          # Send SIGTERM for graceful shutdown
+          kill -TERM "$PID" 2>/dev/null || true
+          # Wait up to 5 seconds for graceful exit
+          for i in 1 2 3 4 5; do
+            if ! kill -0 "$PID" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          # Force kill if still running
+          kill -9 "$PID" 2>/dev/null || true
+          rm -f "{{ workdir }}/state/mempool_monitor.pid"
         fi
       changed_when: false
       failed_when: false
