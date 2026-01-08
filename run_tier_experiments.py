@@ -87,8 +87,9 @@ class TierExperimentRunner:
             
             # Clean up between replications to prevent data contamination
             # This ensures each replication starts with a clean slate
-            if run_id and run_num < num_runs:  # Don't cleanup after last replication
-                print(f"\n🧹 Cleaning up before next replication...")
+            # Also cleanup after last replication to prepare for next experiment config
+            if run_id:
+                print(f"\n🧹 Cleaning up after replication {run_num}...")
                 self._cleanup_between_runs()
             
             # Save progress checkpoint after each replication

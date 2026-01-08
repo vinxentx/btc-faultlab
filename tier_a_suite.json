@@ -2,35 +2,8 @@
   "description": "Tier A: Crash Impact Analysis Suite",
   "purpose": "Isolate crash effects (fraction, mode, duration, recovery) under controlled network conditions",
   "node_count": 128,
-  "total_experiments": 18,
+  "total_experiments": 17,
   "experiments": {
-    "baseline": {
-      "name": "Baseline (No Faults)",
-      "description": "Perfect conditions - establish performance baseline with 128 nodes. Uses Shifted Exponential Distribution (min_interval=2.0s) to prevent fork-causing race conditions while maintaining realistic block time variance.",
-      "tier": "baseline",
-      "config": {
-        "node_count": 128,
-        "tx_rate": 10,
-        "wallet_descriptor_pool_size": 1500,
-        "block_scheduler_interval_s": 12,
-        "crash_fraction": 0.0,
-        "crash_duration_s": 0,
-        "crash_mode": "burst",
-        "recovery_mode": "cold",
-        "loss_pct": 0,
-        "latency_ms": 30,
-        "bandwidth_mbit": 100,
-        "warmup_s": 90,
-        "observe_s": 600,
-        "cooldown_s": 60,
-        "seed": 42,
-        "reindex_on_restart": false,
-        "jitter_ms": 5,
-        "block_scheduler_use_variance": true,
-        "block_scheduler_min_interval": 0,
-        "block_size_limit": "1MB"
-      }
-    },
     "tier_a_001": {
       "name": "Tier A: 10% Crash, Simultaneous, 120s Down, Full Resync",
       "description": "Low crash rate with simultaneous failures and long downtime",
@@ -518,10 +491,9 @@
   },
   "execution_info": {
     "replications": 3,
-    "total_runs": 54,
-    "estimated_duration_hours": 27.0,
+    "total_runs": 51,
+    "estimated_duration_hours": 25.5,
     "experiment_order": [
-      "baseline",
       "tier_a_001",
       "tier_a_002",
       "tier_a_005",
