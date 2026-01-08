@@ -14,9 +14,9 @@ from datetime import datetime
 from run_experiments import ExperimentRunner
 
 class TierExperimentRunner:
-    def __init__(self, skip_bootstrap=True):
+    def __init__(self, skip_bootstrap=True, config_file="tier_experiments.json"):
         self.base_runner = ExperimentRunner(skip_bootstrap=skip_bootstrap)
-        self.config_file = Path("tier_experiments.json")
+        self.config_file = Path(config_file)
         self.results_dir = Path("results")
         
     def load_tier_config(self):
@@ -402,22 +402,25 @@ def main():
 Examples:
   # Run full suite (baseline + all tiers) with 3 replications
   python3 run_tier_experiments.py --extended --runs 3
-  
+
   # Run only baseline
   python3 run_tier_experiments.py --baseline --runs 3
-  
+
   # Run specific tier
   python3 run_tier_experiments.py --tier A --runs 3
   python3 run_tier_experiments.py --tier B --runs 3
   python3 run_tier_experiments.py --tier C --runs 3
-  
+
   # Run specific experiment with custom node count
   python3 run_tier_experiments.py --experiment baseline --runs 1 --node-count 64
   python3 run_tier_experiments.py --experiment tier_a_001 --runs 5 --node-count 32
-  
+
   # Run tier with reduced node count for faster testing
   python3 run_tier_experiments.py --tier A --runs 1 --node-count 8
-  
+
+  # Run from custom config file (e.g., tier_a_suite.json)
+  python3 run_tier_experiments.py --config tier_a_suite.json --extended --runs 3
+
   # List all available experiments
   python3 run_tier_experiments.py --list
         """
@@ -439,10 +442,12 @@ Examples:
                        help="Override node count from config (e.g., --node-count 64)")
     parser.add_argument("--with-bootstrap", action="store_true",
                        help="Run bootstrap step before experiments (default: skip)")
-    
+    parser.add_argument("--config", type=str, default="tier_experiments.json",
+                       help="Path to experiment config JSON (default: tier_experiments.json)")
+
     args = parser.parse_args()
-    
-    runner = TierExperimentRunner(skip_bootstrap=not args.with_bootstrap)
+
+    runner = TierExperimentRunner(skip_bootstrap=not args.with_bootstrap, config_file=args.config)
     
     # Display node count override if specified
     if args.node_count:

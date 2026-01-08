@@ -171,7 +171,7 @@ services:
     volumes:
       - "{{ workdir }}/files:/app:ro"
       - "txlogs_{{ shard.log_suffix }}:/results"
-      - "{{ workdir }}/state:/state:ro"
+      - "{{ workdir }}/state:/state"
     command:
       - python
       - -u
@@ -201,8 +201,9 @@ services:
       - --queue-size
       - "{{ txgen_queue_size | default(200) }}"
       - --max-duration
-      # warmup + observe + cooldown + 90s setup buffer (netem, sync waits, etc.)
-      - "{{ warmup_s + observe_s + cooldown_s + 90 }}"
+      # Used for Phase 1 TX preparation (how many TXs to pre-sign)
+      # txgen runs until container is stopped; metrics handle unconfirmed tail
+      - "{{ warmup_s + observe_s + cooldown_s }}"
     depends_on:
       {{ shard.wallet_container }}:
         condition: service_healthy

@@ -2,7 +2,7 @@
   "description": "Tier-based fault tolerance experiments for Bitcoin network resilience analysis",
   "purpose": "Systematic analysis of crash impacts, stress conditions, and block interval effects. Crashes happen DURING observation window for comparable metrics.",
   "node_count": 128,
-  "total_experiments": 47,
+  "total_experiments": 48,
   "total_duration_estimate": "~37 hours for full suite (4 runs each = 188 total runs, observe_s=600)",
   "experiments": {
     "baseline": {
@@ -1320,6 +1320,34 @@
         "cooldown_s": 60,
         "pre_crash_delay_s": 30,
         "seed": 154,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB"
+      }
+    },
+    "tier_a_018_short": {
+      "name": "Tier A: 50% Crash, Simultaneous, 90s Down, Fast Resync",
+      "description": "High crash rate with SHORT downtime (90s) - compare duration effect with tier_a_018 (180s)",
+      "tier": "A",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 1500,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 90,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "pre_crash_delay_s": 30,
+        "seed": 161,
         "reindex_on_restart": false,
         "jitter_ms": 5,
         "block_scheduler_use_variance": true,

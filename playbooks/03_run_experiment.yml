@@ -106,6 +106,44 @@
         PY
       changed_when: false
 
+    - name: Wait for all txgen shards to complete Phase 1 (TX preparation)
+      ansible.builtin.shell: |
+        echo "Waiting for txgen shards to complete Phase 1..."
+        timeout=1800  # 30 min max wait
+        elapsed=0
+        shards="{{ txgen_shards | map(attribute='id') | join(' ') }}"
+        while [ $elapsed -lt $timeout ]; do
+          all_ready=true
+          for shard in $shards; do
+            if [ ! -f "{{ workdir }}/state/txgen_${shard}_ready" ]; then
+              all_ready=false
+              break
+            fi
+          done
+          if [ "$all_ready" = true ]; then
+            echo "All txgen shards ready!"
+            exit 0
+          fi
+          sleep 1
+          elapsed=$((elapsed + 1))
+          if [ $((elapsed % 30)) -eq 0 ]; then
+            echo "Still waiting for txgen Phase 1... (${elapsed}s)"
+          fi
+        done
+        echo "Timeout waiting for txgen shards!"
+        exit 1
+      args:
+        chdir: "{{ workdir }}"
+      changed_when: false
+
+    - name: Signal txgen shards to start Phase 2 (injection)
+      ansible.builtin.shell: |
+        touch "{{ workdir }}/state/txgen_start"
+        echo "Sent start signal to txgen shards"
+      args:
+        chdir: "{{ workdir }}"
+      changed_when: true
+
     - name:  Log_event - start_warmup
       ansible.builtin.shell: |
         echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_warmup" >> "{{ run_dir }}/events.log"

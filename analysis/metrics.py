@@ -189,60 +189,78 @@ def compute_event_recovery_metrics(run_dir, events):
 
 def compute_latency_comparison(df_conf, events):
     """
-    Compare latency before crash vs after recovery.
-    
+    Compare latency before crash, during crash, and after recovery.
+
     Scientific use: Proves whether the system truly recovered to baseline performance
-    or if there's residual degradation.
-    
+    or if there's residual degradation. Also shows impact during the fault.
+
     Returns:
-        dict with pre_crash_median, post_recovery_median, degradation_percent
+        dict with pre_crash_median, during_crash_median, post_recovery_median, degradation_percent
         or None if no crash occurred
     """
     if df_conf.empty or not events:
         return None
-    
+
     # Find crash_start and recovery_complete timestamps
     crash_start = None
     recovery_complete = None
-    
+
     for (ts, evt, _) in events:
         if evt == "crash_start" and crash_start is None:
             crash_start = ts
         elif evt == "recovery_complete" and recovery_complete is None:
             recovery_complete = ts
-    
+
     if crash_start is None or recovery_complete is None:
         return None  # No crash in this run
-    
+
     # Ensure timestamps are timezone-aware for comparison
     if hasattr(crash_start, 'tzinfo') and crash_start.tzinfo is None:
         crash_start = crash_start.replace(tzinfo=timezone.utc)
     if hasattr(recovery_complete, 'tzinfo') and recovery_complete.tzinfo is None:
         recovery_complete = recovery_complete.replace(tzinfo=timezone.utc)
-    
-    # Split confirmations into pre-crash and post-recovery
+
+    # Split confirmations into pre-crash, during-crash, and post-recovery
     df_pre = df_conf[df_conf["confirm_ts_utc"] < crash_start].copy()
+    df_during = df_conf[
+        (df_conf["confirm_ts_utc"] >= crash_start) &
+        (df_conf["confirm_ts_utc"] <= recovery_complete)
+    ].copy()
     df_post = df_conf[df_conf["confirm_ts_utc"] > recovery_complete].copy()
-    
+
     if df_pre.empty or df_post.empty:
         return None
-    
+
     pre_median = float(df_pre["latency_seconds"].median())
     post_median = float(df_post["latency_seconds"].median())
-    
+
+    # During crash may be empty if crash duration is short
+    during_median = float(df_during["latency_seconds"].median()) if not df_during.empty else None
+
     # Calculate degradation (positive = worse after recovery)
     if pre_median > 0:
         degradation_pct = ((post_median - pre_median) / pre_median) * 100
+        during_degradation_pct = ((during_median - pre_median) / pre_median) * 100 if during_median else None
     else:
         degradation_pct = 0.0
-    
-    return {
+        during_degradation_pct = None
+
+    result = {
         "pre_crash_median": round(pre_median, 3),
         "post_recovery_median": round(post_median, 3),
         "degradation_percent": round(degradation_pct, 1),
         "pre_crash_samples": len(df_pre),
         "post_recovery_samples": len(df_post)
     }
+
+    # Add during_crash stats if available
+    if during_median is not None:
+        result["during_crash_median"] = round(during_median, 3)
+        result["during_crash_samples"] = len(df_during)
+        if during_degradation_pct is not None:
+            result["during_crash_degradation_percent"] = round(during_degradation_pct, 1)
+
+    return result
 
 def compute_block_interval_stats(run_dir, events):
     """
@@ -315,6 +333,336 @@ def compute_block_interval_stats(run_dir, events):
         "max_seconds": round(float(np.max(arr)), 2),
         "p95_seconds": round(float(np.percentile(arr, 95)), 2) if len(arr) > 1 else round(float(arr[0]), 2)
     }
+
+def compute_per_phase_throughput(df_conf_filtered, df_sub_filtered, events, confirmation_buffer_s=180):
+    """
+    Compute throughput separately for pre-crash, during-crash, and post-recovery phases.
+
+    IMPORTANT: TXs are assigned to phases by SUBMISSION time, not confirmation time.
+    This prevents cross-phase contamination from confirmation lag.
+
+    Scientific use: Shows exactly how throughput degrades during crash and recovers after.
+    Critical for thesis statements about system resilience.
+
+    For each phase, reports:
+    - submitted_count: TXs submitted during this phase
+    - confirmed_count: TXs submitted during this phase that got confirmed
+    - confirmation_rate: confirmed/submitted (availability metric)
+    - mean_confirmation_latency_seconds: avg confirmation delay for TXs in this phase
+    - throughput_tx_per_s: submission rate (submitted_count / duration)
+
+    Args:
+        confirmation_buffer_s: Buffer before end_observe to ensure TXs have time to confirm.
+                               TXs submitted after (end_observe - buffer) are excluded.
+
+    Returns:
+        dict with throughput for each phase, or None if no crash events
+    """
+    if df_conf_filtered.empty or not events:
+        return None
+
+    # Find phase boundaries from events
+    crash_start = None
+    recovery_complete = None
+    baseline_start = None  # netem_applied or start_warmup (for pre_crash baseline)
+    observation_start = None
+    end_observe = None
+
+    start_warmup_ts = None
+    netem_applied_ts = None
+    for (ts, evt, _) in events:
+        if evt == "start_warmup":
+            start_warmup_ts = ts
+        elif evt == "netem_applied":
+            netem_applied_ts = ts
+        elif evt in ("start_observation", "after_netem") and observation_start is None:
+            observation_start = ts
+        elif evt == "crash_start" and crash_start is None:
+            crash_start = ts
+        elif evt == "recovery_complete" and recovery_complete is None:
+            recovery_complete = ts
+        elif evt == "end_observe" and end_observe is None:
+            end_observe = ts
+
+    # Use netem_applied as baseline (network in stable degraded state)
+    # Fall back to start_warmup if netem not found
+    baseline_start = netem_applied_ts or start_warmup_ts
+
+    # Need crash events for phase separation
+    if crash_start is None or recovery_complete is None:
+        return None
+
+    # Make timestamps timezone-aware
+    def ensure_tz(ts):
+        if ts is not None and hasattr(ts, 'tzinfo') and ts.tzinfo is None:
+            return ts.replace(tzinfo=timezone.utc)
+        return ts
+
+    crash_start = ensure_tz(crash_start)
+    recovery_complete = ensure_tz(recovery_complete)
+    baseline_start = ensure_tz(baseline_start)
+    observation_start = ensure_tz(observation_start)
+    end_observe = ensure_tz(end_observe)
+
+    # Ensure df timestamps are timezone-aware
+    df_conf = df_conf_filtered.copy()
+    if "submit_ts_utc" in df_conf.columns:
+        if df_conf["submit_ts_utc"].dt.tz is None:
+            df_conf["submit_ts_utc"] = df_conf["submit_ts_utc"].dt.tz_localize('UTC')
+    if df_conf["confirm_ts_utc"].dt.tz is None:
+        df_conf["confirm_ts_utc"] = df_conf["confirm_ts_utc"].dt.tz_localize('UTC')
+
+    # Also prepare submission data for counting submitted TXs
+    df_sub = df_sub_filtered.copy() if not df_sub_filtered.empty else pd.DataFrame()
+    if not df_sub.empty and "submit_ts_utc" in df_sub.columns:
+        df_sub["submit_ts_utc"] = pd.to_datetime(df_sub["submit_ts_utc"])
+        if df_sub["submit_ts_utc"].dt.tz is None:
+            df_sub["submit_ts_utc"] = df_sub["submit_ts_utc"].dt.tz_localize('UTC')
+
+    def compute_phase_metrics(phase_start, phase_end, phase_name):
+        """Compute metrics for a single phase based on submission time."""
+        if phase_start is None or phase_end is None:
+            return None
+
+        duration = (phase_end - phase_start).total_seconds()
+        if duration <= 0:
+            return None
+
+        # Count TXs SUBMITTED during this phase
+        if not df_sub.empty and "submit_ts_utc" in df_sub.columns:
+            submitted = df_sub[
+                (df_sub["submit_ts_utc"] >= phase_start) &
+                (df_sub["submit_ts_utc"] < phase_end)
+            ]
+            submitted_count = len(submitted)
+        else:
+            submitted_count = 0
+
+        # Count confirmed TXs that were SUBMITTED during this phase
+        # (uses submit_ts_utc for phase assignment, not confirm_ts_utc)
+        if "submit_ts_utc" in df_conf.columns:
+            confirmed = df_conf[
+                (df_conf["submit_ts_utc"] >= phase_start) &
+                (df_conf["submit_ts_utc"] < phase_end)
+            ]
+        else:
+            # Fallback to old behavior if submit_ts_utc not in df_conf
+            confirmed = df_conf[
+                (df_conf["confirm_ts_utc"] >= phase_start) &
+                (df_conf["confirm_ts_utc"] < phase_end)
+            ]
+
+        confirmed_count = len(confirmed)
+
+        # Use submitted_count if available, otherwise fall back to confirmed_count
+        effective_submitted = submitted_count if submitted_count > 0 else confirmed_count
+
+        result = {
+            "submitted_count": submitted_count,
+            "confirmed_count": confirmed_count,
+            "duration_seconds": round(duration, 1),
+            "throughput_tx_per_s": round(effective_submitted / duration, 3)
+        }
+
+        # Calculate confirmation rate (availability)
+        if submitted_count > 0:
+            result["confirmation_rate"] = round(confirmed_count / submitted_count, 4)
+
+        # Calculate mean confirmation latency for TXs in this phase
+        if "latency_seconds" in confirmed.columns and len(confirmed) > 0:
+            result["mean_confirmation_latency_seconds"] = round(confirmed["latency_seconds"].mean(), 2)
+            result["median_confirmation_latency_seconds"] = round(confirmed["latency_seconds"].median(), 2)
+
+        return result
+
+    result = {}
+
+    # Phase 1: Pre-crash baseline (netem_applied → crash_start)
+    pre_crash = compute_phase_metrics(baseline_start, crash_start, "pre_crash")
+    if pre_crash:
+        result["pre_crash"] = pre_crash
+
+    # Phase 2: During crash (crash_start → recovery_complete)
+    during_crash = compute_phase_metrics(crash_start, recovery_complete, "during_crash")
+    if during_crash:
+        result["during_crash"] = during_crash
+
+    # Phase 3: Post-recovery (recovery_complete → end_observe - buffer)
+    # Apply confirmation buffer to ensure TXs have time to confirm
+    post_recovery_end = end_observe
+    if end_observe is not None and confirmation_buffer_s > 0:
+        post_recovery_end = end_observe - pd.Timedelta(seconds=confirmation_buffer_s)
+    post_recovery = compute_phase_metrics(recovery_complete, post_recovery_end, "post_recovery")
+    if post_recovery:
+        result["post_recovery"] = post_recovery
+
+    # Calculate degradation percentages (using throughput)
+    if "pre_crash" in result and "during_crash" in result:
+        pre_tps = result["pre_crash"]["throughput_tx_per_s"]
+        during_tps = result["during_crash"]["throughput_tx_per_s"]
+        if pre_tps > 0:
+            result["crash_degradation_percent"] = round(((pre_tps - during_tps) / pre_tps) * 100, 1)
+
+    if "pre_crash" in result and "post_recovery" in result:
+        pre_tps = result["pre_crash"]["throughput_tx_per_s"]
+        post_tps = result["post_recovery"]["throughput_tx_per_s"]
+        if pre_tps > 0:
+            recovery_diff = ((post_tps - pre_tps) / pre_tps) * 100
+            result["recovery_vs_baseline_percent"] = round(recovery_diff, 1)
+
+    # Calculate confirmation rate degradation (more meaningful than throughput degradation)
+    if "pre_crash" in result and "during_crash" in result:
+        pre_rate = result["pre_crash"].get("confirmation_rate", 1.0)
+        during_rate = result["during_crash"].get("confirmation_rate", 1.0)
+        if pre_rate and pre_rate > 0:
+            result["confirmation_rate_degradation_percent"] = round(((pre_rate - during_rate) / pre_rate) * 100, 1)
+
+    return result if result else None
+
+
+def compute_reorg_metrics(run_dir, events=None, reorg_events_from_propagation=None):
+    """
+    Analyze blockchain reorgs and fork resolution from chaintips.json and pre-parsed log data.
+
+    Scientific use: Measures network consensus stability under fault conditions.
+    Fork resolution time shows how quickly the network converges after partitions.
+
+    Args:
+        run_dir: Path to experiment run directory
+        events: Parsed events.log data
+        reorg_events_from_propagation: Reorg events already detected by compute_block_propagation_metrics
+                                       (avoids parsing logs twice)
+
+    Returns:
+        dict with reorg count, stale blocks, fork resolution times
+    """
+    result = {
+        "stale_blocks": 0,
+        "valid_headers_blocks": 0,
+        "valid_fork_blocks": 0,
+        "active_tips": 1,
+        "total_tips": 1,
+        "fork_details": []
+    }
+
+    # Read chaintips.json (end-of-experiment snapshot)
+    chaintips_path = os.path.join(run_dir, "chaintips.json")
+    if os.path.exists(chaintips_path):
+        try:
+            with open(chaintips_path, 'r') as f:
+                tips = json.load(f)
+
+            result["total_tips"] = len(tips)
+
+            for tip in tips:
+                status = tip.get("status", "")
+                branchlen = tip.get("branchlen", 0)
+                height = tip.get("height", 0)
+
+                if status == "active":
+                    result["active_tips"] = 1
+                    result["active_height"] = height
+                elif status == "valid-headers":
+                    result["valid_headers_blocks"] += 1
+                    result["fork_details"].append({
+                        "type": "valid-headers",
+                        "height": height,
+                        "branchlen": branchlen,
+                        "blocks_behind": result.get("active_height", 0) - height
+                    })
+                elif status == "valid-fork":
+                    result["valid_fork_blocks"] += 1
+                    result["fork_details"].append({
+                        "type": "valid-fork",
+                        "height": height,
+                        "branchlen": branchlen,
+                        "blocks_behind": result.get("active_height", 0) - height
+                    })
+                elif status == "headers-only":
+                    result["stale_blocks"] += 1
+
+            # Total orphaned/stale blocks
+            result["orphaned_blocks_total"] = (
+                result["stale_blocks"] +
+                result["valid_headers_blocks"] +
+                result["valid_fork_blocks"]
+            )
+
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"⚠️  Could not parse chaintips.json: {e}")
+
+    # Use reorg events from block_propagation_metrics (already parsed from ALL node logs)
+    # This is much more efficient than parsing logs again
+    if reorg_events_from_propagation is not None:
+        reorg_events = reorg_events_from_propagation
+    else:
+        reorg_events = []
+
+    result["reorg_count"] = len(reorg_events)
+
+    # Count unique heights that had reorgs (more meaningful than raw event count)
+    if reorg_events:
+        unique_reorg_heights = set(e.get("height") for e in reorg_events)
+        result["reorg_heights_affected"] = len(unique_reorg_heights)
+
+        # Count how many nodes saw each reorg and calculate per-fork resolution times
+        events_per_height = {}
+        for e in reorg_events:
+            h = e.get("height")
+            if h not in events_per_height:
+                events_per_height[h] = []
+            events_per_height[h].append(e)
+
+        nodes_per_height = {h: set(e.get("node") for e in evts) for h, evts in events_per_height.items()}
+        result["reorg_network_wide"] = sum(1 for nodes in nodes_per_height.values() if len(nodes) > 1)
+
+        # Calculate reorg propagation times (time from first to last node seeing reorg at each height)
+        reorg_propagation = []
+        for height, evts in events_per_height.items():
+            timestamps = []
+            for e in evts:
+                ts_str = e.get("timestamp")
+                if ts_str:
+                    try:
+                        ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                        timestamps.append(ts)
+                    except ValueError:
+                        pass
+
+            if len(timestamps) >= 2:
+                timestamps.sort()
+                propagation_time = (timestamps[-1] - timestamps[0]).total_seconds()
+                reorg_propagation.append({
+                    "height": height,
+                    "nodes_affected": len(nodes_per_height[height]),
+                    "first_reorg": timestamps[0].isoformat(),
+                    "last_reorg": timestamps[-1].isoformat(),
+                    "propagation_seconds": round(propagation_time, 2)
+                })
+            elif len(timestamps) == 1:
+                reorg_propagation.append({
+                    "height": height,
+                    "nodes_affected": len(nodes_per_height[height]),
+                    "first_reorg": timestamps[0].isoformat(),
+                    "propagation_seconds": 0  # Single node
+                })
+
+        # Sort by height descending (most recent first)
+        reorg_propagation.sort(key=lambda x: x["height"], reverse=True)
+        result["reorg_propagation"] = reorg_propagation
+
+        # Summary stats
+        if reorg_propagation:
+            propagation_times = [r["propagation_seconds"] for r in reorg_propagation if r["propagation_seconds"] > 0]
+            if propagation_times:
+                result["max_reorg_propagation_seconds"] = max(propagation_times)
+                result["mean_reorg_propagation_seconds"] = round(sum(propagation_times) / len(propagation_times), 2)
+
+        # Store first 10 reorg events for debugging
+        result["reorg_events"] = reorg_events[:10]
+
+    return result
+
 
 def rolling_rate(times, window=60):
     """Calculate rolling transaction rate"""
@@ -813,38 +1161,62 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     # Data structures:
     # - seen[(block_hash, node)] = (min_delay, mined_ts, earliest_arrival_ts)
     # - per_block_node_delay[block_hash][node] = min_delay
+    # - reorg_events: list of detected reorgs (same height, different hash)
+    # - height_to_hash_per_node[node][height] = first seen hash (for reorg detection)
     seen: dict[tuple[str, str], tuple[float, "pd.Timestamp", "pd.Timestamp"]] = {}
     per_block_node_delay: dict[str, dict[str, float]] = {}
-    
+    reorg_events: list[dict] = []
+    height_to_hash_per_node: dict[str, dict[int, str]] = {}
+
     for log_path in log_files:
         node_name = log_path.stem
-        
+        height_to_hash_per_node[node_name] = {}
+
         try:
             with open(log_path, "r", encoding="utf-8") as handle:
                 for line in handle:
                     match = UPDATE_TIP_REGEX.search(line)
                     if not match:
                         continue
-                    
-                    arrival_ts = pd.to_datetime(match.group(1).replace("Z", "+00:00"))
+
+                    ts_str = match.group(1)
+                    arrival_ts = pd.to_datetime(ts_str.replace("Z", "+00:00"))
                     block_hash = match.group(2)
-                    
+                    height = int(match.group(3))
+
+                    # === REORG DETECTION (combined into this loop for efficiency) ===
+                    # Detect when same height appears with different hash = reorg
+                    node_heights = height_to_hash_per_node[node_name]
+                    if height in node_heights:
+                        if node_heights[height] != block_hash:
+                            reorg_events.append({
+                                "node": node_name,
+                                "height": height,
+                                "timestamp": ts_str,
+                                "old_hash": node_heights[height][:16] + "...",
+                                "new_hash": block_hash[:16] + "..."
+                            })
+                            node_heights[height] = block_hash  # Update to new hash
+                    else:
+                        node_heights[height] = block_hash
+
+                    # === BLOCK PROPAGATION (existing logic) ===
                     if best_chain_hashes and block_hash not in best_chain_hashes:
                         continue
-                    
+
                     mined_ts = block_times.get(block_hash)
                     if mined_ts is None:
                         continue
-                    
+
                     delay = (arrival_ts - mined_ts).total_seconds()
                     if math.isnan(delay):
                         continue
-                    
+
                     # Allow small clock skew, clamp negatives to zero
                     if delay < -2:
                         continue
                     delay = max(0.0, delay)
-                    
+
                     # Ignore extreme outliers (>10 minutes)
                     if delay > 600:
                         continue
@@ -1110,6 +1482,9 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     if partition_stats:
         result["partition_resync"] = partition_stats
         result["partition_resync"]["description"] = "Non-crashed nodes that received blocks via reorg after network partition healed"
+
+    # Include reorg events detected during log parsing (for use by compute_reorg_metrics)
+    result["_reorg_events"] = reorg_events
 
     return result
 
@@ -1789,8 +2164,10 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
     if not df_conf.empty and df_sub is not None and len(df_conf) > 0:
         ax2 = axes[0, 1]
 
-        # Use same filtering as metrics.json (netem_applied as start, with 60s buffer)
-        CONFIRMATION_BUFFER_SECONDS = 60
+        # Use same filtering as metrics.json (netem_applied as start, with buffer)
+        # Buffer must be long enough for TXs to confirm under fault conditions
+        # (p99 latency can be ~140s, max ~185s under heavy faults)
+        CONFIRMATION_BUFFER_SECONDS = 180
         start_ts = netem_applied_ts or observation_start_ts
         end_ts_with_buffer = end_observe_ts - pd.Timedelta(seconds=CONFIRMATION_BUFFER_SECONDS) if end_observe_ts else None
 
@@ -2006,29 +2383,51 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf, avg_thro
     os.makedirs(plots_dir, exist_ok=True)
     
     # SCIENTIFIC FIX: Filter data to experiment window
-    after_netem_ts = None
+    # Use netem_applied as baseline start (for throughput_by_phase analysis)
+    # Fall back to start_observation if netem_applied not found
+    baseline_filter_ts = None
     end_observe_ts = None
+    start_warmup_ts = None
+    netem_applied_ts = None
+    start_observation_ts = None
     for (ts, evt, _) in events:
-        if evt in ("start_observation", "after_netem") and after_netem_ts is None:
-            after_netem_ts = ts
+        if evt == "start_warmup" and start_warmup_ts is None:
+            start_warmup_ts = ts
+        elif evt == "netem_applied" and netem_applied_ts is None:
+            netem_applied_ts = ts
+        elif evt in ("start_observation", "after_netem") and start_observation_ts is None:
+            start_observation_ts = ts
         elif evt == "end_observe" and end_observe_ts is None:
             end_observe_ts = ts
-    
-    # Filter dataframes to observation window
+
+    # Use netem_applied for baseline (includes warmup period under degraded conditions)
+    # Fall back to start_warmup, then start_observation
+    baseline_filter_ts = netem_applied_ts or start_warmup_ts or start_observation_ts
+
+    # Filter dataframes to experiment window (from baseline, not just observation)
     df_sub_filtered = df_sub.copy() if not df_sub.empty else pd.DataFrame()
     df_conf_filtered = df_conf.copy() if not df_conf.empty else pd.DataFrame()
-    
-    if not df_sub_filtered.empty and after_netem_ts is not None:
+
+    if not df_sub_filtered.empty and baseline_filter_ts is not None:
         df_sub_filtered["submit_ts_utc"] = pd.to_datetime(df_sub_filtered["submit_ts_utc"])
-        df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] >= after_netem_ts]
+        df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] >= baseline_filter_ts]
         if end_observe_ts is not None:
             df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] <= end_observe_ts]
-    
-    if not df_conf_filtered.empty and after_netem_ts is not None:
+
+    if not df_conf_filtered.empty and baseline_filter_ts is not None:
         df_conf_filtered["confirm_ts_utc"] = pd.to_datetime(df_conf_filtered["confirm_ts_utc"])
-        df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] >= after_netem_ts]
-        if end_observe_ts is not None:
-            df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] <= end_observe_ts]
+        # For throughput_by_phase, filter by SUBMISSION time (not confirmation time)
+        # This ensures TXs submitted during observation are counted even if confirmed later
+        if "submit_ts_utc" in df_conf_filtered.columns:
+            df_conf_filtered["submit_ts_utc"] = pd.to_datetime(df_conf_filtered["submit_ts_utc"])
+            df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] >= baseline_filter_ts]
+            if end_observe_ts is not None:
+                df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] <= end_observe_ts]
+        else:
+            # Fallback to confirm_ts filtering if submit_ts not available
+            df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] >= baseline_filter_ts]
+            if end_observe_ts is not None:
+                df_conf_filtered = df_conf_filtered[df_conf_filtered["confirm_ts_utc"] <= end_observe_ts]
     
     # Load experiment configuration
     metadata_file = os.path.join(run_dir, "metadata.yml")
@@ -2524,7 +2923,8 @@ def main():
     # IMPORTANT: We apply a confirmation buffer to exclude TXs submitted too close to the end
     # of observation. These TXs may not have had time to confirm, which would unfairly lower
     # availability metrics. The buffer ensures we only count TXs that had a fair chance to confirm.
-    CONFIRMATION_BUFFER_SECONDS = 60  # Time needed for TX to get into a block and confirm
+    # Under fault conditions, p99 latency can be ~140s and max ~185s, so we use 180s buffer.
+    CONFIRMATION_BUFFER_SECONDS = 180
 
     df_sub_filtered = df_sub.copy()
     if not df_sub_filtered.empty and "submit_ts_utc" in df_sub_filtered.columns:
@@ -2576,46 +2976,17 @@ def main():
         
         A = min(1.0, confirmed_count / len(sub_times_filtered))  # Cap at 100%
     
-    # Calculate official Bitcoin network throughput
-    # Official definition: Total confirmed transactions / Total time (experiment window)
+    # Calculate average throughput over the measurement window
+    # IMPORTANT: Use same time window as filtered TXs for consistency
+    # Window: start_experiment → (end_observe - CONFIRMATION_BUFFER)
     avg_throughput_official = 0.0
-    if not df_conf_filtered.empty and len(df_conf_filtered) > 1:
-        # Use experiment window time if available, otherwise use first to last confirmation
+    if not df_conf_filtered.empty and len(df_conf_filtered) > 0:
         if start_experiment is not None and end_observe is not None:
-            total_time = (end_observe - start_experiment).total_seconds()
-        else:
-            # Use already-computed conf_times_filtered (from line above) for consistency
-            total_time = (conf_times_filtered[-1] - conf_times_filtered[0]).total_seconds() if conf_times_filtered else 0
-        
-        if total_time > 0:
-            avg_throughput_official = len(df_conf_filtered) / total_time
-        
-        # Alternative: Use mining.csv if available for block-based calculation
-        mining_file = os.path.join(run_dir, "mining.csv")
-        if os.path.exists(mining_file):
-            try:
-                df_mining = pd.read_csv(mining_file)
-                if "timestamp_utc" in df_mining.columns and len(df_mining) > 1:
-                    df_mining["timestamp_utc"] = pd.to_datetime(df_mining["timestamp_utc"])
-                    # Filter mining blocks to experiment window
-                    if start_experiment is not None:
-                        df_mining = df_mining[df_mining["timestamp_utc"] >= start_experiment]
-                    if end_observe is not None:
-                        df_mining = df_mining[df_mining["timestamp_utc"] <= end_observe]
-                    
-                    if len(df_mining) > 1:
-                        mining_times = sorted(df_mining["timestamp_utc"].tolist())
-                        block_time_span = (mining_times[-1] - mining_times[0]).total_seconds()
-                        if block_time_span > 0:
-                            # Method 2: Average TX per block × Blocks per second
-                            tx_per_block = len(df_conf_filtered) / len(df_mining)
-                            blocks_per_second = len(df_mining) / block_time_span
-                            avg_throughput_block_based = tx_per_block * blocks_per_second
-                            # Use block-based if it's more accurate (covers full experiment duration)
-                            if block_time_span > total_time * 0.8:  # If block span covers most of experiment
-                                avg_throughput_official = avg_throughput_block_based
-            except Exception as e:
-                print(f"⚠️  Could not read mining.csv for throughput calculation: {e}")
+            # Time window must match TX filter (with confirmation buffer applied)
+            end_ts_with_buffer = end_observe - pd.Timedelta(seconds=CONFIRMATION_BUFFER_SECONDS)
+            total_time = (end_ts_with_buffer - start_experiment).total_seconds()
+            if total_time > 0:
+                avg_throughput_official = len(df_conf_filtered) / total_time
     
     # Create enhanced plots
     create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_throughput_official)
@@ -2632,8 +3003,12 @@ def main():
         cl_filtered = df_conf_filtered["latency_seconds"].astype(float)
         cl50 = float(np.percentile(cl_filtered, 50))
         cl95 = float(np.percentile(cl_filtered, 95))
+        cl99 = float(np.percentile(cl_filtered, 99))
+        cl_mean = float(np.mean(cl_filtered))
+        cl_min = float(np.min(cl_filtered))
+        cl_max = float(np.max(cl_filtered))
     else:
-        cl50 = cl95 = float("nan")
+        cl50 = cl95 = cl99 = cl_mean = cl_min = cl_max = float("nan")
 
     # Calculate k=6 confirmation latency (time from submit to 6 confirmations deep)
     k6_median = k6_p95 = float("nan")
@@ -2677,15 +3052,27 @@ def main():
         "total_submitted": len(df_sub_filtered),  # Only transactions in observation window
         "total_confirmed": len(df_conf_filtered),  # Only confirmations in observation window
         "availability": A,
-        "median_latency": cl50,
-        "p95_latency": cl95,
-        "k6_median_latency": k6_median,
-        "k6_p95_latency": k6_p95,
+        "confirmation_latency_stats": {
+            "min": cl_min,
+            "mean": cl_mean,
+            "median": cl50,
+            "p95": cl95,
+            "p99": cl99,
+            "max": cl_max
+        },
+        # k6 = 6-confirmation latency (time until TX has 6 confirmations, Bitcoin's standard finality)
+        "k6_confirmation_latency": {
+            "median": k6_median,
+            "p95": k6_p95
+        } if k6_median is not None else None,
         "avg_throughput": avg_throughput_official  # Official Bitcoin network throughput definition
     }
     
     block_propagation_metrics = compute_block_propagation_metrics(run_dir, events=events)
+    reorg_events_from_logs = []  # Will be populated from block_propagation if available
     if block_propagation_metrics:
+        # Extract reorg events (internal field, not saved to JSON)
+        reorg_events_from_logs = block_propagation_metrics.pop("_reorg_events", [])
         metrics["block_propagation"] = block_propagation_metrics
         
         # Print block propagation summary with separation info
@@ -2739,17 +3126,21 @@ def main():
                 print(f"   Current latency: {recovery_metrics['final_latency']:.2f}s")
                 print(f"   Observation duration: {recovery_metrics['observation_duration']:.0f}s")
     
-    # Compute latency comparison (pre-crash vs post-recovery)
+    # Compute latency comparison (pre-crash vs during-crash vs post-recovery)
     latency_comparison = compute_latency_comparison(df_conf_filtered, events)
     if latency_comparison:
-        metrics["latency_comparison"] = latency_comparison
-        print(f"\n📈 LATENCY COMPARISON:")
+        metrics["confirmation_latency_comparison"] = latency_comparison
+        print(f"\n📈 CONFIRMATION LATENCY COMPARISON:")
         print(f"   Pre-crash median: {latency_comparison['pre_crash_median']:.2f}s ({latency_comparison['pre_crash_samples']} samples)")
+        if 'during_crash_median' in latency_comparison:
+            during_deg = latency_comparison.get('during_crash_degradation_percent', 0)
+            status = "⚠️" if during_deg > 0 else "✅"
+            print(f"   During crash median: {latency_comparison['during_crash_median']:.2f}s ({latency_comparison['during_crash_samples']} samples) {status} {during_deg:+.1f}%")
         print(f"   Post-recovery median: {latency_comparison['post_recovery_median']:.2f}s ({latency_comparison['post_recovery_samples']} samples)")
         if latency_comparison['degradation_percent'] > 0:
-            print(f"   ⚠️  Degradation: +{latency_comparison['degradation_percent']:.1f}%")
+            print(f"   ⚠️  Post-recovery degradation: +{latency_comparison['degradation_percent']:.1f}%")
         else:
-            print(f"   ✅ Improvement: {latency_comparison['degradation_percent']:.1f}%")
+            print(f"   ✅ Post-recovery improvement: {latency_comparison['degradation_percent']:.1f}%")
     
     # Compute block interval statistics
     block_interval_stats = compute_block_interval_stats(run_dir, events)
@@ -2759,7 +3150,80 @@ def main():
         print(f"   Blocks mined: {block_interval_stats['blocks_mined']}")
         print(f"   Mean interval: {block_interval_stats['mean_seconds']:.1f}s ± {block_interval_stats['std_seconds']:.1f}s")
         print(f"   Range: {block_interval_stats['min_seconds']:.1f}s - {block_interval_stats['max_seconds']:.1f}s")
-    
+
+    # Compute per-phase throughput (pre-crash, during-crash, post-recovery)
+    # Uses submission time for phase assignment to avoid confirmation lag artifacts
+    # IMPORTANT: For throughput analysis, we DON'T apply the confirmation buffer
+    # because we want to measure all TXs submitted in each phase (confirmation_rate handles unconfirmed TXs)
+    df_sub_for_throughput = df_sub.copy()
+    df_conf_for_throughput = df_conf.copy()
+    if not df_sub_for_throughput.empty and "submit_ts_utc" in df_sub_for_throughput.columns:
+        if start_experiment is not None:
+            df_sub_for_throughput = df_sub_for_throughput[df_sub_for_throughput["submit_ts_utc"] >= start_experiment]
+        if end_observe is not None:
+            df_sub_for_throughput = df_sub_for_throughput[df_sub_for_throughput["submit_ts_utc"] <= end_observe]
+    if not df_conf_for_throughput.empty and "submit_ts_utc" in df_conf_for_throughput.columns:
+        if start_experiment is not None:
+            df_conf_for_throughput = df_conf_for_throughput[df_conf_for_throughput["submit_ts_utc"] >= start_experiment]
+        if end_observe is not None:
+            df_conf_for_throughput = df_conf_for_throughput[df_conf_for_throughput["submit_ts_utc"] <= end_observe]
+
+    # Confirmation buffer is applied inside compute_per_phase_throughput for post_recovery phase
+    # This ensures TXs have enough time to confirm before being counted in confirmation_rate
+    per_phase_throughput = compute_per_phase_throughput(
+        df_conf_for_throughput, df_sub_for_throughput, events,
+        confirmation_buffer_s=CONFIRMATION_BUFFER_SECONDS
+    )
+    if per_phase_throughput:
+        metrics["throughput_by_phase"] = per_phase_throughput
+        print(f"\n📊 THROUGHPUT BY PHASE (by submission time):")
+        for phase_name, phase_label in [("pre_crash", "Pre-crash"), ("during_crash", "During crash"), ("post_recovery", "Post-recovery")]:
+            if phase_name in per_phase_throughput:
+                p = per_phase_throughput[phase_name]
+                submitted = p.get('submitted_count', 0)
+                confirmed = p.get('confirmed_count', 0)
+                rate = p.get('confirmation_rate', 0)
+                latency = p.get('mean_confirmation_latency_seconds', 0)
+                duration = p.get('duration_seconds', 0)
+                tps = p.get('throughput_tx_per_s', 0)
+
+                rate_str = f", rate={rate*100:.1f}%" if rate else ""
+                latency_str = f", latency={latency:.1f}s" if latency else ""
+                print(f"   {phase_label}: {tps:.2f} tx/s ({submitted} sub, {confirmed} conf in {duration:.0f}s{rate_str}{latency_str})")
+
+        if "confirmation_rate_degradation_percent" in per_phase_throughput:
+            deg = per_phase_throughput["confirmation_rate_degradation_percent"]
+            status = "⚠️" if deg > 5 else "✅"
+            print(f"   {status} Confirmation rate degradation: {deg:+.1f}%")
+        if "recovery_vs_baseline_percent" in per_phase_throughput:
+            rec = per_phase_throughput["recovery_vs_baseline_percent"]
+            status = "✅" if rec >= -5 else "⚠️"
+            print(f"   {status} Recovery vs baseline: {rec:+.1f}%")
+
+    # Compute reorg and fork metrics (uses reorg events from block_propagation - no extra log parsing)
+    reorg_metrics = compute_reorg_metrics(run_dir, events, reorg_events_from_propagation=reorg_events_from_logs)
+    if reorg_metrics:
+        metrics["chain_consensus"] = reorg_metrics
+        print(f"\n🔗 CHAIN CONSENSUS:")
+        print(f"   Active chain tips: {reorg_metrics.get('active_tips', 1)}")
+        print(f"   Orphaned blocks: {reorg_metrics.get('orphaned_blocks_total', 0)}")
+        print(f"   Reorgs detected: {reorg_metrics.get('reorg_count', 0)}")
+        if reorg_metrics.get('reorg_heights_affected'):
+            print(f"   Unique heights affected: {reorg_metrics['reorg_heights_affected']}")
+        if reorg_metrics.get('reorg_network_wide'):
+            print(f"   Network-wide reorgs: {reorg_metrics['reorg_network_wide']}")
+        if reorg_metrics.get('max_reorg_propagation_seconds') is not None:
+            print(f"   Max reorg propagation: {reorg_metrics['max_reorg_propagation_seconds']:.1f}s")
+        if reorg_metrics.get('mean_reorg_propagation_seconds') is not None:
+            print(f"   Mean reorg propagation: {reorg_metrics['mean_reorg_propagation_seconds']:.1f}s")
+        if reorg_metrics.get('fork_details'):
+            for fork in reorg_metrics['fork_details'][:3]:
+                print(f"   └─ {fork['type']} at height {fork['height']} ({fork['blocks_behind']} blocks behind)")
+        if reorg_metrics.get('reorg_propagation'):
+            print(f"   Reorg propagation by height:")
+            for rp in reorg_metrics['reorg_propagation'][:5]:
+                print(f"      └─ height {rp['height']}: {rp['propagation_seconds']:.1f}s ({rp['nodes_affected']} nodes)")
+
     # Save metrics
     with open(os.path.join(run_dir, "metrics.json"), "w") as f:
         json.dump(metrics, f, indent=2, default=str)
@@ -2767,8 +3231,8 @@ def main():
     print(f"\n📊 Enhanced analysis complete for {run_dir}")
     print(f"Submitted: {metrics['total_submitted']}, Confirmed: {metrics['total_confirmed']}")
     print(f"Availability: {metrics['availability']:.2%}")
-    print(f"Median Latency: {metrics['median_latency']:.2f}s")
-    print(f"P95 Latency: {metrics['p95_latency']:.2f}s")
+    print(f"Median Confirmation Latency: {metrics['confirmation_latency_stats']['median']:.2f}s")
+    print(f"P95 Confirmation Latency: {metrics['confirmation_latency_stats']['p95']:.2f}s")
     print(f"Avg Throughput: {metrics['avg_throughput']:.2f} tx/s")
 
 if __name__ == "__main__":

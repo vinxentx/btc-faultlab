@@ -500,7 +500,9 @@ class StrictRateInjector:
             else:
                 rtps = 0.0
 
-            timestamp = datetime.now(timezone.utc).isoformat()
+            # Use actual send time (captured BEFORE RPC call) for accurate latency measurement
+            # Previously used datetime.now() which was AFTER RPC returned, introducing ~100-300ms error
+            timestamp = datetime.fromtimestamp(result.sent_time, tz=timezone.utc).isoformat()
 
             if result.success:
                 txlog.write(f"{result.seq_num},{self.shard_id},{timestamp},{result.txid}\n")
@@ -683,6 +685,22 @@ def main() -> int:
     if prepared < 100:
         raise RuntimeError(f"Zu wenige TXs vorbereitet: {prepared}")
 
+    # Signal that Phase 1 is complete
+    ready_file = f"/state/txgen_{args.shard_id}_ready"
+    with open(ready_file, "w") as f:
+        f.write(f"{prepared}\n")
+    print(f"✅ Shard {args.shard_id}: Ready-Signal geschrieben ({ready_file})")
+
+    # Wait for start signal before Phase 2
+    start_file = "/state/txgen_start"
+    print(f"⏳ Shard {args.shard_id}: Warte auf Start-Signal ({start_file})...")
+    wait_start = time.time()
+    while not os.path.exists(start_file):
+        time.sleep(0.1)
+        if time.time() - wait_start > 1800:  # 30 min timeout
+            raise RuntimeError(f"Timeout waiting for {start_file}")
+    print(f"🚦 Shard {args.shard_id}: Start-Signal empfangen!")
+
     print(f"\n{'='*60}")
     print(f"PHASE 2: TRANSACTION INJECTION")
     print(f"{'='*60}")
@@ -706,8 +724,7 @@ def main() -> int:
     errorlog_header = "timestamp_utc,error_code,error_message,context\n"
 
     print(f"⚡ Shard {args.shard_id}: Zielrate {args.rate:.4f} tx/s via sendrawtransaction")
-    if args.max_duration > 0:
-        print(f"⏱️  Shard {args.shard_id}: Max Injection-Dauer {args.max_duration}s")
+    print(f"⏱️  Shard {args.shard_id}: Runs until container stopped (prepared {tx_count} TXs)")
 
     try:
         with open(args.log, "w", encoding="utf-8") as txlog, \
@@ -720,15 +737,10 @@ def main() -> int:
 
             injector.start(txlog, perflog, errlog)
 
-            injection_start = time.time()
+            # Run until container is stopped by docker
+            # The metrics handle "unconfirmed tail" via CONFIRMATION_BUFFER
             while True:
                 time.sleep(1.0)
-                # Stop after max_duration if specified
-                if args.max_duration > 0:
-                    elapsed = time.time() - injection_start
-                    if elapsed >= args.max_duration:
-                        print(f"⏱️  Shard {args.shard_id}: Max Dauer erreicht ({args.max_duration}s)")
-                        break
 
     except KeyboardInterrupt:
         pass

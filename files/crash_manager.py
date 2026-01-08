@@ -212,12 +212,12 @@ def wait_for_sync(crash_nodes: list, reference_nodes: list, run_dir: str, timeou
     return False
 
 
-def inject_crash_burst(crash_nodes: list, run_dir: str) -> dict:
+def inject_crash_burst(crash_nodes: list, run_dir: str, crash_duration_s: float) -> dict:
     """Burst mode: Stop all nodes simultaneously. Returns actual crash times."""
     # Signal scheduler BEFORE stopping containers (eliminates connection errors)
     write_crash_signal(crash_nodes)
 
-    log_event(run_dir, "crash_start", f"mode=burst duration=N/A nodes={','.join(crash_nodes)}")
+    log_event(run_dir, "crash_start", f"mode=burst duration={crash_duration_s:.0f}s nodes={','.join(crash_nodes)}")
     actual_crash_times = {}
 
     # Stop all nodes in parallel
@@ -327,6 +327,10 @@ def wait_for_recovery_complete(executor, futures, crash_nodes: list, run_dir: st
 
     executor.shutdown(wait=True)
 
+    # Log when all containers are running (before sync wait)
+    # This enables accurate block_catchup_time measurement in metrics.py
+    log_event(run_dir, "all_containers_running", f"nodes={','.join(crash_nodes)}")
+
     # Wait for sync (unless skipped for local testing)
     if skip_sync:
         print("Skipping sync wait (--skip-sync)")
@@ -382,7 +386,7 @@ def main():
 
     # Inject crashes (recovery threads are watching for events)
     if args.crash_mode == "burst":
-        inject_crash_burst(crash_nodes, run_dir)
+        inject_crash_burst(crash_nodes, run_dir, args.crash_duration)
     else:
         stagger_period = args.stagger_period if args.stagger_period else args.crash_duration
         inject_crash_staggered(crash_nodes, run_dir, stagger_period)

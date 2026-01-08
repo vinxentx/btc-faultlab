@@ -3,6 +3,14 @@
   vars:
     funding_host_port: "127.0.0.1:{{ wallet_rpc_base }}"
   tasks:
+    - name: Clean up old txgen signal files
+      ansible.builtin.shell: |
+        rm -f {{ workdir }}/state/txgen_*_ready
+        rm -f {{ workdir }}/state/txgen_start
+      args:
+        chdir: "{{ workdir }}"
+      changed_when: true
+
     - name: Build base argv for funding setup
       ansible.builtin.set_fact:
         funding_setup_argv:
