@@ -40,6 +40,7 @@ snapshot_restore_wallets: true
 snapshot_restore_state: true
 snapshot_compress: true
 snapshot_parallelism: 8
+snapshot_utxo_amount: 0.001           # UTXO amount for txgen wallets (increased from 0.0002 for better fund efficiency)
 
 # --- Wallet- & Generator-Topologie ---
 wallet_funding_container: "wallet_funding"
