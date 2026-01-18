@@ -31,6 +31,6 @@ blockmaxweight=8000000
 blockmaxweight=4000000
 {% endif %}
 {% endif %}
-{% if reindex_on_restart is defined and reindex_on_restart | bool %}
+{% if reindex_on_restart is defined and reindex_on_restart | bool and not (is_wallet_config | default(false)) %}
 reindex=1
 {% endif %}

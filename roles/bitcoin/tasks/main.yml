@@ -92,7 +92,7 @@
     group: "{{ file_group }}"
   loop: "{{ wallet_services }}"
   vars:
-    reindex_on_restart: false  # Wallets should never reindex - only crashed nodes do
+    is_wallet_config: true  # Wallets should never reindex - only crashed nodes do
 
 - name: Ensure results dir exists
   ansible.builtin.file:
