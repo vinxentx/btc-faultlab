@@ -16,11 +16,12 @@ from pathlib import Path
 import yaml
 
 class ExperimentRunner:
-    def __init__(self, base_dir=None, skip_bootstrap=True):
+    def __init__(self, base_dir=None, skip_bootstrap=True, snapshot_dir=None):
         self.base_dir = Path(base_dir) if base_dir else Path.cwd()
         self.results_dir = self.base_dir / "results"
         self.experiment_log = self.results_dir / "experiment_log.json"
         self.skip_bootstrap = skip_bootstrap
+        self.snapshot_dir = snapshot_dir
         self.ensure_directories()
         
     def ensure_directories(self):
@@ -89,12 +90,20 @@ class ExperimentRunner:
     
     def run_single_experiment(self, config_params):
         """Run a single experiment with given parameters"""
+        # Inject snapshot params if snapshot_dir is set
+        if self.snapshot_dir:
+            config_params = config_params.copy() if config_params else {}
+            config_params["use_chain_snapshot"] = True
+            config_params["snapshot_dir"] = str(Path(self.snapshot_dir).resolve())
+            config_params["skip_funding_setup"] = True
+            print(f"📦 Using snapshot: {self.snapshot_dir}")
+
         print(f"\n{'='*80}")
         print(f"EXPERIMENT: {config_params}")
         print(f"{'='*80}")
-        
+
         start_time = time.time()
-        
+
         try:
             # Step 1: Bootstrap (if needed)
             if not self.skip_bootstrap:
@@ -380,11 +389,13 @@ def main():
                        help="Number of runs per configuration (for statistical significance)")
     parser.add_argument("--with-bootstrap", action="store_true",
                        help="Run bootstrap step before experiments (default: skip)")
-    
+    parser.add_argument("--snapshot-dir", type=str,
+                       help="Path to snapshot directory (enables snapshot restore, skips funding)")
+
     args = parser.parse_args()
     
-    runner = ExperimentRunner(skip_bootstrap=not args.with_bootstrap)
-    
+    runner = ExperimentRunner(skip_bootstrap=not args.with_bootstrap, snapshot_dir=args.snapshot_dir)
+
     if args.single:
         # Run single experiment with current configuration or custom config
         config = {}

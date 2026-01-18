@@ -6,6 +6,24 @@ rpcallowip=0.0.0.0/0
 rpcbind=0.0.0.0
 rpcuser={{ rpc_user }}
 rpcpassword={{ rpc_pass }}
+{% if rpcthreads is defined %}
+rpcthreads={{ rpcthreads }}
+{% endif %}
+{% if rpcworkqueue is defined %}
+rpcworkqueue={{ rpcworkqueue }}
+{% endif %}
+{% if limitancestorcount is defined %}
+limitancestorcount={{ limitancestorcount }}
+{% endif %}
+{% if limitdescendantcount is defined %}
+limitdescendantcount={{ limitdescendantcount }}
+{% endif %}
+{% if limitancestorsize is defined %}
+limitancestorsize={{ limitancestorsize }}
+{% endif %}
+{% if limitdescendantsize is defined %}
+limitdescendantsize={{ limitdescendantsize }}
+{% endif %}
 {% if block_size_limit is defined %}
 {% if block_size_limit == '2MB' %}
 blockmaxweight=8000000

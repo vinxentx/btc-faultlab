@@ -33,6 +33,14 @@ network_name: "btcnet"
 # Projektwurzel = Ordner über playbooks/
 workdir: "{{ playbook_dir | realpath | dirname }}"
 
+# --- Snapshot Restore ---
+use_chain_snapshot: false
+snapshot_dir: "{{ workdir }}/snapshots/chain_snapshot"
+snapshot_restore_wallets: true
+snapshot_restore_state: true
+snapshot_compress: true
+snapshot_parallelism: 8
+
 # --- Wallet- & Generator-Topologie ---
 wallet_funding_container: "wallet_funding"
 wallet_funding_name: "funding"
@@ -76,6 +84,38 @@ txgen_shards:
     wallet_container: "wallet_shard_h"
     wallet_name: "txshard_h"
     log_suffix: "h"
+
+# Builder wallets for snapshot chain generation (separate from txgen)
+# Same containers as txgen, different wallet names to avoid UTXO pollution
+builder_shards:
+  - id: "a"
+    wallet_container: "wallet_shard_a"
+    wallet_name: "builder_a"
+  - id: "b"
+    wallet_container: "wallet_shard_b"
+    wallet_name: "builder_b"
+  - id: "c"
+    wallet_container: "wallet_shard_c"
+    wallet_name: "builder_c"
+  - id: "d"
+    wallet_container: "wallet_shard_d"
+    wallet_name: "builder_d"
+  - id: "e"
+    wallet_container: "wallet_shard_e"
+    wallet_name: "builder_e"
+  - id: "f"
+    wallet_container: "wallet_shard_f"
+    wallet_name: "builder_f"
+  - id: "g"
+    wallet_container: "wallet_shard_g"
+    wallet_name: "builder_g"
+  - id: "h"
+    wallet_container: "wallet_shard_h"
+    wallet_name: "builder_h"
+
+# Builder wallet funding (higher UTXO count for 1000+ blocks of chain building)
+builder_utxo_pool_size: 2000
+builder_utxo_amount_btc: 0.001
 
 txgen_address_pool_size: 2048           # Anzahl vorbereiteter Zieladressen pro Shard
 txgen_address_reuse_window: 100         # Nur jede 100. TX ruft getnewaddress auf

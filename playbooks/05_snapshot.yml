@@ -1,0 +1,104 @@
+- hosts: controller
+  gather_facts: true
+  vars:
+    snapshot_stop_containers: true
+    snapshot_restart_containers: false
+  tasks:
+    - name: Build wallet service list
+      ansible.builtin.set_fact:
+        wallet_services: "{{ [wallet_funding_container] + (txgen_shards | map(attribute='wallet_container') | list) }}"
+
+    - name: Ensure snapshot directory exists
+      ansible.builtin.file:
+        path: "{{ snapshot_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure state directory exists
+      ansible.builtin.file:
+        path: "{{ workdir }}/state"
+        state: directory
+        mode: "0755"
+
+    - name: Set snapshot tar flags
+      ansible.builtin.set_fact:
+        snapshot_tar_ext: "{{ 'tar.gz' if snapshot_compress | default(true) else 'tar' }}"
+        snapshot_tar_create_flag: "{{ 'czf' if snapshot_compress | default(true) else 'cf' }}"
+
+    - name: Stop containers before snapshot (optional)
+      ansible.builtin.shell: |
+        docker compose -f "{{ workdir }}/docker-compose.yml" stop
+      args:
+        chdir: "{{ workdir }}"
+      when: snapshot_stop_containers | default(true)
+      changed_when: true
+
+    - name: Snapshot node and wallet volumes (Parallel)
+      ansible.builtin.shell: |
+        set -euo pipefail
+        snapshot_dir="{{ snapshot_dir }}"
+        tar_ext="{{ snapshot_tar_ext }}"
+        tar_flag="{{ snapshot_tar_create_flag }}"
+        parallel="{{ snapshot_parallelism | default(8) }}"
+
+        wait_for_slot() {
+          while [ "$(jobs -rp | wc -l)" -ge "$parallel" ]; do
+            pid="$(jobs -rp | head -n 1)"
+            if [ -n "$pid" ]; then
+              wait "$pid"
+            fi
+          done
+        }
+
+        for i in $(seq -f "%02g" 1 {{ node_count }}); do
+          wait_for_slot
+          (
+            vol="{{ network_name }}_node${i}_data"
+            docker run --rm -u 0:0 -v "$vol":/data -v "$snapshot_dir":/snap alpine:3.19 sh -lc "tar -C /data -${tar_flag} /snap/node${i}_data.${tar_ext} ."
+          ) &
+        done
+        wait
+
+        {% if snapshot_restore_wallets | default(true) %}
+        wallet_list="{{ wallet_services | join(' ') }}"
+        for item in $wallet_list; do
+          wait_for_slot
+          (
+            vol="{{ network_name }}_${item}_data"
+            docker run --rm -u 0:0 -v "$vol":/data -v "$snapshot_dir":/snap alpine:3.19 sh -lc "tar -C /data -${tar_flag} /snap/${item}_data.${tar_ext} ."
+          ) &
+        done
+        wait
+        {% endif %}
+      args:
+        executable: /bin/bash
+      changed_when: true
+
+    - name: Snapshot state directory
+      ansible.builtin.shell: |
+        set -euo pipefail
+        tar -C "{{ workdir }}/state" -{{ snapshot_tar_create_flag }} "{{ snapshot_dir }}/state.{{ snapshot_tar_ext }}" .
+      args:
+        executable: /bin/bash
+      changed_when: true
+
+    - name: Write snapshot metadata
+      ansible.builtin.copy:
+        dest: "{{ snapshot_dir }}/meta.json"
+        mode: "0644"
+        content: "{{ snapshot_meta | to_nice_json }}"
+      vars:
+        snapshot_meta:
+          created_at: "{{ ansible_date_time.iso8601 }}"
+          node_count: "{{ node_count }}"
+          wallet_services: "{{ wallet_services }}"
+          snapshot_compress: "{{ snapshot_compress | default(true) }}"
+          snapshot_dir: "{{ snapshot_dir }}"
+
+    - name: Restart containers after snapshot (optional)
+      ansible.builtin.shell: |
+        docker compose -f "{{ workdir }}/docker-compose.yml" up -d
+      args:
+        chdir: "{{ workdir }}"
+      when: snapshot_restart_containers | default(false)
+      changed_when: true

@@ -29,7 +29,7 @@
   when: 
     - clear | default(false) | bool == false
     - i | int in (network_fault_nodes_idx | default(all_nodes))
-  loop: "{{ range(1, node_count + 1) | list }}"
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
   loop_control:
     loop_var: i
   ansible.builtin.shell: |
@@ -88,7 +88,7 @@
   when: 
     - clear | default(false) | bool
     - i | int in (network_fault_nodes_idx_clear | default(all_nodes_clear))
-  loop: "{{ range(1, node_count + 1) | list }}"
+  loop: "{{ range(1, (node_count | int) + 1) | list }}"
   loop_control:
     loop_var: i
   ansible.builtin.shell: |

@@ -108,8 +108,99 @@
     owner: "{{ lookup('env','USER') }}"
     group: "{{ file_group }}"
 
+- name: Validate snapshot directory exists
+  ansible.builtin.stat:
+    path: "{{ snapshot_dir }}"
+  register: snapshot_dir_stat
+  when: use_chain_snapshot | default(false) | bool
+
+- name: Fail if snapshot directory is missing
+  ansible.builtin.fail:
+    msg: "Snapshot directory not found: {{ snapshot_dir }}"
+  when:
+    - use_chain_snapshot | default(false) | bool
+    - not snapshot_dir_stat.stat.exists
+
+- name: Set snapshot tar flags
+  ansible.builtin.set_fact:
+    snapshot_tar_ext: "{{ 'tar.gz' if snapshot_compress | default(true) else 'tar' }}"
+    snapshot_tar_extract_flag: "{{ 'xzf' if snapshot_compress | default(true) else 'xf' }}"
+  when: use_chain_snapshot | default(false) | bool
+
+- name: Restore snapshot into node and wallet volumes (Parallel)
+  ansible.builtin.shell: |
+    set -euo pipefail
+    snapshot_dir="{{ snapshot_dir }}"
+    tar_ext="{{ snapshot_tar_ext }}"
+    tar_flag="{{ snapshot_tar_extract_flag }}"
+    parallel="{{ snapshot_parallelism | default(8) }}"
+
+    wait_for_slot() {
+      while [ "$(jobs -rp | wc -l)" -ge "$parallel" ]; do
+        pid="$(jobs -rp | head -n 1)"
+        if [ -n "$pid" ]; then
+          wait "$pid"
+        fi
+      done
+    }
+
+    for i in $(seq -f "%02g" 1 {{ node_count }}); do
+      wait_for_slot
+      (
+        vol="{{ network_name }}_node${i}_data"
+        archive="$snapshot_dir/node${i}_data.$tar_ext"
+        if [ ! -f "$archive" ]; then
+          echo "Missing snapshot archive: $archive" >&2
+          exit 1
+        fi
+        docker run --rm -u 0:0 -v "$vol":/data -v "$snapshot_dir":/snap alpine:3.19 sh -lc "rm -rf /data/* && tar -C /data -${tar_flag} /snap/node${i}_data.${tar_ext}"
+      ) &
+    done
+    wait
+
+    {% if snapshot_restore_wallets | default(true) %}
+    wallet_list="{{ wallet_services | join(' ') }}"
+    for item in $wallet_list; do
+      wait_for_slot
+      (
+        vol="{{ network_name }}_${item}_data"
+        archive="$snapshot_dir/${item}_data.$tar_ext"
+        if [ ! -f "$archive" ]; then
+          echo "Missing snapshot archive: $archive" >&2
+          exit 1
+        fi
+        docker run --rm -u 0:0 -v "$vol":/data -v "$snapshot_dir":/snap alpine:3.19 sh -lc "rm -rf /data/* && tar -C /data -${tar_flag} /snap/${item}_data.${tar_ext}"
+      ) &
+    done
+    wait
+    {% endif %}
+  args:
+    executable: /bin/bash
+  when: use_chain_snapshot | default(false) | bool
+  changed_when: true
+
+- name: Restore snapshot state files
+  ansible.builtin.shell: |
+    set -euo pipefail
+    snapshot_dir="{{ snapshot_dir }}"
+    tar_ext="{{ snapshot_tar_ext }}"
+    tar_flag="{{ snapshot_tar_extract_flag }}"
+    archive="${snapshot_dir}/state.${tar_ext}"
+    if [ ! -f "$archive" ]; then
+      echo "Missing snapshot archive: $archive" >&2
+      exit 1
+    fi
+    rm -rf "{{ workdir }}/state"/*
+    tar -C "{{ workdir }}/state" -${tar_flag} "$archive"
+  args:
+    executable: /bin/bash
+  when:
+    - use_chain_snapshot | default(false) | bool
+    - snapshot_restore_state | default(true) | bool
+  changed_when: true
+
 - name: Clear stale mining config from previous runs
   ansible.builtin.file:
     path: "{{ workdir }}/state/mining_targets.json"
     state: absent
-
+  when: not (use_chain_snapshot | default(false) | bool and snapshot_restore_state | default(true) | bool)

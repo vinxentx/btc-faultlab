@@ -3,6 +3,10 @@
   vars:
     funding_host_port: "127.0.0.1:{{ wallet_rpc_base }}"
   tasks:
+    - name: Determine whether to skip funding setup
+      ansible.builtin.set_fact:
+        skip_funding_setup: "{{ use_chain_snapshot | default(false) | bool and snapshot_restore_wallets | default(true) | bool and snapshot_restore_state | default(true) | bool }}"
+
     - name: Clean up old txgen signal files
       ansible.builtin.shell: |
         rm -f {{ workdir }}/state/txgen_*_ready
@@ -10,6 +14,23 @@
       args:
         chdir: "{{ workdir }}"
       changed_when: true
+
+    - name: Validate snapshot state files when skipping funding
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop:
+        - "{{ workdir }}/state/funding_snapshot.json"
+        - "{{ workdir }}/state/mining_targets.json"
+      register: snapshot_state_files
+      when: skip_funding_setup
+
+    - name: Fail if snapshot state files are missing
+      ansible.builtin.fail:
+        msg: "Missing required snapshot state file: {{ item.stat.path }}"
+      loop: "{{ snapshot_state_files.results | default([]) }}"
+      when:
+        - skip_funding_setup
+        - not item.stat.exists
 
     - name: Build base argv for funding setup
       ansible.builtin.set_fact:
@@ -33,7 +54,7 @@
           - "--utxo-amount"
           - "{{ '%0.8f' | format(wallet_descriptor_amount_btc) }}"
           - "--address-batch"
-          - "50"
+          - "{{ funding_address_batch | default(50) | string }}"
           - "--confirmation-blocks"
           - "{{ funding_confirmation_blocks | string }}"
           - "--state-dir"
@@ -52,6 +73,7 @@
           - "{{ node_rpc_base | string }}"
           - "--miner-port-step"
           - "{{ node_rpc_step | string }}"
+      when: not skip_funding_setup
 
     - name: Append shard-specific arguments
       ansible.builtin.set_fact:
@@ -61,6 +83,7 @@
       loop: "{{ txgen_shards }}"
       loop_control:
         index_var: loop_index
+      when: not skip_funding_setup
 
     - name: Execute funding setup
       ansible.builtin.command:
@@ -70,10 +93,12 @@
         PYTHONUNBUFFERED: "1"
       register: funding_setup
       changed_when: true
+      when: not skip_funding_setup
 
     - name: Debug funding setup output
       ansible.builtin.debug:
         msg: "{{ funding_setup.stdout_lines }}"
+      when: not skip_funding_setup
 
     - name: Verify funding snapshot exists
       ansible.builtin.stat:
@@ -89,6 +114,7 @@
       loop: "{{ txgen_shards }}"
       changed_when: true
       register: txgen_start
+      when: not skip_txgen_start | default(false) | bool
 
     - name: Wait for TxGen containers to be running
       ansible.builtin.shell: |
@@ -107,4 +133,4 @@
       loop: "{{ txgen_shards }}"
       register: txgen_status
       changed_when: false
-
+      when: not skip_txgen_start | default(false) | bool

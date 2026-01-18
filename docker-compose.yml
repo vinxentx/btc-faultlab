@@ -347,10 +347,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
-      - "-connect=node62:18444"
-      - "-connect=node54:18444"
-      - "-connect=node33:18444"
+      - "-connect=node02:18444"
+      - "-connect=node17:18444"
+      - "-connect=node26:18444"
+      - "-connect=node40:18444"
     volumes:
       - "node09_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node09/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -388,10 +388,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node03:18444"
-      - "-connect=node43:18444"
-      - "-connect=node45:18444"
-      - "-connect=node42:18444"
+      - "-connect=node01:18444"
+      - "-connect=node47:18444"
+      - "-connect=node35:18444"
+      - "-connect=node16:18444"
     volumes:
       - "node10_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node10/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -429,10 +429,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node03:18444"
-      - "-connect=node43:18444"
-      - "-connect=node49:18444"
-      - "-connect=node35:18444"
+      - "-connect=node05:18444"
+      - "-connect=node53:18444"
+      - "-connect=node16:18444"
+      - "-connect=node27:18444"
     volumes:
       - "node11_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node11/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -470,10 +470,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
-      - "-connect=node13:18444"
-      - "-connect=node63:18444"
-      - "-connect=node17:18444"
+      - "-connect=node04:18444"
+      - "-connect=node34:18444"
+      - "-connect=node20:18444"
+      - "-connect=node24:18444"
     volumes:
       - "node12_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node12/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -511,9 +511,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node33:18444"
-      - "-connect=node24:18444"
+      - "-connect=node04:18444"
+      - "-connect=node44:18444"
+      - "-connect=node32:18444"
+      - "-connect=node49:18444"
     volumes:
       - "node13_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node13/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -551,10 +552,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
-      - "-connect=node46:18444"
-      - "-connect=node45:18444"
-      - "-connect=node20:18444"
+      - "-connect=node03:18444"
+      - "-connect=node50:18444"
+      - "-connect=node59:18444"
+      - "-connect=node56:18444"
     volumes:
       - "node14_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node14/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -592,9 +593,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node07:18444"
-      - "-connect=node60:18444"
-      - "-connect=node27:18444"
+      - "-connect=node02:18444"
+      - "-connect=node18:18444"
+      - "-connect=node24:18444"
       - "-connect=node51:18444"
     volumes:
       - "node15_data:/home/bitcoin/.bitcoin"
@@ -633,10 +634,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
-      - "-connect=node25:18444"
-      - "-connect=node34:18444"
-      - "-connect=node36:18444"
+      - "-connect=node02:18444"
+      - "-connect=node62:18444"
     volumes:
       - "node16_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node16/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -674,9 +673,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node01:18444"
-      - "-connect=node50:18444"
-      - "-connect=node18:18444"
+      - "-connect=node07:18444"
+      - "-connect=node57:18444"
+      - "-connect=node37:18444"
     volumes:
       - "node17_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node17/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -714,9 +713,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
-      - "-connect=node30:18444"
-      - "-connect=node42:18444"
+      - "-connect=node01:18444"
+      - "-connect=node64:18444"
+      - "-connect=node52:18444"
     volumes:
       - "node18_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node18/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -754,10 +753,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
-      - "-connect=node48:18444"
-      - "-connect=node49:18444"
-      - "-connect=node23:18444"
+      - "-connect=node01:18444"
+      - "-connect=node45:18444"
+      - "-connect=node26:18444"
+      - "-connect=node53:18444"
     volumes:
       - "node19_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node19/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -795,9 +794,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node07:18444"
-      - "-connect=node64:18444"
-      - "-connect=node36:18444"
+      - "-connect=node02:18444"
+      - "-connect=node41:18444"
+      - "-connect=node34:18444"
     volumes:
       - "node20_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node20/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -835,10 +834,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node07:18444"
-      - "-connect=node27:18444"
-      - "-connect=node22:18444"
-      - "-connect=node60:18444"
+      - "-connect=node04:18444"
+      - "-connect=node55:18444"
+      - "-connect=node34:18444"
+      - "-connect=node29:18444"
     volumes:
       - "node21_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node21/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -876,9 +875,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node32:18444"
-      - "-connect=node41:18444"
+      - "-connect=node04:18444"
+      - "-connect=node46:18444"
+      - "-connect=node30:18444"
+      - "-connect=node33:18444"
     volumes:
       - "node22_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node22/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -916,9 +916,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
-      - "-connect=node26:18444"
-      - "-connect=node53:18444"
+      - "-connect=node01:18444"
+      - "-connect=node29:18444"
+      - "-connect=node47:18444"
+      - "-connect=node50:18444"
     volumes:
       - "node23_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node23/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -956,9 +957,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node48:18444"
-      - "-connect=node47:18444"
+      - "-connect=node04:18444"
+      - "-connect=node40:18444"
     volumes:
       - "node24_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node24/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -996,9 +996,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
-      - "-connect=node38:18444"
-      - "-connect=node53:18444"
+      - "-connect=node07:18444"
+      - "-connect=node31:18444"
+      - "-connect=node42:18444"
+      - "-connect=node63:18444"
     volumes:
       - "node25_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node25/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1036,9 +1037,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node47:18444"
-      - "-connect=node44:18444"
+      - "-connect=node04:18444"
+      - "-connect=node60:18444"
     volumes:
       - "node26_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node26/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1076,8 +1076,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
-      - "-connect=node48:18444"
+      - "-connect=node08:18444"
+      - "-connect=node58:18444"
+      - "-connect=node44:18444"
     volumes:
       - "node27_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node27/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1115,10 +1116,10 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node59:18444"
-      - "-connect=node29:18444"
-      - "-connect=node49:18444"
+      - "-connect=node05:18444"
+      - "-connect=node32:18444"
+      - "-connect=node61:18444"
+      - "-connect=node54:18444"
     volumes:
       - "node28_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node28/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1156,9 +1157,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node63:18444"
-      - "-connect=node58:18444"
+      - "-connect=node01:18444"
+      - "-connect=node51:18444"
     volumes:
       - "node29_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node29/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1196,9 +1196,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node40:18444"
+      - "-connect=node03:18444"
       - "-connect=node58:18444"
+      - "-connect=node51:18444"
     volumes:
       - "node30_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node30/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1237,9 +1237,8 @@ services:
       - "-dnsseed=0"
       - "-listen=1"
       - "-connect=node07:18444"
-      - "-connect=node40:18444"
-      - "-connect=node45:18444"
-      - "-connect=node54:18444"
+      - "-connect=node33:18444"
+      - "-connect=node43:18444"
     volumes:
       - "node31_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node31/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1277,9 +1276,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node01:18444"
-      - "-connect=node43:18444"
-      - "-connect=node61:18444"
+      - "-connect=node06:18444"
+      - "-connect=node36:18444"
     volumes:
       - "node32_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node32/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1317,8 +1315,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
-      - "-connect=node62:18444"
+      - "-connect=node05:18444"
+      - "-connect=node57:18444"
     volumes:
       - "node33_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node33/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1357,8 +1355,6 @@ services:
       - "-dnsseed=0"
       - "-listen=1"
       - "-connect=node03:18444"
-      - "-connect=node36:18444"
-      - "-connect=node44:18444"
     volumes:
       - "node34_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node34/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1396,9 +1392,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node03:18444"
-      - "-connect=node41:18444"
-      - "-connect=node59:18444"
+      - "-connect=node04:18444"
+      - "-connect=node62:18444"
+      - "-connect=node48:18444"
     volumes:
       - "node35_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node35/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1436,7 +1432,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node01:18444"
+      - "-connect=node06:18444"
+      - "-connect=node49:18444"
+      - "-connect=node39:18444"
     volumes:
       - "node36_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node36/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1474,9 +1472,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node51:18444"
-      - "-connect=node64:18444"
+      - "-connect=node02:18444"
+      - "-connect=node46:18444"
       - "-connect=node38:18444"
     volumes:
       - "node37_data:/home/bitcoin/.bitcoin"
@@ -1516,7 +1513,8 @@ services:
       - "-dnsseed=0"
       - "-listen=1"
       - "-connect=node02:18444"
-      - "-connect=node57:18444"
+      - "-connect=node48:18444"
+      - "-connect=node47:18444"
     volumes:
       - "node38_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node38/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1554,10 +1552,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node51:18444"
+      - "-connect=node07:18444"
       - "-connect=node41:18444"
-      - "-connect=node52:18444"
+      - "-connect=node54:18444"
     volumes:
       - "node39_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node39/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1595,8 +1592,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
-      - "-connect=node56:18444"
+      - "-connect=node02:18444"
+      - "-connect=node54:18444"
     volumes:
       - "node40_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node40/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1634,7 +1631,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
+      - "-connect=node06:18444"
+      - "-connect=node64:18444"
     volumes:
       - "node41_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node41/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1672,8 +1670,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
-      - "-connect=node61:18444"
+      - "-connect=node06:18444"
+      - "-connect=node50:18444"
+      - "-connect=node43:18444"
     volumes:
       - "node42_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node42/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1711,7 +1710,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
+      - "-connect=node05:18444"
+      - "-connect=node55:18444"
     volumes:
       - "node43_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node43/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1749,8 +1749,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node54:18444"
+      - "-connect=node01:18444"
+      - "-connect=node62:18444"
     volumes:
       - "node44_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node44/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1788,7 +1788,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node03:18444"
+      - "-connect=node08:18444"
+      - "-connect=node60:18444"
+      - "-connect=node49:18444"
     volumes:
       - "node45_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node45/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1826,9 +1828,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
-      - "-connect=node57:18444"
-      - "-connect=node64:18444"
+      - "-connect=node02:18444"
+      - "-connect=node59:18444"
     volumes:
       - "node46_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node46/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1866,8 +1867,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
-      - "-connect=node56:18444"
+      - "-connect=node07:18444"
     volumes:
       - "node47_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node47/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1905,7 +1905,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
+      - "-connect=node02:18444"
+      - "-connect=node61:18444"
     volumes:
       - "node48_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node48/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1943,7 +1944,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
+      - "-connect=node05:18444"
     volumes:
       - "node49_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node49/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -1981,9 +1982,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node52:18444"
-      - "-connect=node55:18444"
+      - "-connect=node06:18444"
     volumes:
       - "node50_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node50/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2021,7 +2020,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
+      - "-connect=node04:18444"
     volumes:
       - "node51_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node51/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2059,8 +2058,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node62:18444"
+      - "-connect=node02:18444"
+      - "-connect=node64:18444"
+      - "-connect=node63:18444"
     volumes:
       - "node52_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node52/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2098,8 +2098,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node06:18444"
-      - "-connect=node63:18444"
+      - "-connect=node01:18444"
+      - "-connect=node57:18444"
     volumes:
       - "node53_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node53/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2137,7 +2137,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node01:18444"
+      - "-connect=node04:18444"
     volumes:
       - "node54_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node54/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2175,9 +2175,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node08:18444"
-      - "-connect=node57:18444"
-      - "-connect=node58:18444"
+      - "-connect=node05:18444"
+      - "-connect=node59:18444"
     volumes:
       - "node55_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node55/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2215,8 +2214,9 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node03:18444"
+      - "-connect=node02:18444"
       - "-connect=node60:18444"
+      - "-connect=node63:18444"
     volumes:
       - "node56_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node56/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2254,7 +2254,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node01:18444"
+      - "-connect=node04:18444"
     volumes:
       - "node57_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node57/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2292,7 +2292,8 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
+      - "-connect=node02:18444"
+      - "-connect=node61:18444"
     volumes:
       - "node58_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node58/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2330,8 +2331,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
-      - "-connect=node61:18444"
+      - "-connect=node07:18444"
     volumes:
       - "node59_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node59/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2369,7 +2369,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
+      - "-connect=node05:18444"
     volumes:
       - "node60_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node60/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2407,7 +2407,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node02:18444"
+      - "-connect=node08:18444"
     volumes:
       - "node61_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node61/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2445,7 +2445,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node04:18444"
+      - "-connect=node06:18444"
     volumes:
       - "node62_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node62/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2483,7 +2483,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node05:18444"
+      - "-connect=node03:18444"
     volumes:
       - "node63_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node63/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2521,7 +2521,7 @@ services:
       - "-discover=0"
       - "-dnsseed=0"
       - "-listen=1"
-      - "-connect=node01:18444"
+      - "-connect=node06:18444"
     volumes:
       - "node64_data:/home/bitcoin/.bitcoin"
       - "/Users/vincenttietze/btc-faultlab/config/node64/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro"
@@ -2981,7 +2981,7 @@ services:
       - --shard-id
       - "a"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_a:18443"
       - --wallet
@@ -2997,7 +2997,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3005,7 +3005,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_a:
         condition: service_healthy
@@ -3029,7 +3029,7 @@ services:
       - --shard-id
       - "b"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_b:18443"
       - --wallet
@@ -3045,7 +3045,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3053,7 +3053,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_b:
         condition: service_healthy
@@ -3077,7 +3077,7 @@ services:
       - --shard-id
       - "c"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_c:18443"
       - --wallet
@@ -3093,7 +3093,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3101,7 +3101,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_c:
         condition: service_healthy
@@ -3125,7 +3125,7 @@ services:
       - --shard-id
       - "d"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_d:18443"
       - --wallet
@@ -3141,7 +3141,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3149,7 +3149,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_d:
         condition: service_healthy
@@ -3173,7 +3173,7 @@ services:
       - --shard-id
       - "e"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_e:18443"
       - --wallet
@@ -3189,7 +3189,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3197,7 +3197,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_e:
         condition: service_healthy
@@ -3221,7 +3221,7 @@ services:
       - --shard-id
       - "f"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_f:18443"
       - --wallet
@@ -3237,7 +3237,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3245,7 +3245,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_f:
         condition: service_healthy
@@ -3269,7 +3269,7 @@ services:
       - --shard-id
       - "g"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_g:18443"
       - --wallet
@@ -3285,7 +3285,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3293,7 +3293,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_g:
         condition: service_healthy
@@ -3317,7 +3317,7 @@ services:
       - --shard-id
       - "h"
       - --rate
-      - "2.5000"
+      - "1.2500"
       - --rpc
       - "http://user:pass@wallet_shard_h:18443"
       - --wallet
@@ -3333,7 +3333,7 @@ services:
       - --amount-btc
       - "1e-05"
       - --utxo-target
-      - "2800"
+      - "800"
       - --num-workers
       - "4"
       - --queue-size
@@ -3341,7 +3341,7 @@ services:
       - --max-duration
       # Used for Phase 1 TX preparation (how many TXs to pre-sign)
       # txgen runs until container is stopped; metrics handle unconfirmed tail
-      - "750"
+      - "660"
     depends_on:
       wallet_shard_h:
         condition: service_healthy
@@ -3363,7 +3363,7 @@ services:
       - -u
       - /app/block_scheduler.py
       - --interval
-      - "12"
+      - "16"
       - --node-count
       - "64"
       - --mining-percentage
@@ -3376,9 +3376,8 @@ services:
       - "1337"
       - --config
       - /state/mining_targets.json
-      - --use-variance
       - --min-interval
-      - "0"
+      - "2.0"
       - --adaptive-interval
       - --health-check-interval
       - "5.0"

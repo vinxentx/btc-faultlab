@@ -14,10 +14,11 @@ from datetime import datetime
 from run_experiments import ExperimentRunner
 
 class TierExperimentRunner:
-    def __init__(self, skip_bootstrap=True, config_file="tier_experiments.json"):
-        self.base_runner = ExperimentRunner(skip_bootstrap=skip_bootstrap)
+    def __init__(self, skip_bootstrap=True, config_file="tier_experiments.json", snapshot_dir=None):
+        self.base_runner = ExperimentRunner(skip_bootstrap=skip_bootstrap, snapshot_dir=snapshot_dir)
         self.config_file = Path(config_file)
         self.results_dir = Path("results")
+        self.snapshot_dir = snapshot_dir
         
     def load_tier_config(self):
         """Load tier experiment configurations"""
@@ -445,10 +446,12 @@ Examples:
                        help="Run bootstrap step before experiments (default: skip)")
     parser.add_argument("--config", type=str, default="tier_experiments.json",
                        help="Path to experiment config JSON (default: tier_experiments.json)")
+    parser.add_argument("--snapshot-dir", type=str,
+                       help="Path to snapshot directory (enables snapshot restore, skips funding)")
 
     args = parser.parse_args()
 
-    runner = TierExperimentRunner(skip_bootstrap=not args.with_bootstrap, config_file=args.config)
+    runner = TierExperimentRunner(skip_bootstrap=not args.with_bootstrap, config_file=args.config, snapshot_dir=args.snapshot_dir)
     
     # Display node count override if specified
     if args.node_count:

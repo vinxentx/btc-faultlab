@@ -88,7 +88,7 @@ def compute_event_recovery_metrics(run_dir, events):
     accurate timing metrics:
     - crash_duration: time from crash_start to crash_complete
     - total_downtime: time from crash_start to recovery_complete
-    - recovery_time: time from crash_complete to recovery_complete
+    - wall_clock_recovery_time: time from recovery_start to recovery_complete
     - restart_time: time from recovery_start to all_containers_running
     - block_catchup_time: time from all_containers_running (or recovery_start) to recovery_complete (time to catch up missed blocks)
     """
@@ -169,9 +169,9 @@ def compute_event_recovery_metrics(run_dir, events):
     if "crash_start" in timestamps:
         durations["total_downtime"] = (timestamps["recovery_complete"] - timestamps["crash_start"]).total_seconds()
     
-    # recovery_time: crash_complete → recovery_complete
-    if "crash_complete" in timestamps:
-        durations["recovery_time"] = (timestamps["recovery_complete"] - timestamps["crash_complete"]).total_seconds()
+    # wall_clock_recovery_time: recovery_start → recovery_complete
+    if "recovery_start" in timestamps:
+        durations["wall_clock_recovery_time"] = (timestamps["recovery_complete"] - timestamps["recovery_start"]).total_seconds()
     
     # restart_time: recovery_start → all_containers_running
     if "all_containers_running" in timestamps:
@@ -1327,7 +1327,7 @@ def compute_block_propagation_metrics(run_dir, best_chain_hashes=None, events=No
     )
     recovery_stats = compute_delay_stats(
         recovery_samples,
-        "Sync delay for crashed nodes catching up after recovery"
+        "Per-block arrival delay (arrival_time - mined_time) for crashed nodes. NOTE: This is NOT wall-clock recovery time. For post-restart recovery time, see recovery_analysis.durations_seconds.wall_clock_recovery_time"
     )
     partition_stats = compute_delay_stats(
         partition_samples,
@@ -2826,8 +2826,264 @@ def create_mempool_plot(run_dir, events):
     plt.tight_layout()
     plt.savefig(os.path.join(plots_dir, "mempool_analysis.png"), dpi=300, bbox_inches='tight')
     plt.close()
-    
+
     print("✅ Created mempool_analysis.png")
+
+
+def create_latency_cdf_plot(run_dir, events, df_conf):
+    """
+    Create a Stabl-style CDF comparison plot showing latency distributions
+    for pre-crash, during-crash, and post-recovery phases.
+
+    This visualization follows academic standards (Gramoli et al., 2024) for
+    comparing system performance across fault injection phases.
+
+    The CDF shows "what percentage of transactions were confirmed within X seconds"
+    making it easy to compare entire distributions, not just summary statistics.
+    """
+    plots_dir = os.path.join(run_dir, "plots")
+    os.makedirs(plots_dir, exist_ok=True)
+
+    if df_conf.empty or not events:
+        print("⚠️  Skipping CDF plot: no confirmation data or events")
+        return None
+
+    # Find phase boundaries from events
+    crash_start = None
+    recovery_complete = None
+    observation_start = None
+    observation_end = None
+
+    for (ts, evt, _) in events:
+        if evt == "crash_start" and crash_start is None:
+            crash_start = ts
+        elif evt == "recovery_complete" and recovery_complete is None:
+            recovery_complete = ts
+        elif evt in ("start_observation", "netem_applied") and observation_start is None:
+            observation_start = ts
+        elif evt == "end_observe" and observation_end is None:
+            observation_end = ts
+
+    # Ensure timestamps are timezone-aware
+    def make_aware(ts):
+        if ts is not None and hasattr(ts, 'tzinfo') and ts.tzinfo is None:
+            return ts.replace(tzinfo=timezone.utc)
+        return ts
+
+    crash_start = make_aware(crash_start)
+    recovery_complete = make_aware(recovery_complete)
+    observation_start = make_aware(observation_start)
+    observation_end = make_aware(observation_end)
+
+    # Filter to observation window if available
+    df_plot = df_conf.copy()
+    if observation_start and observation_end:
+        df_plot = df_plot[
+            (df_plot["confirm_ts_utc"] >= observation_start) &
+            (df_plot["confirm_ts_utc"] <= observation_end)
+        ]
+
+    if df_plot.empty:
+        print("⚠️  Skipping CDF plot: no data in observation window")
+        return None
+
+    # Determine if this is a fault injection run or baseline
+    has_crash = crash_start is not None and recovery_complete is not None
+
+    # Create figure with appropriate layout
+    if has_crash:
+        fig, (ax_main, ax_zoom) = plt.subplots(1, 2, figsize=(14, 6))
+    else:
+        fig, ax_main = plt.subplots(1, 1, figsize=(8, 6))
+        ax_zoom = None
+
+    # Color scheme - colorblind friendly
+    colors = {
+        'pre_crash': '#2ecc71',      # Green
+        'during_crash': '#e74c3c',   # Red
+        'post_recovery': '#3498db',  # Blue
+        'baseline': '#9b59b6'        # Purple (for non-fault runs)
+    }
+
+    phase_data = {}
+
+    if has_crash:
+        # Split into phases
+        df_pre = df_plot[df_plot["confirm_ts_utc"] < crash_start]
+        df_during = df_plot[
+            (df_plot["confirm_ts_utc"] >= crash_start) &
+            (df_plot["confirm_ts_utc"] <= recovery_complete)
+        ]
+        df_post = df_plot[df_plot["confirm_ts_utc"] > recovery_complete]
+
+        if not df_pre.empty:
+            phase_data['pre_crash'] = {
+                'latencies': np.sort(df_pre["latency_seconds"].values),
+                'label': f'Pre-Crash (n={len(df_pre)})',
+                'color': colors['pre_crash'],
+                'linestyle': '-'
+            }
+        if not df_during.empty:
+            phase_data['during_crash'] = {
+                'latencies': np.sort(df_during["latency_seconds"].values),
+                'label': f'During Crash (n={len(df_during)})',
+                'color': colors['during_crash'],
+                'linestyle': '-'
+            }
+        if not df_post.empty:
+            phase_data['post_recovery'] = {
+                'latencies': np.sort(df_post["latency_seconds"].values),
+                'label': f'Post-Recovery (n={len(df_post)})',
+                'color': colors['post_recovery'],
+                'linestyle': '-'
+            }
+    else:
+        # Baseline run - single distribution
+        phase_data['baseline'] = {
+            'latencies': np.sort(df_plot["latency_seconds"].values),
+            'label': f'Baseline (n={len(df_plot)})',
+            'color': colors['baseline'],
+            'linestyle': '-'
+        }
+
+    if not phase_data:
+        print("⚠️  Skipping CDF plot: no phase data available")
+        plt.close()
+        return None
+
+    # Compute and plot CDFs
+    cdf_data = {}
+    max_latency = 0
+
+    for phase_name, data in phase_data.items():
+        latencies = data['latencies']
+        n = len(latencies)
+        cdf = np.arange(1, n + 1) / n
+
+        # Store for sensitivity calculation
+        cdf_data[phase_name] = {'latencies': latencies, 'cdf': cdf}
+        max_latency = max(max_latency, latencies[-1] if len(latencies) > 0 else 0)
+
+        # Plot on main axis
+        ax_main.plot(latencies, cdf * 100,
+                    color=data['color'],
+                    linestyle=data['linestyle'],
+                    linewidth=2.5,
+                    label=data['label'],
+                    alpha=0.9)
+
+    # Style main plot
+    ax_main.set_xlabel('Confirmation Latency (seconds)', fontsize=12)
+    ax_main.set_ylabel('Cumulative Percentage (%)', fontsize=12)
+    ax_main.set_ylim(0, 105)
+    ax_main.set_xlim(0, min(max_latency * 1.1, np.percentile(df_plot["latency_seconds"], 99) * 1.5))
+    ax_main.grid(True, alpha=0.3, linestyle='--')
+    ax_main.legend(loc='lower right', fontsize=10, framealpha=0.9)
+
+    # Add reference lines
+    ax_main.axhline(50, color='gray', linestyle=':', alpha=0.5, linewidth=1)
+    ax_main.axhline(95, color='gray', linestyle=':', alpha=0.5, linewidth=1)
+    ax_main.text(ax_main.get_xlim()[1] * 0.02, 51, 'Median', fontsize=9, color='gray', alpha=0.7)
+    ax_main.text(ax_main.get_xlim()[1] * 0.02, 96, 'P95', fontsize=9, color='gray', alpha=0.7)
+
+    if has_crash:
+        ax_main.set_title('Latency CDF by Phase (Full Range)', fontsize=13, fontweight='bold')
+    else:
+        ax_main.set_title('Latency CDF (Baseline)', fontsize=13, fontweight='bold')
+
+    # Create zoomed view for fault runs (focus on median region)
+    if ax_zoom is not None and has_crash:
+        for phase_name, data in phase_data.items():
+            latencies = cdf_data[phase_name]['latencies']
+            cdf = cdf_data[phase_name]['cdf']
+            ax_zoom.plot(latencies, cdf * 100,
+                        color=phase_data[phase_name]['color'],
+                        linestyle=phase_data[phase_name]['linestyle'],
+                        linewidth=2.5,
+                        label=phase_data[phase_name]['label'],
+                        alpha=0.9)
+
+        # Zoom to interesting region (20-80 percentile range)
+        all_latencies = df_plot["latency_seconds"]
+        p20 = np.percentile(all_latencies, 10)
+        p80 = np.percentile(all_latencies, 90)
+
+        ax_zoom.set_xlim(max(0, p20 * 0.5), p80 * 1.2)
+        ax_zoom.set_ylim(0, 105)
+        ax_zoom.set_xlabel('Confirmation Latency (seconds)', fontsize=12)
+        ax_zoom.set_ylabel('Cumulative Percentage (%)', fontsize=12)
+        ax_zoom.set_title('Latency CDF (Zoomed to P10-P90 Range)', fontsize=13, fontweight='bold')
+        ax_zoom.grid(True, alpha=0.3, linestyle='--')
+        ax_zoom.legend(loc='lower right', fontsize=10, framealpha=0.9)
+
+        # Add reference lines
+        ax_zoom.axhline(50, color='gray', linestyle=':', alpha=0.5, linewidth=1)
+        ax_zoom.axhline(95, color='gray', linestyle=':', alpha=0.5, linewidth=1)
+
+        # Shade area between pre-crash and during-crash CDFs (sensitivity visualization)
+        if 'pre_crash' in cdf_data and 'during_crash' in cdf_data:
+            pre_lat = cdf_data['pre_crash']['latencies']
+            pre_cdf = cdf_data['pre_crash']['cdf']
+            during_lat = cdf_data['during_crash']['latencies']
+            during_cdf = cdf_data['during_crash']['cdf']
+
+            # Interpolate to common x-axis for shading
+            common_x = np.linspace(0, min(pre_lat[-1], during_lat[-1]), 200)
+            pre_interp = np.interp(common_x, pre_lat, pre_cdf)
+            during_interp = np.interp(common_x, during_lat, during_cdf)
+
+            ax_zoom.fill_betweenx(
+                pre_interp * 100,
+                np.interp(pre_interp, pre_cdf, pre_lat),
+                np.interp(pre_interp, during_cdf, during_lat),
+                alpha=0.15,
+                color='red',
+                label='_Degradation Area'
+            )
+
+    # Add statistics annotation
+    stats_text = []
+    for phase_name in ['pre_crash', 'during_crash', 'post_recovery', 'baseline']:
+        if phase_name in cdf_data:
+            lat = cdf_data[phase_name]['latencies']
+            median = np.median(lat)
+            p95 = np.percentile(lat, 95)
+            phase_label = phase_name.replace('_', ' ').title()
+            stats_text.append(f"{phase_label}: median={median:.1f}s, P95={p95:.1f}s")
+
+    # Add text box with statistics
+    textstr = '\n'.join(stats_text)
+    props = dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='gray')
+    ax_main.text(0.98, 0.02, textstr, transform=ax_main.transAxes, fontsize=9,
+                verticalalignment='bottom', horizontalalignment='right', bbox=props)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(plots_dir, "latency_cdf_comparison.png"), dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print("✅ Created latency_cdf_comparison.png")
+
+    # Return sensitivity metric if applicable
+    if has_crash and 'pre_crash' in cdf_data and 'during_crash' in cdf_data:
+        # Compute simplified sensitivity score (area between CDFs)
+        pre_lat = cdf_data['pre_crash']['latencies']
+        pre_cdf = cdf_data['pre_crash']['cdf']
+        during_lat = cdf_data['during_crash']['latencies']
+        during_cdf = cdf_data['during_crash']['cdf']
+
+        # Interpolate to common percentile points
+        percentiles = np.linspace(0.01, 0.99, 100)
+        pre_quantiles = np.percentile(pre_lat, percentiles * 100)
+        during_quantiles = np.percentile(during_lat, percentiles * 100)
+
+        # Area = integral of |during - pre| over percentiles
+        # This is similar to Stabl's sensitivity score
+        sensitivity = np.trapezoid(np.abs(during_quantiles - pre_quantiles), percentiles)
+
+        return {'sensitivity_score': round(sensitivity, 2)}
+
+    return None
+
 
 def main():
     parser = argparse.ArgumentParser(description="Enhanced Bitcoin fault analysis")
@@ -2997,7 +3253,10 @@ def main():
     
     # Create mempool analysis plot
     create_mempool_plot(run_dir, events)
-    
+
+    # Create latency CDF comparison plot (Stabl-style)
+    cdf_result = create_latency_cdf_plot(run_dir, events, df_conf)
+
     # Calculate latency metrics from filtered confirmations (only observation window)
     if not df_conf_filtered.empty:
         cl_filtered = df_conf_filtered["latency_seconds"].astype(float)
@@ -3067,7 +3326,11 @@ def main():
         } if k6_median is not None else None,
         "avg_throughput": avg_throughput_official  # Official Bitcoin network throughput definition
     }
-    
+
+    # Add sensitivity score from CDF analysis (Stabl-style metric)
+    if cdf_result and 'sensitivity_score' in cdf_result:
+        metrics["latency_sensitivity_score"] = cdf_result['sensitivity_score']
+
     block_propagation_metrics = compute_block_propagation_metrics(run_dir, events=events)
     reorg_events_from_logs = []  # Will be populated from block_propagation if available
     if block_propagation_metrics:
@@ -3096,14 +3359,18 @@ def main():
     if events_recovery:
         metrics["recovery_analysis"] = events_recovery
         durations = events_recovery.get("durations_seconds", {})
+        # Promote wall_clock_recovery_time to top-level for discoverability
+        if "wall_clock_recovery_time" in durations:
+            metrics["wall_clock_recovery_time_seconds"] = durations["wall_clock_recovery_time"]
+        # Keep block_catchup_time only inside recovery_analysis to avoid duplicate top-level metrics
         print(f"\n🔄 RECOVERY ANALYSIS (events-based):")
         print(f"   Crashed nodes: {events_recovery.get('crashed_nodes_count', 0)}")
         if "crash_duration" in durations:
             print(f"   Crash duration: {durations['crash_duration']:.0f}s")
         if "total_downtime" in durations:
             print(f"   Total downtime: {durations['total_downtime']:.0f}s ({durations['total_downtime']/60:.1f} min)")
-        if "recovery_time" in durations:
-            print(f"   Recovery time: {durations['recovery_time']:.0f}s")
+        if "wall_clock_recovery_time" in durations:
+            print(f"   Wall-clock recovery time: {durations['wall_clock_recovery_time']:.0f}s")
         if "restart_time" in durations:
             print(f"   Restart time: {durations['restart_time']:.0f}s")
         if "block_catchup_time" in durations:

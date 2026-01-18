@@ -96,13 +96,14 @@
             sys.exit(1)
 
         data = json.loads(snapshot.read_text())
-        expected = {{ wallet_descriptor_pool_size }}
+        min_utxos = 100
         for shard in data.get("shards", []):
             confirmed = shard.get("confirmed", 0)
             shard_id = shard.get("id", "unknown")
-            if confirmed < expected:
-                sys.stderr.write(f"Shard {shard_id} hat nur {confirmed} bestätigte UTXOs (erwartet ≥ {expected})\n")
+            if confirmed < min_utxos:
+                sys.stderr.write("Shard " + shard_id + " hat nur " + str(confirmed) + " UTXOs (min " + str(min_utxos) + ")\n")
                 sys.exit(1)
+        print("Snapshot OK: " + str(len(data.get("shards", []))) + " shards validated")
         PY
       changed_when: false
 

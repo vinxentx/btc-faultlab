@@ -1,0 +1,302 @@
+# Snapshot Chain Generator (with Builder Wallet Separation)
+#
+# This playbook builds a blockchain snapshot with SEPARATED wallets:
+#   - BUILDER wallets (builder_a...h): Used for chain filling, accumulate dust UTXOs
+#   - TXGEN wallets (txshard_a...h): Stay clean with only 1500 UTXOs for fast experiments
+#
+# Flow:
+#   1. Deploy stack
+#   2. Fund BUILDER wallets → builder_targets.json
+#   3. Run incremental builder (uses builder wallets)
+#   4. Fund TXGEN wallets fresh → mining_targets.json (clean UTXOs only)
+#   5. Ready for snapshot
+#
+- import_playbook: 02_deploy.yml
+  vars:
+    rpcthreads: 32
+    rpcworkqueue: 128
+
+# =============================================================================
+# PHASE 1: FUND BUILDER WALLETS (for chain filling)
+# =============================================================================
+- hosts: controller
+  gather_facts: false
+  vars:
+    builder_funding_utxos: "{{ builder_utxo_pool_size | default(2000) }}"
+    builder_funding_amount: "{{ builder_utxo_amount_btc | default(0.001) }}"
+  tasks:
+    - name: Build base argv for builder wallet funding
+      ansible.builtin.set_fact:
+        builder_funding_argv:
+          - python3
+          - "{{ workdir }}/files/funding_setup.py"
+          - "--rpc-user"
+          - "{{ rpc_user }}"
+          - "--rpc-pass"
+          - "{{ rpc_pass }}"
+          - "--funding-host"
+          - "127.0.0.1:{{ wallet_rpc_base }}"
+          - "--funding-wallet"
+          - "{{ wallet_funding_name }}"
+          - "--node-count"
+          - "{{ node_count | string }}"
+          - "--mining-percentage"
+          - "{{ mining_percentage | default(1.0) | string }}"
+          - "--utxo-per-shard"
+          - "{{ builder_funding_utxos | string }}"
+          - "--utxo-amount"
+          - "{{ builder_funding_amount | string }}"
+          - "--address-batch"
+          - "100"
+          - "--confirmation-blocks"
+          - "12"
+          - "--state-dir"
+          - "{{ workdir }}/state"
+          - "--scheduler-config"
+          - "{{ workdir }}/state/builder_targets.json"
+          - "--summary-file"
+          - "{{ workdir }}/state/builder_snapshot.json"
+          - "--scheduler-interval"
+          - "{{ block_scheduler_interval_s | default(16) | string }}"
+          - "--scheduler-seed"
+          - "{{ seed | default(42) | string }}"
+          - "--miner-host-override"
+          - "127.0.0.1"
+          - "--miner-port-base"
+          - "{{ node_rpc_base }}"
+          - "--miner-port-step"
+          - "{{ node_rpc_step | string }}"
+
+    - name: Append builder shard arguments
+      ansible.builtin.set_fact:
+        builder_funding_argv: "{{ builder_funding_argv + ['--shard', shard_spec] }}"
+      vars:
+        shard_spec: "id={{ item.id }},host=127.0.0.1:{{ wallet_rpc_base + (wallet_rpc_step * (loop_index + 1)) }},wallet=builder_{{ item.id }}"
+      loop: "{{ builder_shards | default(txgen_shards) }}"
+      loop_control:
+        index_var: loop_index
+
+    - name: Fund builder wallets
+      ansible.builtin.command:
+        argv: "{{ builder_funding_argv }}"
+        chdir: "{{ workdir }}"
+      environment:
+        PYTHONUNBUFFERED: "1"
+      register: builder_funding_result
+      changed_when: true
+
+    - name: Show builder funding output (last 20 lines)
+      ansible.builtin.debug:
+        msg: "{{ builder_funding_result.stdout_lines[-20:] }}"
+
+# =============================================================================
+# PHASE 2: BUILD FILLED CHAIN (using builder wallets)
+# =============================================================================
+- hosts: controller
+  gather_facts: false
+  vars:
+    snapshot_chain_blocks: "{{ snapshot_blocks | default(1000) }}"
+    snapshot_chain_txs_per_block: "{{ snapshot_txs_per_block | default(120) }}"
+    snapshot_chain_tx_amount_btc: "{{ txgen_send_amount_btc | default(0.00001) }}"
+    snapshot_chain_parallel_wallets: "{{ snapshot_parallel_wallets | default(8) }}"
+    snapshot_chain_progress_interval: "{{ snapshot_progress_interval | default(25) }}"
+  tasks:
+    - name: Stop block scheduler to avoid interference
+      ansible.builtin.shell: |
+        docker compose -f "{{ workdir }}/docker-compose.yml" stop block_scheduler || true
+      args:
+        chdir: "{{ workdir }}"
+      changed_when: true
+
+    - name: Run incremental snapshot builder (uses builder wallets)
+      ansible.builtin.command:
+        argv:
+          - python3
+          - "{{ workdir }}/files/snapshot_incremental_builder.py"
+          - --rpc-user
+          - "{{ rpc_user }}"
+          - --rpc-pass
+          - "{{ rpc_pass }}"
+          - --state-dir
+          - "{{ workdir }}/state"
+          - --config-file
+          - builder_targets.json
+          - --miner-host
+          - "127.0.0.1"
+          - --miner-port
+          - "{{ node_rpc_base }}"
+          - --blocks
+          - "{{ snapshot_chain_blocks | string }}"
+          - --txs-per-block
+          - "{{ snapshot_chain_txs_per_block | string }}"
+          - --amount-btc
+          - "{{ snapshot_chain_tx_amount_btc | string }}"
+          - --parallel-wallets
+          - "{{ snapshot_chain_parallel_wallets | string }}"
+          - --progress-interval
+          - "{{ snapshot_chain_progress_interval | string }}"
+      environment:
+        PYTHONUNBUFFERED: "1"
+      register: snapshot_builder
+      changed_when: true
+
+    - name: Show snapshot builder output
+      ansible.builtin.debug:
+        msg: "{{ snapshot_builder.stdout_lines }}"
+
+    - name: Show any errors
+      ansible.builtin.debug:
+        msg: "{{ snapshot_builder.stderr_lines }}"
+      when: snapshot_builder.stderr_lines | length > 0
+
+# =============================================================================
+# PHASE 3: FUND TXGEN WALLETS FRESH (clean UTXOs for experiments)
+# =============================================================================
+- hosts: controller
+  gather_facts: false
+  vars:
+    txgen_funding_utxos: "{{ snapshot_utxos_per_shard | default(1500) }}"
+    txgen_funding_amount: "{{ snapshot_utxo_amount | default(0.0002) }}"
+    maturity_blocks: 101
+  tasks:
+    - name: Get current block height after chain building
+      ansible.builtin.shell: |
+        docker exec node01 bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount
+      register: current_height
+      changed_when: false
+
+    - name: Display chain building results
+      ansible.builtin.debug:
+        msg: "Chain built with {{ current_height.stdout }} blocks. Now funding TXGEN wallets with {{ txgen_funding_utxos }} clean UTXOs per shard..."
+
+    - name: Get funding wallet mining address
+      ansible.builtin.shell: |
+        docker exec wallet_funding bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+          -rpcwallet=funding getnewaddress
+      register: mining_address
+      changed_when: false
+
+    - name: Mine blocks for new coinbase maturity
+      ansible.builtin.shell: |
+        docker exec node01 bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+          generatetoaddress {{ maturity_blocks }} {{ mining_address.stdout }}
+      changed_when: true
+
+    - name: Wait for blocks to propagate
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Build base argv for txgen wallet funding
+      ansible.builtin.set_fact:
+        txgen_funding_argv:
+          - python3
+          - "{{ workdir }}/files/funding_setup.py"
+          - "--rpc-user"
+          - "{{ rpc_user }}"
+          - "--rpc-pass"
+          - "{{ rpc_pass }}"
+          - "--funding-host"
+          - "127.0.0.1:{{ wallet_rpc_base }}"
+          - "--funding-wallet"
+          - "{{ wallet_funding_name }}"
+          - "--node-count"
+          - "{{ node_count | string }}"
+          - "--mining-percentage"
+          - "{{ mining_percentage | default(1.0) | string }}"
+          - "--utxo-per-shard"
+          - "{{ txgen_funding_utxos | string }}"
+          - "--utxo-amount"
+          - "{{ txgen_funding_amount | string }}"
+          - "--address-batch"
+          - "100"
+          - "--confirmation-blocks"
+          - "20"
+          - "--state-dir"
+          - "{{ workdir }}/state"
+          - "--scheduler-config"
+          - "{{ workdir }}/state/mining_targets.json"
+          - "--summary-file"
+          - "{{ workdir }}/state/funding_snapshot.json"
+          - "--scheduler-interval"
+          - "{{ block_scheduler_interval_s | default(16) | string }}"
+          - "--scheduler-seed"
+          - "{{ seed | default(42) | string }}"
+          - "--miner-host-override"
+          - "127.0.0.1"
+          - "--miner-port-base"
+          - "{{ node_rpc_base }}"
+          - "--miner-port-step"
+          - "{{ node_rpc_step | string }}"
+
+    - name: Append txgen shard arguments
+      ansible.builtin.set_fact:
+        txgen_funding_argv: "{{ txgen_funding_argv + ['--shard', shard_spec] }}"
+      vars:
+        shard_spec: "id={{ item.id }},host=127.0.0.1:{{ wallet_rpc_base + (wallet_rpc_step * (loop_index + 1)) }},wallet={{ item.wallet_name }}"
+      loop: "{{ txgen_shards }}"
+      loop_control:
+        index_var: loop_index
+
+    - name: Fund txgen wallets with clean UTXOs
+      ansible.builtin.command:
+        argv: "{{ txgen_funding_argv }}"
+        chdir: "{{ workdir }}"
+      environment:
+        PYTHONUNBUFFERED: "1"
+      register: txgen_funding_result
+      changed_when: true
+
+    - name: Show txgen funding output (last 20 lines)
+      ansible.builtin.debug:
+        msg: "{{ txgen_funding_result.stdout_lines[-20:] }}"
+
+# =============================================================================
+# PHASE 4: VERIFICATION AND SUMMARY
+# =============================================================================
+- hosts: controller
+  gather_facts: false
+  tasks:
+    - name: Get final block height
+      ansible.builtin.shell: |
+        docker exec node01 bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount
+      register: final_height
+      changed_when: false
+
+    - name: Verify txgen wallet UTXO counts are clean
+      ansible.builtin.shell: |
+        for shard in a b c d e f g h; do
+          count=$(docker exec wallet_shard_${shard} bitcoin-cli -regtest \
+            -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+            -rpcwallet=txshard_${shard} listunspent 1 9999999 | jq length)
+          echo "txshard_${shard}: ${count} UTXOs"
+        done
+      register: txgen_utxo_check
+      changed_when: false
+
+    - name: Verify builder wallet UTXO counts (should have dust)
+      ansible.builtin.shell: |
+        for shard in a b c d e f g h; do
+          count=$(docker exec wallet_shard_${shard} bitcoin-cli -regtest \
+            -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+            -rpcwallet=builder_${shard} listunspent 1 9999999 | jq length)
+          echo "builder_${shard}: ${count} UTXOs"
+        done
+      register: builder_utxo_check
+      changed_when: false
+
+    - name: Display final snapshot statistics
+      ansible.builtin.debug:
+        msg: |
+          ============================================================
+          SNAPSHOT GENERATION COMPLETE
+          ============================================================
+          Final block height: {{ final_height.stdout }}
+
+          TXGEN WALLETS (clean - for experiments):
+          {{ txgen_utxo_check.stdout }}
+
+          BUILDER WALLETS (dust - used for chain building):
+          {{ builder_utxo_check.stdout }}
+
+          Ready for snapshotting with: ansible-playbook playbooks/05_snapshot.yml
+          ============================================================
