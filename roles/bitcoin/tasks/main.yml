@@ -91,6 +91,8 @@
     owner: "{{ lookup('env','USER') }}"
     group: "{{ file_group }}"
   loop: "{{ wallet_services }}"
+  vars:
+    reindex_on_restart: false  # Wallets should never reindex - only crashed nodes do
 
 - name: Ensure results dir exists
   ansible.builtin.file:
