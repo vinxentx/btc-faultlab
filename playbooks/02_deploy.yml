@@ -34,17 +34,17 @@
         target_height=$(docker exec node01 bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount)
         echo "Target height: $target_height"
 
-        # Wait for all wallet containers to sync
+        # Wait for all wallet containers to sync (up to 10 min per wallet)
         for shard in a b c d e f g h; do
           container="wallet_shard_$shard"
           echo "Syncing $container..."
-          for attempt in $(seq 1 120); do
+          for attempt in $(seq 1 600); do
             wallet_height=$(docker exec $container bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount 2>/dev/null || echo "0")
             if [ "$wallet_height" -ge "$target_height" ]; then
               echo "$container synced at height $wallet_height"
               break
             fi
-            if [ $((attempt % 10)) -eq 0 ]; then
+            if [ $((attempt % 30)) -eq 0 ]; then
               echo "$container at $wallet_height / $target_height..."
             fi
             sleep 1
