@@ -3078,7 +3078,7 @@ def create_latency_cdf_plot(run_dir, events, df_conf):
 
         # Area = integral of |during - pre| over percentiles
         # This is similar to Stabl's sensitivity score
-        sensitivity = np.trapezoid(np.abs(during_quantiles - pre_quantiles), percentiles)
+        sensitivity = np.trapz(np.abs(during_quantiles - pre_quantiles), percentiles)
 
         return {'sensitivity_score': round(sensitivity, 2)}
 

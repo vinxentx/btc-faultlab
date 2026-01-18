@@ -17,3 +17,27 @@
         docker compose -f "{{ output_compose }}" up -d
       args:
         chdir: "{{ workdir }}"
+
+    - name: Wait for wallet containers to be ready
+      ansible.builtin.shell: |
+        for i in {1..30}; do
+          if docker exec wallet_shard_a bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockchaininfo > /dev/null 2>&1; then
+            exit 0
+          fi
+          sleep 2
+        done
+        exit 1
+      when: use_chain_snapshot | default(false) | bool
+      changed_when: false
+
+    - name: Rescan wallets after snapshot restore
+      ansible.builtin.shell: |
+        for shard in a b c d e f g h; do
+          echo "Rescanning txshard_$shard..."
+          docker exec wallet_shard_$shard bitcoin-cli -regtest \
+            -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+            -rpcwallet=txshard_$shard rescanblockchain > /dev/null 2>&1 || true
+        done
+        echo "Wallet rescan complete"
+      when: use_chain_snapshot | default(false) | bool
+      changed_when: true
