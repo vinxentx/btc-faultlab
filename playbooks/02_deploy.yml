@@ -18,25 +18,68 @@
       args:
         chdir: "{{ workdir }}"
 
-    - name: Wait for wallet containers to be ready
+    - name: Wait for wallet containers to be ready and synced
       ansible.builtin.shell: |
-        for i in {1..30}; do
+        set -e
+        echo "Waiting for wallet containers to start..."
+        for i in {1..60}; do
           if docker exec wallet_shard_a bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockchaininfo > /dev/null 2>&1; then
-            exit 0
+            break
           fi
           sleep 2
         done
-        exit 1
+
+        echo "Waiting for wallets to sync with nodes..."
+        # Get target height from node01
+        target_height=$(docker exec node01 bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount)
+        echo "Target height: $target_height"
+
+        # Wait for all wallet containers to sync
+        for shard in a b c d e f g h; do
+          container="wallet_shard_$shard"
+          echo "Syncing $container..."
+          for attempt in {1..120}; do
+            wallet_height=$(docker exec $container bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount 2>/dev/null || echo "0")
+            if [ "$wallet_height" -ge "$target_height" ]; then
+              echo "$container synced at height $wallet_height"
+              break
+            fi
+            if [ $((attempt % 10)) -eq 0 ]; then
+              echo "$container at $wallet_height / $target_height..."
+            fi
+            sleep 1
+          done
+        done
+        echo "All wallet containers synced"
       when: use_chain_snapshot | default(false) | bool
       changed_when: false
 
+    - name: Derive wallet addresses (keypoolrefill) after snapshot restore
+      ansible.builtin.shell: |
+        echo "Deriving addresses for txgen wallets..."
+        for shard in a b c d e f g h; do
+          echo "Keypoolrefill txshard_$shard with 2000 addresses..."
+          docker exec wallet_shard_$shard bitcoin-cli -regtest \
+            -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+            -rpcwallet=txshard_$shard keypoolrefill 2000 2>&1 || true
+        done
+        echo "Address derivation complete"
+      when: use_chain_snapshot | default(false) | bool
+      changed_when: true
+
     - name: Rescan wallets after snapshot restore
       ansible.builtin.shell: |
+        echo "Rescanning txgen wallets to find UTXOs..."
         for shard in a b c d e f g h; do
           echo "Rescanning txshard_$shard..."
           docker exec wallet_shard_$shard bitcoin-cli -regtest \
             -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
             -rpcwallet=txshard_$shard rescanblockchain > /dev/null 2>&1 || true
+          # Check UTXO count after rescan
+          utxo_count=$(docker exec wallet_shard_$shard bitcoin-cli -regtest \
+            -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} \
+            -rpcwallet=txshard_$shard listunspent | jq length 2>/dev/null || echo "0")
+          echo "txshard_$shard: $utxo_count UTXOs"
         done
         echo "Wallet rescan complete"
       when: use_chain_snapshot | default(false) | bool
