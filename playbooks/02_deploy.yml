@@ -22,7 +22,7 @@
       ansible.builtin.shell: |
         set -e
         echo "Waiting for wallet containers to start..."
-        for i in {1..60}; do
+        for i in $(seq 1 60); do
           if docker exec wallet_shard_a bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockchaininfo > /dev/null 2>&1; then
             break
           fi
@@ -38,7 +38,7 @@
         for shard in a b c d e f g h; do
           container="wallet_shard_$shard"
           echo "Syncing $container..."
-          for attempt in {1..120}; do
+          for attempt in $(seq 1 120); do
             wallet_height=$(docker exec $container bitcoin-cli -regtest -rpcuser={{ rpc_user }} -rpcpassword={{ rpc_pass }} getblockcount 2>/dev/null || echo "0")
             if [ "$wallet_height" -ge "$target_height" ]; then
               echo "$container synced at height $wallet_height"
