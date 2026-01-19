@@ -279,7 +279,8 @@ def main() -> int:
     
     # Verwende tatsächliche Anzahl der Miner für node_count-abhängige Berechnungen
     effective_node_count = len(miner_hosts)
-    interval_s = float(config.get("interval_s", args.interval))
+    # CLI --interval (from experiment config) takes precedence over config file
+    interval_s = float(args.interval)
     seed = int(config.get("seed", args.seed))
     # use_variance kann via CLI oder Config gesetzt werden (CLI hat Vorrang wenn True)
     use_variance = args.use_variance or config.get("use_variance", False)
