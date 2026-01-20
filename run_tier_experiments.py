@@ -430,8 +430,8 @@ Examples:
     
     parser.add_argument("--baseline", action="store_true",
                        help="Run baseline experiment only")
-    parser.add_argument("--tier", type=str, choices=["A", "B", "C", "D"],
-                       help="Run specific tier (A, B, C, or D)")
+    parser.add_argument("--tier", type=str, choices=["A", "B", "C", "D", "E"],
+                       help="Run specific tier (A, B, C, D, or E). Note: Tier E (20 tx/s) requires different snapshot.")
     parser.add_argument("--extended", action="store_true",
                        help="Run full suite (all experiments)")
     parser.add_argument("--experiment", type=str,
