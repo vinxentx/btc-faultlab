@@ -153,9 +153,17 @@
       include_role: { name: netem }
       vars: { run_dir: "{{ run_dir }}" }
 
-    - name: Log_event - netem_applied
+    - name: Log_event - netem_applied (all nodes)
+      when: (network_fault_fraction | default(1.0) | float) >= 1.0
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms" >> "{{ run_dir }}/events.log"
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms fraction=1.0 nodes=all" >> "{{ run_dir }}/events.log"
+
+    - name: Log_event - netem_applied (partial)
+      when: (network_fault_fraction | default(1.0) | float) < 1.0
+      vars:
+        affected_nodes: "{% for idx in network_fault_nodes_idx %}node{{ '%02d' | format(idx | int) }}{% if not loop.last %},{% endif %}{% endfor %}"
+      ansible.builtin.shell: |
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms fraction={{ network_fault_fraction }} nodes={{ affected_nodes }}" >> "{{ run_dir }}/events.log"
 
     - name: Start mempool monitoring in background
       ansible.builtin.shell: |
@@ -208,6 +216,10 @@
     - name: Remove net impairments
       include_role: { name: netem }
       vars: { clear: true, run_dir: "{{ run_dir }}" }
+
+    - name: Log_event - netem_cleared
+      ansible.builtin.shell: |
+        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_cleared" >> "{{ run_dir }}/events.log"
 
     - name: Log_event - end_observation_start_cooldown
       ansible.builtin.shell: |

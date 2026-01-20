@@ -68,7 +68,7 @@ def get_netem_applied(events):
     """
     Get the netem_applied timestamp (for showing warmup data in plots).
     Falls back to start_warmup if netem_applied not available.
-    
+
     Returns:
         timestamp or None
     """
@@ -80,6 +80,66 @@ def get_netem_applied(events):
         if evt == "start_warmup":
             return ts
     return None
+
+def compute_network_fault_metrics(events):
+    """
+    Parse network fault (netem) events from events.log.
+
+    Extracts:
+    - Parameters: latency, loss, jitter, bandwidth
+    - Timing: when applied, when cleared
+    - Affected nodes: which nodes when fraction < 1.0
+
+    Returns:
+        dict with network fault info or None if no netem events
+    """
+    netem_applied_ts = None
+    netem_cleared_ts = None
+    params = {}
+    affected_nodes = None
+    fraction = 1.0
+
+    for (ts, evt, rest) in events:
+        if evt == "netem_applied":
+            netem_applied_ts = ts
+            # Parse parameters from rest: "loss=5% latency=100ms bw=100mbit jitter=5ms fraction=0.25 nodes=node01,node02,..."
+            for part in rest.split():
+                if "=" in part:
+                    key, val = part.split("=", 1)
+                    if key == "loss":
+                        params["loss_pct"] = float(val.replace("%", ""))
+                    elif key == "latency":
+                        params["latency_ms"] = float(val.replace("ms", ""))
+                    elif key == "jitter":
+                        params["jitter_ms"] = float(val.replace("ms", ""))
+                    elif key == "bw":
+                        params["bandwidth_mbit"] = float(val.replace("mbit", ""))
+                    elif key == "fraction":
+                        fraction = float(val)
+                    elif key == "nodes":
+                        if val != "all":
+                            affected_nodes = val.split(",")
+        elif evt == "netem_cleared":
+            netem_cleared_ts = ts
+
+    if netem_applied_ts is None:
+        return None
+
+    result = {
+        "applied_at": netem_applied_ts.isoformat() if hasattr(netem_applied_ts, 'isoformat') else str(netem_applied_ts),
+        "parameters": params,
+        "fraction": fraction
+    }
+
+    if netem_cleared_ts:
+        result["cleared_at"] = netem_cleared_ts.isoformat() if hasattr(netem_cleared_ts, 'isoformat') else str(netem_cleared_ts)
+        result["duration_seconds"] = (netem_cleared_ts - netem_applied_ts).total_seconds()
+
+    if affected_nodes:
+        result["affected_nodes"] = affected_nodes
+        result["affected_count"] = len(affected_nodes)
+
+    return result
 
 def compute_event_recovery_metrics(run_dir, events):
     """Compute comprehensive recovery metrics from events.log.
@@ -161,10 +221,14 @@ def compute_event_recovery_metrics(run_dir, events):
                 "count": len(startup_delays)
             }
 
-    # crash_duration: crash_start → crash_complete
+    # crash_injection_time: crash_start → crash_complete (time to stop all nodes)
     if "crash_start" in timestamps and "crash_complete" in timestamps:
-        durations["crash_duration"] = (timestamps["crash_complete"] - timestamps["crash_start"]).total_seconds()
-    
+        durations["crash_injection_time"] = (timestamps["crash_complete"] - timestamps["crash_start"]).total_seconds()
+
+    # node_downtime: crash_start → recovery_start (actual time nodes are down = crash_duration_s config)
+    if "crash_start" in timestamps and "recovery_start" in timestamps:
+        durations["node_downtime"] = (timestamps["recovery_start"] - timestamps["crash_start"]).total_seconds()
+
     # total_downtime: crash_start → recovery_complete (most important metric!)
     if "crash_start" in timestamps:
         durations["total_downtime"] = (timestamps["recovery_complete"] - timestamps["crash_start"]).total_seconds()
@@ -420,7 +484,12 @@ def compute_per_phase_throughput(df_conf_filtered, df_sub_filtered, events, conf
             df_sub["submit_ts_utc"] = df_sub["submit_ts_utc"].dt.tz_localize('UTC')
 
     def compute_phase_metrics(phase_start, phase_end, phase_name):
-        """Compute metrics for a single phase based on submission time."""
+        """Compute metrics for a single phase.
+
+        Two perspectives on throughput:
+        1. Submission-based: TXs submitted during phase (for availability analysis)
+        2. Confirmation-based: TXs confirmed during phase (for true throughput)
+        """
         if phase_start is None or phase_end is None:
             return None
 
@@ -428,6 +497,7 @@ def compute_per_phase_throughput(df_conf_filtered, df_sub_filtered, events, conf
         if duration <= 0:
             return None
 
+        # === SUBMISSION-BASED METRICS ===
         # Count TXs SUBMITTED during this phase
         if not df_sub.empty and "submit_ts_utc" in df_sub.columns:
             submitted = df_sub[
@@ -438,40 +508,47 @@ def compute_per_phase_throughput(df_conf_filtered, df_sub_filtered, events, conf
         else:
             submitted_count = 0
 
-        # Count confirmed TXs that were SUBMITTED during this phase
-        # (uses submit_ts_utc for phase assignment, not confirm_ts_utc)
+        # Count TXs that were SUBMITTED during this phase AND got confirmed
+        # (confirmation may happen in a later phase - this is for availability calculation)
         if "submit_ts_utc" in df_conf.columns:
-            confirmed = df_conf[
+            confirmed_of_submitted = df_conf[
                 (df_conf["submit_ts_utc"] >= phase_start) &
                 (df_conf["submit_ts_utc"] < phase_end)
             ]
         else:
-            # Fallback to old behavior if submit_ts_utc not in df_conf
-            confirmed = df_conf[
-                (df_conf["confirm_ts_utc"] >= phase_start) &
-                (df_conf["confirm_ts_utc"] < phase_end)
-            ]
+            confirmed_of_submitted = pd.DataFrame()
 
-        confirmed_count = len(confirmed)
+        confirmed_count = len(confirmed_of_submitted)
 
-        # Use submitted_count if available, otherwise fall back to confirmed_count
-        effective_submitted = submitted_count if submitted_count > 0 else confirmed_count
+        # === CONFIRMATION-BASED METRICS (TRUE THROUGHPUT) ===
+        # Count TXs CONFIRMED during this phase (regardless of when submitted)
+        # This is the actual processing rate during the phase - no bleeding between phases
+        confirmations_in_phase = df_conf[
+            (df_conf["confirm_ts_utc"] >= phase_start) &
+            (df_conf["confirm_ts_utc"] < phase_end)
+        ]
+        confirmations_in_phase_count = len(confirmations_in_phase)
 
         result = {
+            # Submission metrics
             "submitted_count": submitted_count,
-            "confirmed_count": confirmed_count,
+            "confirmed_count": confirmed_count,  # of TXs submitted in this phase
             "duration_seconds": round(duration, 1),
-            "throughput_tx_per_s": round(effective_submitted / duration, 3)
+            "submission_rate_tx_per_s": round(submitted_count / duration, 3) if submitted_count > 0 else 0.0,
+
+            # True throughput: confirmations that actually happened during this phase
+            "confirmations_in_phase": confirmations_in_phase_count,
+            "confirmation_throughput_tx_per_s": round(confirmations_in_phase_count / duration, 3)
         }
 
-        # Calculate confirmation rate (availability)
+        # Calculate confirmation rate (availability for TXs submitted in this phase)
         if submitted_count > 0:
             result["confirmation_rate"] = round(confirmed_count / submitted_count, 4)
 
-        # Calculate mean confirmation latency for TXs in this phase
-        if "latency_seconds" in confirmed.columns and len(confirmed) > 0:
-            result["mean_confirmation_latency_seconds"] = round(confirmed["latency_seconds"].mean(), 2)
-            result["median_confirmation_latency_seconds"] = round(confirmed["latency_seconds"].median(), 2)
+        # Calculate mean confirmation latency for TXs CONFIRMED in this phase
+        if "latency_seconds" in confirmations_in_phase.columns and len(confirmations_in_phase) > 0:
+            result["mean_confirmation_latency_seconds"] = round(confirmations_in_phase["latency_seconds"].mean(), 2)
+            result["median_confirmation_latency_seconds"] = round(confirmations_in_phase["latency_seconds"].median(), 2)
 
         return result
 
@@ -496,21 +573,21 @@ def compute_per_phase_throughput(df_conf_filtered, df_sub_filtered, events, conf
     if post_recovery:
         result["post_recovery"] = post_recovery
 
-    # Calculate degradation percentages (using throughput)
+    # Calculate degradation percentages using TRUE throughput (confirmations per second)
     if "pre_crash" in result and "during_crash" in result:
-        pre_tps = result["pre_crash"]["throughput_tx_per_s"]
-        during_tps = result["during_crash"]["throughput_tx_per_s"]
+        pre_tps = result["pre_crash"]["confirmation_throughput_tx_per_s"]
+        during_tps = result["during_crash"]["confirmation_throughput_tx_per_s"]
         if pre_tps > 0:
-            result["crash_degradation_percent"] = round(((pre_tps - during_tps) / pre_tps) * 100, 1)
+            result["throughput_degradation_percent"] = round(((pre_tps - during_tps) / pre_tps) * 100, 1)
 
     if "pre_crash" in result and "post_recovery" in result:
-        pre_tps = result["pre_crash"]["throughput_tx_per_s"]
-        post_tps = result["post_recovery"]["throughput_tx_per_s"]
+        pre_tps = result["pre_crash"]["confirmation_throughput_tx_per_s"]
+        post_tps = result["post_recovery"]["confirmation_throughput_tx_per_s"]
         if pre_tps > 0:
             recovery_diff = ((post_tps - pre_tps) / pre_tps) * 100
             result["recovery_vs_baseline_percent"] = round(recovery_diff, 1)
 
-    # Calculate confirmation rate degradation (more meaningful than throughput degradation)
+    # Calculate confirmation rate degradation (availability of TXs submitted in each phase)
     if "pre_crash" in result and "during_crash" in result:
         pre_rate = result["pre_crash"].get("confirmation_rate", 1.0)
         during_rate = result["during_crash"].get("confirmation_rate", 1.0)
@@ -660,6 +737,219 @@ def compute_reorg_metrics(run_dir, events=None, reorg_events_from_propagation=No
 
         # Store first 10 reorg events for debugging
         result["reorg_events"] = reorg_events[:10]
+
+    return result
+
+
+def compute_chain_split_metrics(run_dir):
+    """
+    Detect chain splits from UpdateTip logs across all nodes.
+
+    A chain split occurs when multiple nodes have different block hashes at the same
+    height simultaneously. This is different from reorgs:
+    - Reorg: A single node switches from one chain to another
+    - Chain split: Multiple nodes disagree on the current tip at the same time
+
+    Chain splits indicate temporary consensus failures and are more severe than reorgs.
+    They typically resolve when nodes receive blocks and converge back.
+
+    Algorithm:
+    1. Parse all UpdateTip events from all node logs with timestamps
+    2. Build a timeline of each node's current tip (height, hash)
+    3. At each event, check if nodes disagree on the tip hash for the same height
+    4. Track split start, duration, and nodes involved
+
+    Args:
+        run_dir: Path to experiment run directory
+
+    Returns:
+        dict with chain split metrics:
+        - total_splits: Number of distinct chain split events
+        - max_duration_seconds: Longest split duration
+        - max_nodes_diverged: Maximum nodes on different chains simultaneously
+        - total_divergence_seconds: Total time network was in split state
+        - splits: List of individual split events with details
+    """
+    result = {
+        "total_splits": 0,
+        "max_duration_seconds": 0.0,
+        "max_nodes_diverged": 0,
+        "total_divergence_seconds": 0.0,
+        "splits": []
+    }
+
+    run_dir = Path(run_dir)
+    log_files = sorted(run_dir.glob("node*.log"))
+
+    if not log_files:
+        return result
+
+    # Collect all UpdateTip events across all nodes
+    # Format: (timestamp, node, height, hash)
+    all_events = []
+
+    for log_path in log_files:
+        node_name = log_path.stem
+        try:
+            with open(log_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    match = UPDATE_TIP_REGEX.search(line)
+                    if match:
+                        ts_str = match.group(1)
+                        block_hash = match.group(2)
+                        height = int(match.group(3))
+
+                        try:
+                            ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                            all_events.append((ts, node_name, height, block_hash))
+                        except ValueError:
+                            continue
+        except FileNotFoundError:
+            continue
+
+    if not all_events:
+        return result
+
+    # Sort events chronologically
+    all_events.sort(key=lambda x: x[0])
+
+    # Track current state of each node: node -> (height, hash)
+    node_state: dict[str, tuple[int, str]] = {}
+
+    # Track active split state
+    current_split = None  # None or {"start_ts": ..., "heights_involved": set(), "hashes_seen": set()}
+    splits_detected = []
+
+    def check_for_split():
+        """Check if current node states represent a chain split."""
+        if len(node_state) < 2:
+            return [], 0
+
+        # Group nodes by their current tip
+        # For a split, we care about nodes at the SAME height but DIFFERENT hashes
+        height_to_nodes = {}
+        for node, (height, hash_val) in node_state.items():
+            if height not in height_to_nodes:
+                height_to_nodes[height] = {}
+            if hash_val not in height_to_nodes[height]:
+                height_to_nodes[height][hash_val] = set()
+            height_to_nodes[height][hash_val].add(node)
+
+        # Find heights where multiple hashes exist (split)
+        max_diverged = 0
+        split_heights = []
+
+        for height, hash_to_nodes in height_to_nodes.items():
+            if len(hash_to_nodes) > 1:
+                # Multiple hashes at same height = split
+                nodes_involved = sum(len(nodes) for nodes in hash_to_nodes.values())
+                max_diverged = max(max_diverged, nodes_involved)
+                split_heights.append({
+                    "height": height,
+                    "forks": {h[:16]: list(nodes) for h, nodes in hash_to_nodes.items()}
+                })
+
+        return split_heights, max_diverged
+
+    # Process events chronologically
+    prev_in_split = False
+
+    for ts, node, height, block_hash in all_events:
+        # Update node state
+        node_state[node] = (height, block_hash)
+
+        # Check for split
+        split_heights, nodes_diverged = check_for_split()
+        in_split = len(split_heights) > 0
+
+        if in_split and not prev_in_split:
+            # Split started
+            current_split = {
+                "start_ts": ts,
+                "max_nodes_diverged": nodes_diverged,
+                "heights_involved": set(s["height"] for s in split_heights)
+            }
+        elif in_split and prev_in_split:
+            # Still in split - update max diverged
+            if current_split:
+                current_split["max_nodes_diverged"] = max(
+                    current_split["max_nodes_diverged"], nodes_diverged
+                )
+                for s in split_heights:
+                    current_split["heights_involved"].add(s["height"])
+        elif not in_split and prev_in_split:
+            # Split resolved
+            if current_split:
+                duration = (ts - current_split["start_ts"]).total_seconds()
+                splits_detected.append({
+                    "start_ts": current_split["start_ts"].isoformat(),
+                    "end_ts": ts.isoformat(),
+                    "duration_seconds": round(duration, 2),
+                    "max_nodes_diverged": current_split["max_nodes_diverged"],
+                    "heights_involved": sorted(current_split["heights_involved"])
+                })
+                current_split = None
+
+        prev_in_split = in_split
+
+    # Handle split that never resolved (still active at end of logs)
+    if current_split:
+        last_ts = all_events[-1][0]
+        duration = (last_ts - current_split["start_ts"]).total_seconds()
+        splits_detected.append({
+            "start_ts": current_split["start_ts"].isoformat(),
+            "end_ts": last_ts.isoformat() + " (ongoing)",
+            "duration_seconds": round(duration, 2),
+            "max_nodes_diverged": current_split["max_nodes_diverged"],
+            "heights_involved": sorted(current_split["heights_involved"]),
+            "unresolved": True
+        })
+
+    # Compute summary statistics
+    if splits_detected:
+        result["total_splits"] = len(splits_detected)
+        result["max_duration_seconds"] = max(s["duration_seconds"] for s in splits_detected)
+        result["max_nodes_diverged"] = max(s["max_nodes_diverged"] for s in splits_detected)
+        result["total_divergence_seconds"] = sum(s["duration_seconds"] for s in splits_detected)
+
+        # Include up to 10 most significant splits (by duration)
+        splits_sorted = sorted(splits_detected, key=lambda x: x["duration_seconds"], reverse=True)
+        result["splits"] = splits_sorted[:10]
+
+    # === END-OF-EXPERIMENT CONSENSUS VERIFICATION ===
+    # node_state contains each node's final tip from their last UpdateTip log entry
+    # Check if all nodes converged to the same tip
+    if node_state:
+        # Group nodes by their final tip (height, hash)
+        tip_to_nodes: dict[tuple[int, str], list[str]] = {}
+        for node, (height, block_hash) in node_state.items():
+            tip = (height, block_hash)
+            if tip not in tip_to_nodes:
+                tip_to_nodes[tip] = []
+            tip_to_nodes[tip].append(node)
+
+        result["final_state"] = {
+            "nodes_checked": len(node_state),
+            "consensus_reached": len(tip_to_nodes) == 1,
+            "unique_tips": len(tip_to_nodes)
+        }
+
+        if len(tip_to_nodes) == 1:
+            # All nodes agree
+            (height, block_hash), nodes = list(tip_to_nodes.items())[0]
+            result["final_state"]["final_height"] = height
+            result["final_state"]["final_hash"] = block_hash[:16] + "..."
+        else:
+            # Nodes disagree - report the divergence
+            result["final_state"]["divergent_tips"] = [
+                {
+                    "height": height,
+                    "hash": block_hash[:16] + "...",
+                    "node_count": len(nodes),
+                    "nodes": nodes[:5]  # First 5 nodes as sample
+                }
+                for (height, block_hash), nodes in sorted(tip_to_nodes.items(), key=lambda x: -len(x[1]))
+            ]
 
     return result
 
@@ -3365,8 +3655,10 @@ def main():
         # Keep block_catchup_time only inside recovery_analysis to avoid duplicate top-level metrics
         print(f"\n🔄 RECOVERY ANALYSIS (events-based):")
         print(f"   Crashed nodes: {events_recovery.get('crashed_nodes_count', 0)}")
-        if "crash_duration" in durations:
-            print(f"   Crash duration: {durations['crash_duration']:.0f}s")
+        if "node_downtime" in durations:
+            print(f"   Node downtime: {durations['node_downtime']:.0f}s ({durations['node_downtime']/60:.1f} min)")
+        if "crash_injection_time" in durations:
+            print(f"   Crash injection time: {durations['crash_injection_time']:.0f}s")
         if "total_downtime" in durations:
             print(f"   Total downtime: {durations['total_downtime']:.0f}s ({durations['total_downtime']/60:.1f} min)")
         if "wall_clock_recovery_time" in durations:
@@ -3393,6 +3685,27 @@ def main():
                 print(f"   Current latency: {recovery_metrics['final_latency']:.2f}s")
                 print(f"   Observation duration: {recovery_metrics['observation_duration']:.0f}s")
     
+    # Compute network fault (netem) metrics
+    network_fault_metrics = compute_network_fault_metrics(events)
+    if network_fault_metrics:
+        metrics["network_fault"] = network_fault_metrics
+        params = network_fault_metrics.get("parameters", {})
+        fraction = network_fault_metrics.get("fraction", 1.0)
+        print(f"\n🌐 NETWORK FAULT:")
+        print(f"   Latency: {params.get('latency_ms', 0):.0f}ms, Loss: {params.get('loss_pct', 0):.0f}%, Jitter: {params.get('jitter_ms', 0):.0f}ms")
+        if "duration_seconds" in network_fault_metrics:
+            print(f"   Duration: {network_fault_metrics['duration_seconds']:.0f}s")
+        if fraction < 1.0:
+            affected_count = network_fault_metrics.get("affected_count", 0)
+            print(f"   Partial: {fraction*100:.0f}% of nodes ({affected_count} nodes affected)")
+            if network_fault_metrics.get("affected_nodes"):
+                nodes_preview = ", ".join(network_fault_metrics["affected_nodes"][:5])
+                if affected_count > 5:
+                    nodes_preview += f"... (+{affected_count - 5} more)"
+                print(f"   Affected: {nodes_preview}")
+        else:
+            print(f"   Scope: All nodes")
+
     # Compute latency comparison (pre-crash vs during-crash vs post-recovery)
     latency_comparison = compute_latency_comparison(df_conf_filtered, events)
     if latency_comparison:
@@ -3443,29 +3756,30 @@ def main():
     )
     if per_phase_throughput:
         metrics["throughput_by_phase"] = per_phase_throughput
-        print(f"\n📊 THROUGHPUT BY PHASE (by submission time):")
+        print(f"\n📊 THROUGHPUT BY PHASE:")
         for phase_name, phase_label in [("pre_crash", "Pre-crash"), ("during_crash", "During crash"), ("post_recovery", "Post-recovery")]:
             if phase_name in per_phase_throughput:
                 p = per_phase_throughput[phase_name]
                 submitted = p.get('submitted_count', 0)
-                confirmed = p.get('confirmed_count', 0)
+                confirmed_of_submitted = p.get('confirmed_count', 0)
+                confirmations_in_phase = p.get('confirmations_in_phase', 0)
                 rate = p.get('confirmation_rate', 0)
-                latency = p.get('mean_confirmation_latency_seconds', 0)
+                latency = p.get('median_confirmation_latency_seconds', 0)
                 duration = p.get('duration_seconds', 0)
-                tps = p.get('throughput_tx_per_s', 0)
+                conf_tps = p.get('confirmation_throughput_tx_per_s', 0)
 
-                rate_str = f", rate={rate*100:.1f}%" if rate else ""
+                rate_str = f", avail={rate*100:.1f}%" if rate else ""
                 latency_str = f", latency={latency:.1f}s" if latency else ""
-                print(f"   {phase_label}: {tps:.2f} tx/s ({submitted} sub, {confirmed} conf in {duration:.0f}s{rate_str}{latency_str})")
+                print(f"   {phase_label}: {conf_tps:.2f} tx/s confirmed ({confirmations_in_phase} conf in {duration:.0f}s{rate_str}{latency_str})")
 
-        if "confirmation_rate_degradation_percent" in per_phase_throughput:
-            deg = per_phase_throughput["confirmation_rate_degradation_percent"]
+        if "throughput_degradation_percent" in per_phase_throughput:
+            deg = per_phase_throughput["throughput_degradation_percent"]
             status = "⚠️" if deg > 5 else "✅"
-            print(f"   {status} Confirmation rate degradation: {deg:+.1f}%")
+            print(f"   {status} Throughput degradation during crash: {deg:+.1f}%")
         if "recovery_vs_baseline_percent" in per_phase_throughput:
             rec = per_phase_throughput["recovery_vs_baseline_percent"]
             status = "✅" if rec >= -5 else "⚠️"
-            print(f"   {status} Recovery vs baseline: {rec:+.1f}%")
+            print(f"   {status} Recovery throughput vs baseline: {rec:+.1f}%")
 
     # Compute reorg and fork metrics (uses reorg events from block_propagation - no extra log parsing)
     reorg_metrics = compute_reorg_metrics(run_dir, events, reorg_events_from_propagation=reorg_events_from_logs)
@@ -3490,6 +3804,44 @@ def main():
             print(f"   Reorg propagation by height:")
             for rp in reorg_metrics['reorg_propagation'][:5]:
                 print(f"      └─ height {rp['height']}: {rp['propagation_seconds']:.1f}s ({rp['nodes_affected']} nodes)")
+
+    # Compute chain split metrics (periods where nodes disagree on current tip)
+    chain_split_metrics = compute_chain_split_metrics(run_dir)
+    if chain_split_metrics:
+        # Add to chain_consensus or create new section
+        if "chain_consensus" not in metrics:
+            metrics["chain_consensus"] = {}
+        metrics["chain_consensus"]["chain_splits"] = chain_split_metrics
+
+        if chain_split_metrics["total_splits"] > 0:
+            print(f"\n⚠️  CHAIN SPLITS DETECTED:")
+            print(f"   Total split events: {chain_split_metrics['total_splits']}")
+            print(f"   Max duration: {chain_split_metrics['max_duration_seconds']:.2f}s")
+            print(f"   Max nodes diverged: {chain_split_metrics['max_nodes_diverged']}")
+            print(f"   Total divergence time: {chain_split_metrics['total_divergence_seconds']:.2f}s")
+            if chain_split_metrics.get('splits'):
+                print(f"   Significant splits (by duration):")
+                for split in chain_split_metrics['splits'][:5]:
+                    unresolved = " (UNRESOLVED)" if split.get('unresolved') else ""
+                    heights = ", ".join(str(h) for h in split['heights_involved'][:3])
+                    if len(split['heights_involved']) > 3:
+                        heights += f"... (+{len(split['heights_involved'])-3} more)"
+                    print(f"      └─ {split['duration_seconds']:.2f}s, {split['max_nodes_diverged']} nodes, heights: {heights}{unresolved}")
+        else:
+            print(f"\n✅ NO CHAIN SPLITS: Network maintained consensus throughout")
+
+        # Show final consensus state
+        final_state = chain_split_metrics.get("final_state", {})
+        if final_state:
+            nodes_checked = final_state.get("nodes_checked", 0)
+            if final_state.get("consensus_reached"):
+                height = final_state.get("final_height", "?")
+                print(f"   ✅ Final consensus: All {nodes_checked} nodes at height {height}")
+            else:
+                unique_tips = final_state.get("unique_tips", 0)
+                print(f"   ⚠️  FINAL DIVERGENCE: {unique_tips} different tips across {nodes_checked} nodes")
+                for tip in final_state.get("divergent_tips", [])[:3]:
+                    print(f"      └─ height {tip['height']}: {tip['node_count']} nodes")
 
     # Save metrics
     with open(os.path.join(run_dir, "metrics.json"), "w") as f:

@@ -2,8 +2,8 @@
   "description": "Tier-based fault tolerance experiments for Bitcoin network resilience analysis",
   "purpose": "Systematic analysis of crash impacts, stress conditions, and block interval effects. Crashes happen DURING observation window for comparable metrics.",
   "node_count": 128,
-  "total_experiments": 48,
-  "total_duration_estimate": "~37 hours for full suite (4 runs each = 188 total runs, observe_s=600)",
+  "total_experiments": 56,
+  "total_duration_estimate": "~43 hours for full suite (4 runs each = 224 total runs, observe_s=600)",
   "experiments": {
     "baseline": {
       "name": "Baseline (No Faults)",
@@ -572,8 +572,8 @@
       "tier": "B",
       "config": {
         "node_count": 128,
-        "tx_rate": 20,
-        "wallet_descriptor_pool_size": 2800,
+        "tx_rate": 10,
+        "wallet_descriptor_pool_size": 1500,
         "block_scheduler_interval_s": 12,
         "crash_fraction": 0.0,
         "crash_duration_s": 0,
@@ -1354,6 +1354,231 @@
         "block_scheduler_min_interval": 0,
         "block_size_limit": "1MB"
       }
+    },
+
+    "baseline_20": {
+      "name": "Baseline 20 tx/s (No Faults)",
+      "description": "High load baseline - 20 tx/s with no faults. Requires 20tx/s snapshot.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 0,
+        "latency_ms": 30,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 200,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB"
+      }
+    },
+    "tier_e_001": {
+      "name": "Tier E: 20 tx/s, 25% Crash, Burst, Full Resync",
+      "description": "High load + 25% crash, burst mode, full resync. Compare with tier_a_009.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 180,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 201,
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB",
+        "pre_crash_delay_s": 60
+      }
+    },
+    "tier_e_002": {
+      "name": "Tier E: 20 tx/s, 25% Crash, Burst, Fast Resync",
+      "description": "High load + 25% crash, burst mode, fast resync. Compare with tier_a_010.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.25,
+        "crash_duration_s": 180,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 202,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB",
+        "pre_crash_delay_s": 60
+      }
+    },
+    "tier_e_003": {
+      "name": "Tier E: 20 tx/s, 50% Crash, Burst, Full Resync",
+      "description": "High load + 50% crash, burst mode, full resync. Compare with tier_a_017.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 180,
+        "crash_mode": "burst",
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 203,
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB",
+        "pre_crash_delay_s": 60
+      }
+    },
+    "tier_e_004": {
+      "name": "Tier E: 20 tx/s, 50% Crash, Burst, Fast Resync",
+      "description": "High load + 50% crash, burst mode, fast resync. Compare with tier_a_018.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 180,
+        "crash_mode": "burst",
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 204,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB",
+        "pre_crash_delay_s": 60
+      }
+    },
+    "tier_e_005": {
+      "name": "Tier E: 20 tx/s, 50% Crash, Staggered, Full Resync",
+      "description": "High load + 50% crash, staggered mode, full resync. Compare with tier_a_021.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 180,
+        "crash_mode": "staggered",
+        "stagger_period_s": 90,
+        "recovery_mode": "full_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 205,
+        "reindex_on_restart": true,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB",
+        "pre_crash_delay_s": 60
+      }
+    },
+    "tier_e_006": {
+      "name": "Tier E: 20 tx/s, 50% Crash, Staggered, Fast Resync",
+      "description": "High load + 50% crash, staggered mode, fast resync. Compare with tier_a_022.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.5,
+        "crash_duration_s": 180,
+        "crash_mode": "staggered",
+        "stagger_period_s": 90,
+        "recovery_mode": "fast_resync",
+        "loss_pct": 0,
+        "latency_ms": 50,
+        "bandwidth_mbit": 100,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 206,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB",
+        "pre_crash_delay_s": 60
+      }
+    },
+    "tier_e_007": {
+      "name": "Tier E: 20 tx/s, Omission Faults Only, Moderate Degradation",
+      "description": "High load + network degradation only (no crashes). Compare with tier_b_005.",
+      "tier": "E",
+      "config": {
+        "node_count": 128,
+        "tx_rate": 20,
+        "wallet_descriptor_pool_size": 2800,
+        "block_scheduler_interval_s": 12,
+        "crash_fraction": 0.0,
+        "crash_duration_s": 0,
+        "crash_mode": "burst",
+        "recovery_mode": "cold",
+        "loss_pct": 5,
+        "latency_ms": 100,
+        "bandwidth_mbit": 50,
+        "warmup_s": 90,
+        "observe_s": 600,
+        "cooldown_s": 60,
+        "seed": 207,
+        "reindex_on_restart": false,
+        "jitter_ms": 5,
+        "block_scheduler_use_variance": true,
+        "block_scheduler_min_interval": 0,
+        "block_size_limit": "1MB"
+      }
     }
   },
   "analysis_comparisons": [
@@ -1518,6 +1743,47 @@
         "Staggered crashes affect smaller networks differently due to fewer remaining nodes",
         "Network stress compounds with network size effects"
       ]
+    },
+    {
+      "name": "Tier E: High Load (20 tx/s) Analysis",
+      "tier": "E",
+      "note": "Requires 20tx/s snapshot with wallet_descriptor_pool_size=2800",
+      "experiments": [
+        "baseline_20",
+        "tier_e_001",
+        "tier_e_002",
+        "tier_e_003",
+        "tier_e_004",
+        "tier_e_005",
+        "tier_e_006",
+        "tier_e_007",
+        "tier_b_001",
+        "tier_b_002"
+      ],
+      "comparisons_with_10txs": [
+        {"high_load": "baseline_20", "normal_load": "baseline"},
+        {"high_load": "tier_e_001", "normal_load": "tier_a_009"},
+        {"high_load": "tier_e_002", "normal_load": "tier_a_010"},
+        {"high_load": "tier_e_003", "normal_load": "tier_a_017"},
+        {"high_load": "tier_e_004", "normal_load": "tier_a_018"},
+        {"high_load": "tier_e_005", "normal_load": "tier_a_021"},
+        {"high_load": "tier_e_006", "normal_load": "tier_a_022"},
+        {"high_load": "tier_e_007", "normal_load": "tier_b_005"}
+      ],
+      "metrics": [
+        "confirmation_latency",
+        "throughput",
+        "availability",
+        "recovery_time",
+        "mempool_size"
+      ],
+      "hypotheses": [
+        "Higher transaction load increases confirmation latency under all conditions",
+        "Crash recovery is slower under high load due to mempool backlog",
+        "High load amplifies the difference between full_resync and fast_resync",
+        "Network degradation has more severe impact at high load",
+        "Availability may decrease at high load if blocks cannot keep up with submissions"
+      ]
     }
   ],
   "execution_recommendations": {
@@ -1527,10 +1793,11 @@
     "seed_generation": "random per replication",
     "suggested_batch_order": [
       "baseline",
-      "tier_a (all 12)",
-      "tier_c (all 6)",
+      "tier_a (all 17, 10 tx/s crash experiments)",
+      "tier_c (all 6, block interval experiments)",
       "tier_d (all 10, 64-node experiments)",
-      "tier_b (all 14, most resource intensive)"
+      "tier_b (all 15, omission fault experiments)",
+      "tier_e (all 8, 20 tx/s - REQUIRES DIFFERENT SNAPSHOT)"
     ],
     "resource_requirements": {
       "minimum_ram_gb": 32,
