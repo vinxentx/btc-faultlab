@@ -678,9 +678,15 @@ def compute_reorg_metrics(run_dir, events=None, reorg_events_from_propagation=No
     result["reorg_count"] = len(reorg_events)
 
     # Count unique heights that had reorgs (more meaningful than raw event count)
+    # NOTE: This is the authoritative fork count from debug.log reorg events.
+    # orphaned_blocks_total from getchaintips may undercount because nodes prune
+    # old fork data from memory. Use reorg_heights_affected (= forks_detected) for
+    # accurate fork counting in analysis.
     if reorg_events:
         unique_reorg_heights = set(e.get("height") for e in reorg_events)
         result["reorg_heights_affected"] = len(unique_reorg_heights)
+        # Alias for clarity - this is the true fork count from actual reorg events
+        result["forks_detected"] = len(unique_reorg_heights)
 
         # Count how many nodes saw each reorg and calculate per-fork resolution times
         events_per_height = {}
@@ -3787,10 +3793,10 @@ def main():
         metrics["chain_consensus"] = reorg_metrics
         print(f"\n🔗 CHAIN CONSENSUS:")
         print(f"   Active chain tips: {reorg_metrics.get('active_tips', 1)}")
-        print(f"   Orphaned blocks: {reorg_metrics.get('orphaned_blocks_total', 0)}")
-        print(f"   Reorgs detected: {reorg_metrics.get('reorg_count', 0)}")
-        if reorg_metrics.get('reorg_heights_affected'):
-            print(f"   Unique heights affected: {reorg_metrics['reorg_heights_affected']}")
+        print(f"   Orphaned blocks (getchaintips): {reorg_metrics.get('orphaned_blocks_total', 0)}")
+        print(f"   Reorg events: {reorg_metrics.get('reorg_count', 0)}")
+        if reorg_metrics.get('forks_detected'):
+            print(f"   Forks detected (from reorgs): {reorg_metrics['forks_detected']}")
         if reorg_metrics.get('reorg_network_wide'):
             print(f"   Network-wide reorgs: {reorg_metrics['reorg_network_wide']}")
         if reorg_metrics.get('max_reorg_propagation_seconds') is not None:
@@ -3842,6 +3848,18 @@ def main():
                 print(f"   ⚠️  FINAL DIVERGENCE: {unique_tips} different tips across {nodes_checked} nodes")
                 for tip in final_state.get("divergent_tips", [])[:3]:
                     print(f"      └─ height {tip['height']}: {tip['node_count']} nodes")
+
+    # Calculate stale_block_rate (academic standard metric: forks / total_blocks)
+    # This uses forks_detected from reorg events (authoritative) rather than getchaintips
+    if "chain_consensus" in metrics and "block_interval_stats" in metrics:
+        forks = metrics["chain_consensus"].get("forks_detected", 0)
+        blocks_mined = metrics["block_interval_stats"].get("blocks_mined", 0)
+        if blocks_mined > 0:
+            stale_rate = forks / blocks_mined
+            metrics["chain_consensus"]["stale_block_rate"] = round(stale_rate, 6)
+            metrics["chain_consensus"]["stale_block_rate_pct"] = round(stale_rate * 100, 3)
+            if forks > 0:
+                print(f"   📊 Stale block rate: {stale_rate*100:.2f}% ({forks} forks / {blocks_mined} blocks)")
 
     # Save metrics
     with open(os.path.join(run_dir, "metrics.json"), "w") as f:
