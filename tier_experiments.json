@@ -962,7 +962,7 @@
       "description": "25% crash (16 nodes) with burst mode - compare to 128-node tier_a_009",
       "tier": "D",
       "config": {
-        "node_count": 32,
+        "node_count": 64,
         "tx_rate": 10,
         "wallet_descriptor_pool_size": 1500,
         "block_scheduler_interval_s": 12,
