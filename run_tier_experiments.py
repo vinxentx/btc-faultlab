@@ -274,6 +274,18 @@ class TierExperimentRunner:
 
         return self._run_tier("D", num_runs, node_count_override)
 
+    def run_tier_e(self, num_runs=4, node_count_override=None):
+        """Run all Tier E experiments (20 tx/s high load)"""
+        print("\n" + "="*80)
+        print("🎯 RUNNING TIER E EXPERIMENTS (20 tx/s High Load)")
+        print("="*80)
+        print(f"8 experiments × {num_runs} replications = {8 * num_runs} runs")
+        print(f"Estimated duration: ~{8 * num_runs * 35 / 60:.1f} hours")
+        print("⚠️  Requires 20 tx/s snapshot (wallet_descriptor_pool_size: 2800)")
+        print("="*80)
+
+        return self._run_tier("E", num_runs, node_count_override)
+
     def _run_tier(self, tier_name, num_runs, node_count_override=None):
         """Run all experiments for a specific tier"""
         tier_config = self.load_tier_config()
@@ -471,6 +483,8 @@ Examples:
             runner.run_tier_c(num_runs=args.runs, node_count_override=args.node_count)
         elif args.tier == "D":
             runner.run_tier_d(num_runs=args.runs, node_count_override=args.node_count)
+        elif args.tier == "E":
+            runner.run_tier_e(num_runs=args.runs, node_count_override=args.node_count)
     elif args.extended:
         runner.run_extended_suite(num_runs=args.runs, node_count_override=args.node_count)
     elif args.experiment:
