@@ -120,7 +120,7 @@ class TierExperimentRunner:
             
             # Step 1: Stop and remove containers using docker compose
             result = subprocess.run(
-                ["docker", "compose", "down", "-v"],
+                ["docker", "compose", "down", "-v", "--remove-orphans"],
                 capture_output=True, text=True,
                 cwd=self.base_runner.base_dir
             )
@@ -175,8 +175,18 @@ class TierExperimentRunner:
                             ["docker", "volume", "rm", "-f", volume],
                             capture_output=True, text=True
                         )
-            
-            time.sleep(2)  # Wait for cleanup to complete
+
+            # Step 4: Prune orphaned networks to release port bindings
+            print("   Pruning orphaned networks...")
+            subprocess.run(
+                ["docker", "network", "prune", "-f"],
+                capture_output=True, text=True
+            )
+
+            # Step 5: Wait for Docker to fully release resources
+            # 128 nodes + txgens + scheduler = 140+ containers
+            # Docker needs time to clean up network namespaces and release ports
+            time.sleep(8)
             print("   ✅ Cleanup completed - ready for next replication")
         except Exception as e:
             print(f"   ⚠️  Warning: Cleanup encountered issue: {e}")
