@@ -457,7 +457,7 @@ Examples:
     parser.add_argument("--extended", action="store_true",
                        help="Run full suite (all experiments)")
     parser.add_argument("--experiment", type=str,
-                       help="Run specific experiment by name")
+                       help="Run specific experiment(s) by name (comma-separated for multiple)")
     parser.add_argument("--list", action="store_true",
                        help="List all available tier experiments")
     parser.add_argument("--runs", type=int, default=4,
@@ -498,7 +498,9 @@ Examples:
     elif args.extended:
         runner.run_extended_suite(num_runs=args.runs, node_count_override=args.node_count)
     elif args.experiment:
-        runner.run_single_experiment(args.experiment, num_runs=args.runs, node_count_override=args.node_count)
+        experiments = [e.strip() for e in args.experiment.split(",")]
+        for exp in experiments:
+            runner.run_single_experiment(exp, num_runs=args.runs, node_count_override=args.node_count)
     else:
         parser.print_help()
         print("\n💡 Tip: Start with --baseline to verify your setup")
