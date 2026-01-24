@@ -183,10 +183,18 @@ class TierExperimentRunner:
                 capture_output=True, text=True
             )
 
-            # Step 5: Wait for Docker to fully release resources
+            # Step 5: Kill orphaned docker-proxy processes that may hold ports
+            # These can survive docker compose down and cause port binding failures
+            print("   Killing orphaned docker-proxy processes...")
+            subprocess.run(
+                ["sudo", "pkill", "-9", "docker-pr"],
+                capture_output=True, text=True
+            )
+
+            # Step 6: Wait for Docker to fully release resources
             # 128 nodes + txgens + scheduler = 140+ containers
             # Docker needs time to clean up network namespaces and release ports
-            time.sleep(8)
+            time.sleep(5)
             print("   ✅ Cleanup completed - ready for next replication")
         except Exception as e:
             print(f"   ⚠️  Warning: Cleanup encountered issue: {e}")
