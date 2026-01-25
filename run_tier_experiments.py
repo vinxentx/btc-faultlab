@@ -304,6 +304,18 @@ class TierExperimentRunner:
 
         return self._run_tier("E", num_runs, node_count_override)
 
+    def run_tier_f(self, num_runs=4, node_count_override=None):
+        """Run all Tier F experiments (Adaptive Interval OFF comparison)"""
+        print("\n" + "="*80)
+        print("🎯 RUNNING TIER F EXPERIMENTS (Adaptive Interval OFF)")
+        print("="*80)
+        print(f"7 experiments × {num_runs} replications = {7 * num_runs} runs")
+        print(f"Estimated duration: ~{7 * num_runs * 35 / 60:.1f} hours")
+        print("⚠️  Adaptive interval DISABLED - comparing with existing adaptive ON data")
+        print("="*80)
+
+        return self._run_tier("F", num_runs, node_count_override)
+
     def _run_tier(self, tier_name, num_runs, node_count_override=None):
         """Run all experiments for a specific tier"""
         tier_config = self.load_tier_config()
@@ -460,8 +472,8 @@ Examples:
     
     parser.add_argument("--baseline", action="store_true",
                        help="Run baseline experiment only")
-    parser.add_argument("--tier", type=str, choices=["A", "B", "C", "D", "E"],
-                       help="Run specific tier (A, B, C, D, or E). Note: Tier E (20 tx/s) requires different snapshot.")
+    parser.add_argument("--tier", type=str, choices=["A", "B", "C", "D", "E", "F"],
+                       help="Run specific tier (A-F). Tier E/F (20 tx/s configs) require 2800 UTXO snapshot. Tier F = adaptive interval OFF.")
     parser.add_argument("--extended", action="store_true",
                        help="Run full suite (all experiments)")
     parser.add_argument("--experiment", type=str,
@@ -503,6 +515,8 @@ Examples:
             runner.run_tier_d(num_runs=args.runs, node_count_override=args.node_count)
         elif args.tier == "E":
             runner.run_tier_e(num_runs=args.runs, node_count_override=args.node_count)
+        elif args.tier == "F":
+            runner.run_tier_f(num_runs=args.runs, node_count_override=args.node_count)
     elif args.extended:
         runner.run_extended_suite(num_runs=args.runs, node_count_override=args.node_count)
     elif args.experiment:
