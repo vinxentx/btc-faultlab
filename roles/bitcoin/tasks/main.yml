@@ -35,6 +35,7 @@
     --seed {{ seed }}
     --mode {{ topology_mode | default('hybrid') }}
     --k {{ topology_k | default(4) }}
+    --core-peers {{ topology_core_peers | default(2) }}
   register: topology_result
   changed_when: false
 

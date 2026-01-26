@@ -58,18 +58,19 @@ def generate_hierarchical_topology(node_count: int) -> Dict[int, List[int]]:
     return topology
 
 
-def generate_hybrid_topology(node_count: int, seed: int, k: int = 4) -> Dict[int, List[int]]:
+def generate_hybrid_topology(node_count: int, seed: int, k: int = 4, core_peers: int = 2) -> Dict[int, List[int]]:
     """
     Hybrid topology: Core full-mesh + non-core k-regular random graph.
 
     More realistic than hierarchical:
     - Core (8 nodes): Full mesh simulating mining pool clique
-    - Non-core: Each has 1 core peer + (k-1) random non-core peers
+    - Non-core: Each has `core_peers` core peers + (k-core_peers) random non-core peers
 
     Args:
         node_count: Total number of nodes
         seed: Random seed for reproducibility
         k: Total degree for non-core nodes (default: 4)
+        core_peers: Number of core peers per non-core node (default: 2)
 
     Returns:
         Dict mapping node_id -> list of peer node_ids to connect to
@@ -90,12 +91,12 @@ def generate_hybrid_topology(node_count: int, seed: int, k: int = 4) -> Dict[int
         return topology
 
     # --- Non-Core Tier: k-regular random graph ---
-    non_core_peers_needed = k - 1  # k-1 non-core peers per node (1 slot for core)
+    non_core_peers_needed = k - core_peers  # Remaining slots for non-core peers
 
-    # Step 1: Assign each non-core node to a random core node
+    # Step 1: Assign each non-core node to `core_peers` random core nodes
     for node in non_core_nodes:
-        core_peer = rng.choice(core_nodes)
-        topology[node] = [core_peer]
+        selected_cores = rng.sample(core_nodes, min(core_peers, len(core_nodes)))
+        topology[node] = selected_cores.copy()
 
     # Step 2: Generate random non-core edges using configuration model
     if len(non_core_nodes) < 2:
@@ -172,7 +173,7 @@ def _fallback_regular_edges(nodes: List[int], degree: int, rng: random.Random) -
     return edges
 
 
-def validate_topology(topology: Dict[int, List[int]], node_count: int, k: int = 4, mode: str = "hybrid") -> bool:
+def validate_topology(topology: Dict[int, List[int]], node_count: int, k: int = 4, mode: str = "hybrid", core_peers: int = 2) -> bool:
     """Validate the generated topology meets constraints."""
     core_size = 8 if node_count >= 8 else node_count
     errors = []
@@ -188,10 +189,10 @@ def validate_topology(topology: Dict[int, List[int]], node_count: int, k: int = 
     if mode == "hybrid":
         for i in range(core_size + 1, node_count + 1):
             peers = topology.get(i, [])
-            core_peers = [p for p in peers if p <= core_size]
+            node_core_peers = [p for p in peers if p <= core_size]
 
-            if len(core_peers) != 1:
-                errors.append(f"Node {i}: expected 1 core peer, got {len(core_peers)} ({core_peers})")
+            if len(node_core_peers) != core_peers:
+                errors.append(f"Node {i}: expected {core_peers} core peers, got {len(node_core_peers)} ({node_core_peers})")
 
     if errors:
         for err in errors:
@@ -213,6 +214,10 @@ def get_topology_stats(topology: Dict[int, List[int]], node_count: int) -> dict:
     )
     non_core_to_non_core = total_connections - core_connections - non_core_to_core
 
+    # Calculate core peers per non-core node
+    non_core_count = node_count - core_size
+    core_peers_per_node = non_core_to_core / non_core_count if non_core_count > 0 else 0
+
     return {
         "node_count": node_count,
         "core_size": core_size,
@@ -221,6 +226,7 @@ def get_topology_stats(topology: Dict[int, List[int]], node_count: int) -> dict:
         "core_mesh_connections": core_connections,
         "non_core_to_core": non_core_to_core,
         "non_core_to_non_core": non_core_to_non_core,
+        "core_peers_per_non_core": core_peers_per_node,
     }
 
 
@@ -248,6 +254,8 @@ Examples:
                        help="Topology mode (default: hybrid)")
     parser.add_argument("--k", type=int, default=4,
                        help="Degree for non-core nodes in hybrid mode (default: 4)")
+    parser.add_argument("--core-peers", type=int, default=2,
+                       help="Number of core peers per non-core node in hybrid mode (default: 2)")
     parser.add_argument("--output", type=str, default="-",
                        help="Output file (- for stdout)")
     parser.add_argument("--validate", action="store_true",
@@ -261,11 +269,11 @@ Examples:
     if args.mode == "hierarchical":
         topology = generate_hierarchical_topology(args.node_count)
     else:
-        topology = generate_hybrid_topology(args.node_count, args.seed, args.k)
+        topology = generate_hybrid_topology(args.node_count, args.seed, args.k, args.core_peers)
 
     # Validate if requested
     if args.validate:
-        if not validate_topology(topology, args.node_count, args.k, args.mode):
+        if not validate_topology(topology, args.node_count, args.k, args.mode, args.core_peers):
             print("Topology validation FAILED", file=sys.stderr)
             sys.exit(1)
         print("Topology validation PASSED", file=sys.stderr)
