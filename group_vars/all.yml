@@ -9,8 +9,8 @@ regions: ["eu","us"]
 # --- Network Topology ---
 # Modes: "hierarchical" (3-tier) | "hybrid" (core mesh + k-regular random)
 topology_mode: "hybrid"
-topology_k: 4                    # Non-core node degree for hybrid mode
-topology_core_peers: 2           # Core peers per non-core node (increased from 1 to 2 for better TX propagation at 20 tx/s)
+topology_k: 6                    # Non-core node degree for hybrid mode
+topology_core_peers: 3           # Core peers per non-core node
 
 # --- Fault Injection ---
 crash_fraction: 0.30
