@@ -1335,7 +1335,7 @@
         "crash_fraction": 0.25,
         "crash_duration_s": 90,
         "crash_mode": "staggered",
-        "stagger_period_s": 60,
+        "stagger_period_s": 90,
         "recovery_mode": "full_resync",
         "loss_pct": 0,
         "latency_ms": 50,
@@ -1364,7 +1364,7 @@
         "crash_fraction": 0.25,
         "crash_duration_s": 90,
         "crash_mode": "staggered",
-        "stagger_period_s": 60,
+        "stagger_period_s": 90,
         "recovery_mode": "fast_resync",
         "loss_pct": 0,
         "latency_ms": 50,
@@ -1641,7 +1641,7 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
-        "wallet_descriptor_pool_size": 2500,
+        "wallet_descriptor_pool_size": 2800,
         "block_scheduler_interval_s": 6,
         "block_scheduler_adaptive_interval": true,
         "crash_fraction": 0.25,
@@ -1670,7 +1670,7 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
-        "wallet_descriptor_pool_size": 2500,
+        "wallet_descriptor_pool_size": 2800,
         "block_scheduler_interval_s": 6,
         "block_scheduler_adaptive_interval": false,
         "crash_fraction": 0.25,
@@ -1728,7 +1728,7 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
-        "wallet_descriptor_pool_size": 2500,
+        "wallet_descriptor_pool_size": 2800,
         "block_scheduler_interval_s": 6,
         "block_scheduler_adaptive_interval": false,
         "crash_fraction": 0.25,
@@ -1786,7 +1786,7 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
-        "wallet_descriptor_pool_size": 2500,
+        "wallet_descriptor_pool_size": 2800,
         "block_scheduler_interval_s": 6,
         "block_scheduler_adaptive_interval": false,
         "crash_fraction": 0.5,
@@ -1844,7 +1844,7 @@
       "config": {
         "node_count": 128,
         "tx_rate": 10,
-        "wallet_descriptor_pool_size": 2500,
+        "wallet_descriptor_pool_size": 2800,
         "block_scheduler_interval_s": 6,
         "block_scheduler_adaptive_interval": false,
         "crash_fraction": 0.5,
