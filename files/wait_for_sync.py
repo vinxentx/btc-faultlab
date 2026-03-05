@@ -3,10 +3,13 @@ import json
 import time
 import sys
 import os
-from datetime import datetime
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from timestamp_utils import now_unix_epoch
 
 def log_event(run_dir, message):
-    ts = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    ts = now_unix_epoch()
     with open(os.path.join(run_dir, "events.log"), "a") as f:
         f.write(f"{ts} {message}\n")
 
@@ -92,7 +95,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 

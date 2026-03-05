@@ -147,7 +147,7 @@
 
     - name:  Log_event - start_warmup
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_warmup" >> "{{ run_dir }}/events.log"
+        echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') start_warmup" >> "{{ run_dir }}/events.log"
 
     - name: Apply net impairments DURING warmup (scientific fix - network stabilization)
       include_role: { name: netem }
@@ -156,14 +156,14 @@
     - name: Log_event - netem_applied (all nodes)
       when: (network_fault_fraction | default(1.0) | float) >= 1.0
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms fraction=1.0 nodes=all" >> "{{ run_dir }}/events.log"
+        echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms fraction=1.0 nodes=all" >> "{{ run_dir }}/events.log"
 
     - name: Log_event - netem_applied (partial)
       when: (network_fault_fraction | default(1.0) | float) < 1.0
       vars:
         affected_nodes: "{% for idx in network_fault_nodes_idx %}node{{ '%02d' | format(idx | int) }}{% if not loop.last %},{% endif %}{% endfor %}"
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms fraction={{ network_fault_fraction }} nodes={{ affected_nodes }}" >> "{{ run_dir }}/events.log"
+        echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') netem_applied loss={{ loss_pct }}% latency={{ latency_ms }}ms bw={{ bandwidth_mbit }}mbit jitter={{ jitter_ms | default(0) }}ms fraction={{ network_fault_fraction }} nodes={{ affected_nodes }}" >> "{{ run_dir }}/events.log"
 
     - name: Start mempool monitoring in background
       ansible.builtin.shell: |
@@ -182,7 +182,7 @@
 
     - name: Log_event - start_observation
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) start_observation" >> "{{ run_dir }}/events.log"
+        echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') start_observation" >> "{{ run_dir }}/events.log"
 
     # ==========================================================================
     # CRASH INJECTION: Runs ASYNC during observation window
@@ -219,11 +219,11 @@
 
     - name: Log_event - netem_cleared
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) netem_cleared" >> "{{ run_dir }}/events.log"
+        echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') netem_cleared" >> "{{ run_dir }}/events.log"
 
     - name: Log_event - end_observation_start_cooldown
       ansible.builtin.shell: |
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) end_observe" >> "{{ run_dir }}/events.log"
+        echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') end_observe" >> "{{ run_dir }}/events.log"
 
     - name: Cool-down
       ansible.builtin.pause: { seconds: "{{ cooldown_s }}" }

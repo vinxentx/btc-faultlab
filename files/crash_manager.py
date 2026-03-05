@@ -18,14 +18,16 @@ import time
 import random
 import os
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from timestamp_utils import now_unix_epoch, parse_unix_or_iso8601
+
 
 def log_event(run_dir: str, event: str, details: str = ""):
-    """Log an event with UTC timestamp to events.log"""
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    """Log an event with unix timestamp to events.log."""
+    ts = now_unix_epoch()
     line = f"{ts} {event}"
     if details:
         line += f" {details}"
@@ -282,8 +284,7 @@ def start_recovery_async(crash_nodes: list, run_dir: str, crash_duration_s: floa
                         if f"node_crash node={node}" in line:
                             # Parse timestamp from event
                             ts_str = line.split()[0]
-                            from datetime import datetime, timezone
-                            crash_time = datetime.fromisoformat(ts_str.replace('Z', '+00:00')).timestamp()
+                            crash_time = parse_unix_or_iso8601(ts_str).timestamp()
                             break
             except:
                 pass

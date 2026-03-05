@@ -55,7 +55,7 @@
     CRASH_MODE: "{{ crash_mode }}"
     CRASH_DURATION: "{{ crash_duration_s }}"
   ansible.builtin.shell: |
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_start mode=${CRASH_MODE} duration=${CRASH_DURATION}s nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') crash_start mode=${CRASH_MODE} duration=${CRASH_DURATION}s nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
   changed_when: true
 
 # =============================================================================
@@ -81,7 +81,7 @@
     sleep $(python3 -c "print({{ i }} * {{ effective_interval_s }})")
     
     # Log individual node crash event
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) node_crash node={{ c }} index={{ i }}" >> "{{ run_dir }}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') node_crash node={{ c }} index={{ i }}" >> "{{ run_dir }}/events.log"
     docker stop {{ c }}
 
 # EVENT: crash_complete - Logged when the last node has started stopping
@@ -98,7 +98,7 @@
     done
     # Small buffer to ensure docker stop command was at least received
     sleep 1
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) crash_complete" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') crash_complete" >> "${RUN_DIR}/events.log"
   changed_when: true
 
 # =============================================================================
@@ -132,7 +132,27 @@
     NODE_CRASH_TIME=$(echo "$NODE_CRASH_LINE" | awk '{print $1}')
     
     # Calculate wait time using python in a one-liner
-    WAIT_SECONDS=$(python3 -c "import sys, datetime; ct=datetime.datetime.fromisoformat(sys.argv[1].replace('Z', '+00:00')); now=datetime.datetime.now(ct.tzinfo); print(max(0, int(float(sys.argv[2]) - (now-ct).total_seconds())))" "$NODE_CRASH_TIME" "$CRASH_DURATION")
+    WAIT_SECONDS=$(python3 -c "import sys, datetime
+raw = sys.argv[1].strip()
+duration_s = float(sys.argv[2])
+try:
+    crash_epoch = float(raw)
+    value = abs(crash_epoch)
+    if value >= 1e18:
+        crash_epoch /= 1e9
+    elif value >= 1e15:
+        crash_epoch /= 1e6
+    elif value >= 1e12:
+        crash_epoch /= 1e3
+    crash_time = datetime.datetime.fromtimestamp(crash_epoch, tz=datetime.timezone.utc)
+except ValueError:
+    crash_time = datetime.datetime.fromisoformat(raw.replace('Z', '+00:00'))
+    if crash_time.tzinfo is None:
+        crash_time = crash_time.replace(tzinfo=datetime.timezone.utc)
+    else:
+        crash_time = crash_time.astimezone(datetime.timezone.utc)
+now = datetime.datetime.now(datetime.timezone.utc)
+print(max(0, int(duration_s - (now - crash_time).total_seconds())))" "$NODE_CRASH_TIME" "$CRASH_DURATION")
     
     if [ "$WAIT_SECONDS" -gt 0 ] 2>/dev/null; then
       echo "Node {{ c }} waiting ${WAIT_SECONDS}s for equal downtime..."
@@ -144,11 +164,11 @@
     docker start {{ c }}
     
     # Log individual node recovery start
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_node_start node={{ c }} index={{ node_idx }}" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') recovery_node_start node={{ c }} index={{ node_idx }}" >> "${RUN_DIR}/events.log"
 
     # Log recovery_start after FIRST successful container restart
     {% if node_idx == 0 %}
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "${RUN_DIR}/events.log"
     {% endif %}
     
     echo "✓ Recovery started for {{ c }} (reindex via config)"
@@ -183,7 +203,27 @@
     NODE_CRASH_TIME=$(echo "$NODE_CRASH_LINE" | awk '{print $1}')
     
     # Calculate wait time using python in a one-liner
-    WAIT_SECONDS=$(python3 -c "import sys, datetime; ct=datetime.datetime.fromisoformat(sys.argv[1].replace('Z', '+00:00')); now=datetime.datetime.now(ct.tzinfo); print(max(0, int(float(sys.argv[2]) - (now-ct).total_seconds())))" "$NODE_CRASH_TIME" "$CRASH_DURATION")
+    WAIT_SECONDS=$(python3 -c "import sys, datetime
+raw = sys.argv[1].strip()
+duration_s = float(sys.argv[2])
+try:
+    crash_epoch = float(raw)
+    value = abs(crash_epoch)
+    if value >= 1e18:
+        crash_epoch /= 1e9
+    elif value >= 1e15:
+        crash_epoch /= 1e6
+    elif value >= 1e12:
+        crash_epoch /= 1e3
+    crash_time = datetime.datetime.fromtimestamp(crash_epoch, tz=datetime.timezone.utc)
+except ValueError:
+    crash_time = datetime.datetime.fromisoformat(raw.replace('Z', '+00:00'))
+    if crash_time.tzinfo is None:
+        crash_time = crash_time.replace(tzinfo=datetime.timezone.utc)
+    else:
+        crash_time = crash_time.astimezone(datetime.timezone.utc)
+now = datetime.datetime.now(datetime.timezone.utc)
+print(max(0, int(duration_s - (now - crash_time).total_seconds())))" "$NODE_CRASH_TIME" "$CRASH_DURATION")
     
     if [ "$WAIT_SECONDS" -gt 0 ] 2>/dev/null; then
       echo "Node {{ c }} waiting ${WAIT_SECONDS}s for equal downtime..."
@@ -193,11 +233,11 @@
     docker start {{ c }}
 
     # Log individual node recovery start
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_node_start node={{ c }} index={{ node_idx }}" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') recovery_node_start node={{ c }} index={{ node_idx }}" >> "${RUN_DIR}/events.log"
 
     # Log recovery_start after FIRST successful container start
     {% if node_idx == 0 %}
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') recovery_start nodes={{ crash_nodes | default([]) | join(',') }}" >> "${RUN_DIR}/events.log"
     {% endif %}
   register: fast_resync_jobs
 
@@ -229,5 +269,5 @@
     RUN_DIR: "{{ run_dir }}"
     CRASH_NODES: "{{ crash_nodes | default([]) | join(',') }}"
   ansible.builtin.shell: |
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) recovery_complete nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
+    echo "$(python3 -c 'import time; print(f"{time.time():.6f}")') recovery_complete nodes=${CRASH_NODES}" >> "${RUN_DIR}/events.log"
   changed_when: true

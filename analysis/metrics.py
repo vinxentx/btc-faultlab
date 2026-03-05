@@ -9,9 +9,13 @@ import json
 import os
 import math
 from pathlib import Path
+import sys
 import re
 from datetime import datetime, timezone
 from collections import deque
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from timestamp_utils import parse_unix_or_iso8601
 
 # Ensure Matplotlib has a writable cache dir + headless backend before importing it
 _default_mpl_dir = Path(
@@ -27,11 +31,18 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 UPDATE_TIP_REGEX = re.compile(
-    r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+UpdateTip:\s+new\s+best=([a-f0-9]+)\s+height=(\d+)\s+.*?\btx=(\d+)\s+date=\'([^\']+)\''
+    r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)\s+UpdateTip:\s+new\s+best=([a-f0-9]+)\s+height=(\d+)\s+.*?\btx=(\d+)\s+date=\'([^\']+)\''
 )
 
 def parse_iso8601(values):
-    """Robust ISO8601 parser that tolerates missing microseconds."""
+    """Parse timestamps from CSV columns - supports both unix epoch and ISO8601.
+
+    Detects numeric (unix epoch seconds) vs string (ISO8601) automatically,
+    so old and new result files both work.
+    """
+    numeric = pd.to_numeric(values, errors="coerce")
+    if numeric.notna().all():
+        return pd.to_datetime(numeric, unit="s", utc=True)
     return pd.to_datetime(values, format="ISO8601", errors="coerce")
 
 def parse_events(path):
@@ -46,7 +57,7 @@ def parse_events(path):
                         ts, evt = parts[0], parts[1]
                         rest = " ".join(parts[2:]) if len(parts) > 2 else ""
                         try:
-                            events.append((datetime.fromisoformat(ts.replace("Z", "+00:00")), evt, rest))
+                            events.append((parse_unix_or_iso8601(ts), evt, rest))
                         except ValueError:
                             continue
     return events
@@ -479,7 +490,7 @@ def compute_per_phase_throughput(df_conf_filtered, df_sub_filtered, events, conf
     # Also prepare submission data for counting submitted TXs
     df_sub = df_sub_filtered.copy() if not df_sub_filtered.empty else pd.DataFrame()
     if not df_sub.empty and "submit_ts_utc" in df_sub.columns:
-        df_sub["submit_ts_utc"] = pd.to_datetime(df_sub["submit_ts_utc"])
+        df_sub["submit_ts_utc"] = parse_iso8601(df_sub["submit_ts_utc"])
         if df_sub["submit_ts_utc"].dt.tz is None:
             df_sub["submit_ts_utc"] = df_sub["submit_ts_utc"].dt.tz_localize('UTC')
 
@@ -707,7 +718,7 @@ def compute_reorg_metrics(run_dir, events=None, reorg_events_from_propagation=No
                 ts_str = e.get("timestamp")
                 if ts_str:
                     try:
-                        ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                        ts = parse_unix_or_iso8601(ts_str)
                         timestamps.append(ts)
                     except ValueError:
                         pass
@@ -1252,8 +1263,8 @@ def block_based_throughput(run_dir, df_conf):
         df_mining["timestamp_utc"] = pd.to_datetime(df_mining["timestamp_utc"])
         df_mining = df_mining.sort_values("timestamp_utc")
         
-        df_conf["confirm_ts_utc"] = pd.to_datetime(df_conf["confirm_ts_utc"])
-        
+        df_conf["confirm_ts_utc"] = parse_iso8601(df_conf["confirm_ts_utc"])
+
         # Check if we have block hashes for exact matching
         has_block_hash_in_mining = "block_hash" in df_mining.columns
         has_block_hash_in_conf = "confirm_block_hash" in df_conf.columns
@@ -1948,7 +1959,7 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
     # Filter data for plots (includes warmup under degraded conditions)
     df_conf_plot = df_conf.copy() if not df_conf.empty else pd.DataFrame()
     if not df_conf_plot.empty and plot_start_ts is not None:
-        df_conf_plot["confirm_ts_utc"] = pd.to_datetime(df_conf_plot["confirm_ts_utc"])
+        df_conf_plot["confirm_ts_utc"] = parse_iso8601(df_conf_plot["confirm_ts_utc"])
         df_conf_plot = df_conf_plot[df_conf_plot["confirm_ts_utc"] >= plot_start_ts]
         if end_observe_ts is not None:
             df_conf_plot = df_conf_plot[df_conf_plot["confirm_ts_utc"] <= end_observe_ts]
@@ -2370,8 +2381,8 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
         # Ensure timestamps are datetime
         df_sub_copy = df_sub.copy()
         df_conf_copy = df_conf_plot.copy()
-        df_sub_copy["submit_ts_utc"] = pd.to_datetime(df_sub_copy["submit_ts_utc"])
-        df_conf_copy["confirm_ts_utc"] = pd.to_datetime(df_conf_copy["confirm_ts_utc"])
+        df_sub_copy["submit_ts_utc"] = parse_iso8601(df_sub_copy["submit_ts_utc"])
+        df_conf_copy["confirm_ts_utc"] = parse_iso8601(df_conf_copy["confirm_ts_utc"])
         
         # Filter to plot window
         if plot_start_ts is not None:
@@ -2469,7 +2480,7 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
 
         # Filter SUBMISSIONS
         df_sub_obs = df_sub.copy()
-        df_sub_obs["submit_ts_utc"] = pd.to_datetime(df_sub_obs["submit_ts_utc"])
+        df_sub_obs["submit_ts_utc"] = parse_iso8601(df_sub_obs["submit_ts_utc"])
         if start_ts is not None:
             df_sub_obs = df_sub_obs[df_sub_obs["submit_ts_utc"] >= start_ts]
         if end_ts_with_buffer is not None:
@@ -2478,14 +2489,14 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
         # Filter CONFIRMATIONS by their SUBMIT time (same as metrics.json)
         df_conf_obs = df_conf.copy()
         if "submit_ts_utc" in df_conf_obs.columns:
-            df_conf_obs["submit_ts_utc"] = pd.to_datetime(df_conf_obs["submit_ts_utc"])
+            df_conf_obs["submit_ts_utc"] = parse_iso8601(df_conf_obs["submit_ts_utc"])
             if start_ts is not None:
                 df_conf_obs = df_conf_obs[df_conf_obs["submit_ts_utc"] >= start_ts]
             if end_ts_with_buffer is not None:
                 df_conf_obs = df_conf_obs[df_conf_obs["submit_ts_utc"] <= end_ts_with_buffer]
         else:
             # Fallback: filter by confirm time if submit time not available
-            df_conf_obs["confirm_ts_utc"] = pd.to_datetime(df_conf_obs["confirm_ts_utc"])
+            df_conf_obs["confirm_ts_utc"] = parse_iso8601(df_conf_obs["confirm_ts_utc"])
             if start_ts is not None:
                 df_conf_obs = df_conf_obs[df_conf_obs["confirm_ts_utc"] >= start_ts]
             if end_ts_with_buffer is not None:
@@ -2521,8 +2532,8 @@ def create_enhanced_plots(run_dir, events, df_sub, df_conf, tps_series, avg_thro
     if not df_sub.empty and not df_conf_plot.empty:
         df_sub_sorted = df_sub.copy()
         df_conf_sorted = df_conf_plot.copy()
-        df_sub_sorted["submit_ts_utc"] = pd.to_datetime(df_sub_sorted["submit_ts_utc"])
-        df_conf_sorted["confirm_ts_utc"] = pd.to_datetime(df_conf_sorted["confirm_ts_utc"])
+        df_sub_sorted["submit_ts_utc"] = parse_iso8601(df_sub_sorted["submit_ts_utc"])
+        df_conf_sorted["confirm_ts_utc"] = parse_iso8601(df_conf_sorted["confirm_ts_utc"])
         
         # Filter to plot window
         if plot_start_ts is not None:
@@ -2705,17 +2716,17 @@ def create_throughput_comparison_plot(run_dir, events, df_sub, df_conf, avg_thro
     df_conf_filtered = df_conf.copy() if not df_conf.empty else pd.DataFrame()
 
     if not df_sub_filtered.empty and baseline_filter_ts is not None:
-        df_sub_filtered["submit_ts_utc"] = pd.to_datetime(df_sub_filtered["submit_ts_utc"])
+        df_sub_filtered["submit_ts_utc"] = parse_iso8601(df_sub_filtered["submit_ts_utc"])
         df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] >= baseline_filter_ts]
         if end_observe_ts is not None:
             df_sub_filtered = df_sub_filtered[df_sub_filtered["submit_ts_utc"] <= end_observe_ts]
 
     if not df_conf_filtered.empty and baseline_filter_ts is not None:
-        df_conf_filtered["confirm_ts_utc"] = pd.to_datetime(df_conf_filtered["confirm_ts_utc"])
+        df_conf_filtered["confirm_ts_utc"] = parse_iso8601(df_conf_filtered["confirm_ts_utc"])
         # For throughput_by_phase, filter by SUBMISSION time (not confirmation time)
         # This ensures TXs submitted during observation are counted even if confirmed later
         if "submit_ts_utc" in df_conf_filtered.columns:
-            df_conf_filtered["submit_ts_utc"] = pd.to_datetime(df_conf_filtered["submit_ts_utc"])
+            df_conf_filtered["submit_ts_utc"] = parse_iso8601(df_conf_filtered["submit_ts_utc"])
             df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] >= baseline_filter_ts]
             if end_observe_ts is not None:
                 df_conf_filtered = df_conf_filtered[df_conf_filtered["submit_ts_utc"] <= end_observe_ts]
