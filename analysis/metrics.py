@@ -41,9 +41,29 @@ def parse_iso8601(values):
     so old and new result files both work.
     """
     numeric = pd.to_numeric(values, errors="coerce")
+
+    # Fast path for fully numeric columns; normalize mixed unix units per value
+    # (seconds / milliseconds / microseconds / nanoseconds).
     if numeric.notna().all():
-        return pd.to_datetime(numeric, unit="s", utc=True)
-    return pd.to_datetime(values, format="ISO8601", errors="coerce")
+        normalized = numeric.astype(float).copy()
+        abs_values = normalized.abs()
+        normalized = normalized.where(abs_values < 1e12, normalized / 1e3)  # ms -> s
+        abs_values = normalized.abs()
+        normalized = normalized.where(abs_values < 1e12, normalized / 1e3)  # us -> s
+        abs_values = normalized.abs()
+        normalized = normalized.where(abs_values < 1e12, normalized / 1e3)  # ns -> s
+        return pd.to_datetime(normalized, unit="s", utc=True, errors="coerce")
+
+    # Mixed/dirty columns: parse per value with robust unix/ISO parser.
+    def _parse_single(value):
+        if pd.isna(value):
+            return pd.NaT
+        try:
+            return parse_unix_or_iso8601(str(value))
+        except Exception:
+            return pd.NaT
+
+    return pd.Series(values).apply(_parse_single)
 
 def parse_events(path):
     """Parse experiment events from log file"""
